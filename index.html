@@ -201,35 +201,91 @@ table.est{width:100%;border-collapse:collapse;min-width:760px}
 
 @media (max-width:1100px){.ed-grid,.split,.mgrid{grid-template-columns:1fr}.side{position:static}.stats{grid-template-columns:1fr 1fr}}
 
-/* print — simple estimate */
+/* print — Born Scope of Work (matches Born SOW template) */
 #print{display:none}
 @media print{
-  @page{size:A4;margin:18mm 16mm}
+  @page{size:A4;margin:16mm 15mm 16mm}
   html,body{background:#fff}
   .rail,.shell,.toast,.modal-bg,.loader{display:none!important}
-  #print{display:block;color:#111;font-size:10pt;line-height:1.5}
+  #print{display:block;color:#111;font-size:8.6pt;line-height:1.45}
 }
-.p-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid #111;padding-bottom:14px;margin-bottom:22px}
-.p-head .ag{font-size:20pt;font-weight:700;letter-spacing:-.02em}
-.p-head .meta{text-align:right;font-size:9pt;color:#555;line-height:1.6}
-.p-head .meta b{color:#111;font-size:11pt;letter-spacing:.08em;text-transform:uppercase}
-.p-title{font-size:18pt;font-weight:600;margin-bottom:2px}
-.p-client{color:#555;margin-bottom:16px}
-.p-ov{margin-bottom:22px;max-width:62ch}
-.p-tbl{width:100%;border-collapse:collapse}
-.p-tbl th{font-size:8pt;text-transform:uppercase;letter-spacing:.08em;color:#777;text-align:left;font-weight:600;padding:0 0 6px;border-bottom:1px solid #111}
-.p-tbl th:last-child,.p-tbl td.c{text-align:right}
-.p-tbl td{padding:11px 0;border-bottom:1px solid #ddd;vertical-align:top}
-.p-tbl td.c{font-weight:600;white-space:nowrap;padding-left:20px;font-variant-numeric:tabular-nums}
-.p-tbl .pn{font-weight:600;font-size:10.5pt}
-.p-tbl .pd{color:#444;margin-top:2px}
-.p-tbl .pi{color:#777;font-size:8.8pt;margin-top:4px}
-.p-tbl tr{break-inside:avoid}
-.p-tot{margin:14px 0 0 auto;width:260px;font-variant-numeric:tabular-nums}
-.p-tot div{display:flex;justify-content:space-between;padding:3px 0;color:#444}
-.p-tot .g{border-top:1.5px solid #111;margin-top:6px;padding-top:8px;color:#111;font-weight:700;font-size:11.5pt}
-.p-notes{margin-top:30px;font-size:8.5pt;color:#666;white-space:pre-line;break-inside:avoid}
-.p-notes b{color:#111;display:block;margin-bottom:3px}
+.sow-top{display:flex;justify-content:space-between;align-items:flex-start}
+.sow-logo{font-size:46pt;font-weight:500;letter-spacing:-.035em;line-height:1}
+.sow-title{text-align:right}.sow-title b{font-size:11pt;font-weight:600;display:block}.sow-title span{font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.sow-parties{display:flex;justify-content:space-between;margin:40px 0 44px;white-space:pre-line}
+.sow-parties div:last-child{text-align:right}
+.sow-head{display:flex;justify-content:space-between;font-weight:600;font-size:9pt;text-transform:uppercase;border-bottom:1.2px solid #111;padding-bottom:5px;margin-bottom:14px}
+.sow-ov{margin:0 0 22px;max-width:70%}
+.sow-ph{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;break-inside:avoid}
+.sow-ph .l{width:62%}
+.sow-ph .pn{font-weight:600;border-top:.6px solid #ccc;padding:4px 0}
+.sow-ph .pd{color:#555;padding:2px 0 5px;font-size:8pt}
+.sow-ph .it{border-top:.6px solid #ccc;padding:3px 0}
+.sow-ph .it:last-child{border-bottom:.6px solid #ccc}
+.sow-ph .fee{font-weight:600;padding-top:4px;font-variant-numeric:tabular-nums}
+.sow-note{margin:26px 0 18px}
+.sow-tot{border-top:1.2px solid #111;font-variant-numeric:tabular-nums}
+.sow-tot div{display:flex;justify-content:flex-end;gap:0;padding:6px 0}
+.sow-tot div span:first-child{width:200px;text-align:right;padding-right:60px}
+.sow-tot div span:last-child{width:110px;text-align:right}
+.sow-tot .g{border-top:1.2px solid #111;font-weight:600;font-size:10pt;padding-top:8px}
+.sow-sign{display:flex;gap:40px;margin-top:60px;break-inside:avoid}
+.sow-sign div{flex:1;border-top:.8px solid #111;padding-top:5px;font-weight:600;font-size:8pt}
+.sow-sign div:last-child{flex:.5}
+.sow-terms{margin-top:28px;font-size:7.5pt;color:#444}
+
+/* ---------- v3 additions ---------- */
+.seg{display:inline-flex;background:var(--bg-soft);border-radius:8px;padding:3px;gap:2px}
+.seg button{border:none;background:none;padding:5px 12px;border-radius:6px;font-size:12.5px;color:var(--t2);font-weight:500}
+.seg button.on{background:var(--paper);color:var(--t1);box-shadow:var(--sh)}
+.est-bar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.trk{display:inline-block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:1px}
+.trk.design{background:var(--info-bg);color:var(--info)}.trk.copy{background:#F1ECFA;color:#6B4FA0}.trk.production{background:var(--warning-bg);color:var(--warning)}
+.trk.ext{background:var(--danger-bg);color:var(--danger)}.trk.am,.trk.wip{background:var(--bg-soft);color:var(--t2)}
+.flat{font-size:12px;color:var(--t3)}
+.margin-pos{color:var(--success)}.margin-neg{color:var(--danger)}
+.est .ro{padding:5px 7px;font-size:13.5px;color:var(--t2);text-align:right;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:4px 6px 4px 10px;border-radius:99px;background:var(--bg-soft);color:var(--t1)}
+.chip .ib{width:20px;height:20px;font-size:10px}
+.pick{display:inline-flex;align-items:center;gap:8px;font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:var(--paper);user-select:none}
+.pick input{accent-color:var(--t1)}
+.pick.on{border-color:var(--t1);background:var(--paper-2)}
+.pick small{color:var(--t3)}
+.rv-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;align-items:start}
+.rv-brief{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto;white-space:pre-wrap;font-size:13px;line-height:1.6;color:var(--t2)}
+.rv-brief mark{background:#FFF1B8;color:var(--t1);border-radius:3px;padding:0 1px}
+.rv-brief mark.hot{background:#FFD95A}
+table.rv{width:100%;border-collapse:collapse}
+.rv th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);text-align:left;padding:8px 6px;border-bottom:1px solid var(--border)}
+.rv td{padding:4px 6px;border-bottom:1px solid var(--border-lt);vertical-align:top}
+.rv input,.rv select{border:1px solid transparent;background:transparent;border-radius:6px;padding:5px 6px;width:100%;outline:none;font-size:13px}
+.rv input:hover,.rv select:hover{border-color:var(--border)}
+.rv input:focus,.rv select:focus{border-color:var(--t1);background:#fff}
+.rv input[type=number]{text-align:right}
+.rv tr.off td{opacity:.45}
+.rv .src{font-size:11.5px;color:var(--t3);padding:0 6px 6px;line-height:1.4}
+.rv .src.bad{color:var(--danger)}
+.rv .src i{margin-right:4px}
+.rv td.chk{width:30px;padding-top:9px}
+.rv .h{width:62px}
+.kicker{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+.assume li{font-size:13px;color:var(--t2);margin:0 0 6px 18px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tabs button{border:none;background:none;padding:9px 14px;font-size:13.5px;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--t1);border-bottom-color:var(--t1);font-weight:500}
+table.ed{width:100%;border-collapse:collapse}
+.ed th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);text-align:left;padding:8px 6px;border-bottom:1px solid var(--border)}
+.ed td{padding:3px 6px;border-bottom:1px solid var(--border-lt)}
+.ed input,.ed select{border:1px solid transparent;background:transparent;border-radius:6px;padding:5px 6px;width:100%;outline:none;font-size:13px}
+.ed input:hover,.ed select:hover{border-color:var(--border)}
+.ed input:focus,.ed select:focus{border-color:var(--t1);background:#fff}
+.ed input[type=number]{text-align:right}
+.ed .n{width:70px}
+.ed tr.grp td{background:var(--paper-2);font-weight:600;font-size:13px;padding:8px 6px}
+.est{min-width:1000px}.est tr.ln td:first-child,.est th:first-child{min-width:240px}.est td select{min-width:150px}
+.rv .h{width:78px}
+
 </style>
 </head>
 <body>
@@ -246,78 +302,147 @@ table.est{width:100%;border-collapse:collapse;min-width:760px}
 
 <script>
 /* ==========================================================
-   Born Scope — brief in, estimate out.  v2
-   Data: localStorage 'bornScope.v1' (schema version 2)
+   Born Scope — brief in, estimate out.  v3
+   Shared data on the server (see server.js); localStorage is a cache.
    ========================================================== */
 const LS = 'bornScope.v1';
 const $ = (s, el = document) => el.querySelector(s);
 const uid = () => Math.random().toString(36).slice(2, 10);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => (n < 0 ? '−$' : '$') + Math.abs(Math.round(+n || 0)).toLocaleString('en-AU');
+const money2 = n => (+n || 0).toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const hrs = n => (Math.round((+n || 0) * 10) / 10).toLocaleString('en-AU') + 'h';
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const median = a => { const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length ? (s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2) : null; };
+const r05 = h => Math.max(0.5, Math.round(h * 2) / 2);
+const isNum = v => v !== '' && v != null && !isNaN(+v);
 const PHASE_DOTS = ['#8FB8DE', '#B7A9D9', '#D9A7B5', '#A9C79B', '#E0C27A', '#9CC9C0', '#C9A88F'];
+const SIZES = [['small', 'Small'], ['mid', 'Mid'], ['big', 'Big']];
+const TRACKS = [['design', 'Design'], ['copy', 'Copy'], ['production', 'Production']];
 if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-/* ---------------- seed ---------------- */
-const DEFAULT_NOTES = `All costs are in AUD and exclude GST unless stated.
-Includes two rounds of amends per deliverable; additional changes will be quoted separately.
-Third-party costs (printing, media spend, stock imagery, talent, licensing, hosting) are excluded unless listed.
+/* ---------------- seed (from Born quote templates) ---------------- */
+const T = { SD: 'Strategy Director', CD: 'Creative Director', DD: 'Design Director', AD: 'Art Director', CW: 'Copywriter', ST: 'Strategist', DES: 'Designer', DM: 'Digital Marketer', AM: 'Account Manager', DEV: 'Developer', MO: 'Motion Designer' };
+const SEED_PEOPLE = [[T.SD, 240, 95], [T.CD, 240, 95], [T.DD, 240, 95], [T.AD, 200, 95], [T.CW, 200, 95], [T.ST, 200, 70], [T.DES, 200, 50], [T.DM, 200, 50], [T.AM, 200, 80], [T.DEV, 200, 95], [T.MO, 200, 70]];
+const DEFAULT_NOTES = `Includes two rounds of changes on all deliverables.
+Third-party costs (printing, media, stock imagery, talent, licensing) are excluded unless listed.
 This estimate is valid for 30 days.`;
-const L = (id, name, phase, kw, tasks, unit = 0, extra = {}) => ({ id, name, phase, kw, tasks, unit, ...extra });
-const T = { CD: 'Creative Director', SD: 'Strategy Director', AM: 'Account Manager', PR: 'Producer', SDES: 'Senior Designer', DES: 'Designer', CW: 'Copywriter', UX: 'UX Designer', DEV: 'Developer', MO: 'Motion Designer' };
+// template item: [name, [[title, small, mid, big], ...]]
+const TI = (name, lines) => ({ name, lines: lines.map(([title, s, m, b]) => ({ title, hours: { small: s, mid: m, big: b } })) });
+const TX = (name, s, m, b, markup = 30, supplier = '') => ({ name, cost: { small: s, mid: m, big: b }, markup, supplier });
+const SEED_TEMPLATES = [
+  { id: 'campaign', name: 'Campaign', designPhase: 'Campaign Roll out', productionPhase: 'Production', mediaPhase: 'Media Buy', weeks: { small: 4, mid: 8, big: 12 },
+    kw: ['campaign', 'tvc', 'radio', 'out of home', 'ooh', 'launch', 'activation', 'above the line', 'integrated'],
+    phases: [
+      { name: 'Getting to know', key: 'discovery', items: [TI('Immersion session preparation', [[T.SD, 0, 4, 4]]), TI('Immersion session', [[T.SD, 1, 2, 2.5], [T.CD, 1, 2, 2.5], [T.AD, 0, 2, 2.5], [T.CW, 0, 2, 2.5]]), TI('Desktop research & audit', [[T.CW, 0, 0, 16]]), TI('Reverse brief', [[T.ST, 0, 6, 6]])], ext: [] },
+      { name: 'Campaign Ideation', key: 'creative', items: [TI('Campaign insights', [[T.ST, 0, 0, 16]]), TI('Campaign ideation', [[T.CD, 0, 5, 25], [T.AD, 20, 25, 30], [T.CW, 20, 25, 25]]), TI('Campaign refinement', [[T.AD, 8, 20, 20], [T.CW, 4, 5, 5]]), TI('Campaign oversight', [[T.CD, 5, 5, 5]])], ext: [] },
+    ] },
+  { id: 'branding', name: 'Branding', designPhase: 'Brand Roll out', productionPhase: 'Production', mediaPhase: 'Media Buy', weeks: { small: 6, mid: 10, big: 16 },
+    kw: ['brand', 'branding', 'rebrand', 'brand identity', 'visual identity', 'logo', 'brand strategy', 'positioning', 'brand guidelines', 'naming'],
+    phases: [
+      { name: 'Getting to know', key: 'discovery', items: [TI('Immersion session preparation', [[T.SD, 2, 6, 6]]), TI('Immersion session', [[T.SD, 2, 2, 2.5], [T.DD, 2, 2, 2.5], [T.CW, 2, 2, 2.5]]), TI('Desktop research & audit', [[T.CW, 8, 8, 16]])], ext: [] },
+      { name: 'Research Quant & Qual', key: 'discovery', items: [TI('Qual research preparation', [[T.ST, 0, 0, 6]]), TI('Quant research preparation', [[T.ST, 0, 0, 6]]), TI('Qual research attendance', [[T.ST, 0, 0, 6]]), TI('Findings report', [[T.SD, 0, 0, 18]])], ext: [TX('Quant research', 0, 0, 16000, 30, 'Research partner'), TX('Qual research', 0, 0, 10000, 0, 'Research partner')] },
+      { name: 'Brand Strategy Development', key: 'strategy', items: [TI('Strategy thought-starters', [[T.ST, 0, 8, 16]]), TI('Brand framework & proposition', [[T.SD, 25, 30, 50]]), TI('Brand narrative', [[T.SD, 15, 15, 20]]), TI('Brand values', [[T.SD, 10, 10, 10]]), TI('Key messaging', [[T.CW, 8, 8, 18]]), TI('Tone of voice', [[T.CW, 8, 8, 18]]), TI('Amends & updates', [[T.SD, 20, 20, 20]])], ext: [] },
+      { name: 'Brand Identity Development', key: 'creative', items: [TI('Workshop preparation', [[T.DD, 4, 4, 12]]), TI('Concept ideation', [[T.DD, 25, 30, 50], [T.DES, 30, 30, 30]]), TI('Concept refinement', [[T.DES, 20, 25, 20], [T.DD, 2, 8, 20]]), TI('Brand guidelines creation', [[T.DES, 20, 25, 30]]), TI('File export & supply', [[T.DES, 2, 6, 6]])], ext: [] },
+    ] },
+  { id: 'other', name: 'Design / other', designPhase: 'Design', productionPhase: 'Production', mediaPhase: 'Media Buy', weeks: { small: 3, mid: 6, big: 10 }, kw: [],
+    phases: [
+      { name: 'Getting to know', key: 'discovery', items: [TI('Briefing & kickoff', [[T.CD, 1, 2, 2], [T.AD, 1, 2, 2]]), TI('Reverse brief', [[T.ST, 0, 2, 4]])], ext: [] },
+      { name: 'Concept', key: 'creative', items: [TI('Creative concepts', [[T.CD, 2, 4, 8], [T.AD, 6, 12, 20], [T.CW, 2, 6, 10]]), TI('Concept refinement', [[T.AD, 2, 6, 10], [T.CW, 1, 3, 5]])], ext: [] },
+    ] },
+];
+// deliverable: hours per track = base + per × qty
+const D = (id, name, unit, kw, tr) => ({ id, name, unit, kw, tracks: Object.fromEntries(Object.entries(tr).map(([k, [base, per, title]]) => [k, { base, per, title }])) });
+const SEED_LIBRARY = [
+  D('brochure', 'Brochure / booklet', 'page', ['brochure', 'booklet', 'catalogue', 'annual report', 'magazine'], { design: [0, 1.5, T.DES], copy: [0, 1, T.CW], production: [0, 0.5, T.DES] }),
+  D('flyer', 'Flyer / leaflet', 'side', ['flyer', 'leaflet', 'dl', 'mailer', 'postcard', 'a4 page', 'one pager', 'one-pager', 'fact sheet', 'sell sheet'], { design: [0, 1.5, T.DES], copy: [0, 1, T.CW], production: [0, 0.5, T.DES] }),
+  D('poster', 'Poster', 'design', ['poster', 'office posters'], { design: [2, 2, T.AD], copy: [0, 0.5, T.CW], production: [0, 1, T.DES] }),
+  D('stationery', 'Stationery (business cards, letterhead)', 'item', ['business card', 'letterhead', 'stationery', 'email signature', 'compliment slip'], { design: [0, 3.5, T.DES], production: [0, 0.5, T.DES] }),
+  D('ppt', 'PowerPoint / presentation template', 'page', ['powerpoint', 'ppt', 'presentation template', 'pitch deck', 'sales deck', 'keynote', 'deck'], { design: [5, 1.3, T.DES], copy: [0, 0.3, T.CW] }),
+  D('social', 'Social media assets', 'asset', ['social', 'social media', 'instagram', 'facebook', 'tiktok', 'linkedin', 'stories', 'reels', 'carousel', 'social posts', 'posts'], { design: [2, 0.75, T.AD], copy: [0, 0.25, T.CW], production: [0, 0.5, T.DES] }),
+  D('social-tpl', 'Social templates', 'template', ['social templates', 'post templates', 'organic templates', 'paid templates'], { design: [0, 4, T.DES] }),
+  D('social-hdr', 'Social headers & icons', 'asset', ['header', 'cover image', 'social icons', 'profile image'], { design: [0, 2, T.DES] }),
+  D('display', 'Digital display banners', 'size', ['display', 'banners', 'banner ads', 'digital banners', 'programmatic', 'html5', 'gdn', 'ad sizes'], { design: [6, 0, T.AD], copy: [1, 0, T.CW], production: [0, 1, T.DES] }),
+  D('web-banner', 'Website banners', 'size', ['website banners', 'web banners', 'hero banner', 'homepage banner', 'tiles'], { design: [3, 0, T.AD], production: [0, 1, T.DES] }),
+  D('ooh', 'Out of home artwork', 'format', ['ooh', 'out of home', 'out-of-home', 'billboard', 'bus shelter', 'adshel', 'street furniture', 'outdoor', 'digital screens', 'dooh'], { design: [6, 3, T.AD], copy: [2, 0, T.CW], production: [0, 2, T.DES] }),
+  D('press', 'Press / print ad', 'format', ['press ad', 'print ad', 'newspaper', 'magazine ad', 'press'], { design: [4, 2, T.AD], copy: [2, 0, T.CW], production: [0, 1.5, T.DES] }),
+  D('tv-script', 'TV script & storyboard', 'script', ['tvc', 'tv script', 'storyboard', 'television', 'tv commercial', 'bvod'], { design: [0, 6, T.AD], copy: [0, 10, T.CW] }),
+  D('radio-script', 'Radio script', 'script', ['radio', 'radio script', 'audio', 'spotify', 'podcast ad'], { copy: [2, 6, T.CW] }),
+  D('video', 'Video edit (social / online)', 'video', ['video', 'cutdown', 'cut-down', 'edit', 'reel', 'youtube'], { design: [0, 6, T.MO], production: [0, 3, T.MO] }),
+  D('motion', 'Motion graphics / animation', 'animation', ['animation', 'motion graphics', 'animated', 'gif', 'explainer'], { design: [0, 8, T.MO], production: [0, 2, T.MO] }),
+  D('edm', 'EDM / email', 'email', ['edm', 'email', 'newsletter', 'mailchimp', 'klaviyo'], { design: [0, 4, T.DES], copy: [0, 2, T.CW], production: [0, 2, T.DEV] }),
+  D('landing', 'Landing page', 'page', ['landing page', 'microsite', 'campaign page'], { design: [4, 6, T.DES], copy: [0, 2, T.CW], production: [4, 8, T.DEV] }),
+  D('website', 'Website', 'page', ['website', 'web design', 'site redesign', 'homepage', 'web pages'], { design: [12, 3, T.DES], copy: [0, 2, T.CW], production: [16, 4, T.DEV] }),
+  D('logo', 'Logo design', 'logo', ['logo', 'wordmark', 'logomark', 'monogram'], { design: [0, 40, T.DD], production: [0, 6, T.DES] }),
+  D('guidelines', 'Brand guidelines', 'document', ['guidelines', 'style guide', 'brand book', 'brand guide'], { design: [0, 24, T.DES], production: [0, 4, T.DES] }),
+  D('signage', 'Signage', 'sign', ['signage', 'sign', 'wayfinding', 'shopfront'], { design: [0, 2.5, T.DES], production: [0, 0.75, T.DES] }),
+  D('pullup', 'Pull-up banner', 'banner', ['pull up', 'pull-up', 'roll up', 'banner stand', 'event banner'], { design: [0, 4, T.DES], production: [0, 2, T.DES] }),
+  D('packaging', 'Packaging', 'SKU', ['packaging', 'label', 'pack design', 'labels', 'can design', 'bottle'], { design: [16, 6, T.DD], production: [0, 3, T.DES] }),
+  D('merch', 'Merchandise / uniform', 'item', ['uniform', 'mug', 'notebook', 'merchandise', 'merch', 'tote', 'folder', 'clipboard', 'apparel'], { design: [0, 2.5, T.DES], production: [0, 0.5, T.DES] }),
+  D('photo-dir', 'Photography art direction', 'shoot day', ['photography', 'photo shoot', 'photoshoot', 'shoot', 'imagery'], { design: [4, 4, T.AD], production: [0, 8, T.AD] }),
+  D('dm-mgmt', 'Digital marketing management', 'month', ['digital marketing', 'campaign management', 'paid social management', 'ads management', 'media management'], { production: [0, 6, T.DM] }),
+];
+const X = (id, name, group, kw, cost, markup, supplier = '') => ({ id, name, group, kw, cost, markup, supplier });
+const SEED_EXTERNALS = [
+  X('tvc-prod', 'TVC production', 'production', ['tvc production', 'tvc shoot', 'tv production', 'commercial production'], 100000, 20),
+  X('radio-prod', 'Radio production', 'production', ['radio production', 'radio recording', 'voiceover', 'voice over'], 5000, 30),
+  X('video-prod', 'Video production', 'production', ['video production', 'video shoot', 'film crew', 'videographer'], 15000, 20),
+  X('photo', 'Photographer & studio', 'production', ['photographer', 'photo shoot', 'photoshoot', 'product photography'], 4000, 30),
+  X('print', 'Printing', 'production', ['printing', 'print run', 'printed'], 0, 20),
+  X('stock', 'Stock imagery / licensing', 'production', ['stock imagery', 'stock photos', 'licensing', 'music licence', 'music license'], 500, 20),
+  X('quant', 'Quant research', 'research', ['quant research', 'quantitative', 'survey'], 16000, 30),
+  X('qual', 'Qual research', 'research', ['qual research', 'qualitative', 'focus groups', 'interviews'], 10000, 0),
+  X('media-tv', 'TVC / BVOD / SVOD media', 'media', ['bvod', 'svod', 'tv media', 'tv airtime'], 0, 0),
+  X('media-radio', 'Radio media', 'media', ['radio media', 'radio airtime', 'radio buy'], 0, 0),
+  X('media-ooh', 'Out of home media', 'media', ['ooh media', 'billboard media', 'outdoor media'], 0, 0),
+  X('media-digital', 'Digital marketing adspend', 'media', ['adspend', 'ad spend', 'media spend', 'paid media', 'media budget', 'media buy'], 0, 0),
+];
+const DEFAULT_SETTINGS = {
+  agency: 'Born', company: 'Born Agency Pty Ltd', address: '507 Crown Street\nSurry Hills NSW 2010', abn: 'ABN 18 661 056 631',
+  gst: 10, round: 10, markup: 30, amPct: 10, amMin: 1, wipHours: 1, amTitle: T.AM,
+  sowNote: '*The scope includes 2 rounds of changes on all deliverables',
+  terms: 'By approving this quote you are agreeing to our Terms and Conditions set out at:\nhttps://www.borntheagency.com/termsconditions',
+  sowNumber: true, sowDesc: true, sowAM: false, ai: true, apiKey: '', model: 'claude-sonnet-5-5', notes: DEFAULT_NOTES, calibrate: true,
+};
+const clone = o => JSON.parse(JSON.stringify(o));
+function seedPeople() { return SEED_PEOPLE.map(([title, rate, cost]) => ({ id: uid(), name: '', title, rate, cost })); }
 function seed() {
-  return {
-    version: 2,
-    settings: { agency: 'Born', gst: 10, round: 50, pmPct: 12, pmTitle: T.AM, ai: true, apiKey: '', model: 'claude-sonnet-5-5', notes: DEFAULT_NOTES },
-    people: [[T.CD, 220], [T.SD, 200], [T.AM, 160], [T.PR, 150], [T.SDES, 170], [T.DES, 135], [T.CW, 150], [T.UX, 160], [T.DEV, 165], [T.MO, 155]].map(([title, rate]) => ({ id: uid(), name: '', title, rate })),
-    phaseTpl: [{ key: 'discovery', name: 'Discovery' }, { key: 'strategy', name: 'Strategy' }, { key: 'creative', name: 'Creative Concept' }, { key: 'production', name: 'Design & Production' }, { key: 'delivery', name: 'Delivery & Launch' }],
-    library: [
-      L('kickoff', 'Kickoff & discovery workshop', 'discovery', ['kickoff', 'kick-off', 'workshop', 'discovery', 'stakeholder'], { [T.AM]: 4, [T.SD]: 6, [T.CD]: 3 }, 0, { always: true }),
-      L('research', 'Audience & market research', 'discovery', ['research', 'audience insight', 'competitor', 'market analysis', 'insights', 'persona'], { [T.SD]: 16, [T.AM]: 2 }),
-      L('ux-research', 'UX research & audit', 'discovery', ['user research', 'usability', 'ux audit', 'user testing', 'site audit', 'analytics review'], { [T.UX]: 20, [T.SD]: 4 }),
-      L('brand-strategy', 'Brand strategy & positioning', 'strategy', ['brand strategy', 'positioning', 'brand platform', 'brand purpose', 'values', 'tone of voice', 'brand story', 'value proposition'], { [T.SD]: 24, [T.CD]: 6, [T.CW]: 6 }),
-      L('naming', 'Naming', 'strategy', ['naming', 'rename', 'new name', 'name generation'], { [T.SD]: 8, [T.CW]: 16, [T.CD]: 4 }),
-      L('comms-strategy', 'Campaign & comms strategy', 'strategy', ['campaign strategy', 'comms strategy', 'communications strategy', 'channel plan', 'media plan', 'go to market', 'launch strategy', 'marketing strategy'], { [T.SD]: 16, [T.AM]: 4 }),
-      L('content-cal', 'Content strategy & calendar', 'strategy', ['content calendar', 'content plan', 'always on', 'content strategy', 'content pillars'], { [T.SD]: 8, [T.CW]: 10 }),
-      L('campaign-concept', 'Campaign creative concepts', 'creative', ['campaign', 'big idea', 'creative platform', 'creative concept', 'integrated', 'concepts'], { [T.CD]: 12, [T.SDES]: 16, [T.CW]: 12 }),
-      L('logo', 'Logo & visual identity', 'creative', ['logo', 'visual identity', 'brand identity', 'rebrand', 'branding', 'wordmark', 'logomark'], { [T.CD]: 10, [T.SDES]: 32, [T.DES]: 8 }),
-      L('wireframes', 'Sitemap & wireframes', 'creative', ['wireframe', 'sitemap', 'information architecture', 'user flow', 'prototype', 'user journey'], { [T.UX]: 24, [T.SD]: 4 }),
-      L('guidelines', 'Brand guidelines', 'production', ['guidelines', 'style guide', 'brand book', 'brand guide'], { [T.SDES]: 16, [T.DES]: 16, [T.CW]: 4 }),
-      L('web-design', 'Website design', 'production', ['website', 'web design', 'homepage', 'site redesign', 'web pages', 'ui design'], { [T.CD]: 6, [T.SDES]: 36, [T.DES]: 12 }, 0.12),
-      L('web-build', 'Website development', 'delivery', ['website', 'web development', 'website build', 'cms', 'wordpress', 'shopify', 'webflow', 'ecommerce', 'e-commerce'], { [T.DEV]: 60, [T.PR]: 6 }, 0.1),
-      L('landing', 'Landing page', 'production', ['landing page', 'microsite', 'campaign page', 'campaign site'], { [T.SDES]: 10, [T.DEV]: 14, [T.CW]: 4 }, 0.5),
-      L('app-design', 'App / product UI design', 'production', ['mobile app', 'app design', 'product design', 'dashboard', 'saas', 'web app', 'portal'], { [T.UX]: 30, [T.SDES]: 40 }, 0.1),
-      L('social', 'Social media assets', 'production', ['social', 'instagram', 'facebook', 'tiktok', 'linkedin', 'social media', 'social posts', 'stories', 'reels', 'carousel'], { [T.DES]: 10, [T.CW]: 3, [T.CD]: 1 }, 0.12),
-      L('digital-ads', 'Digital display ads', 'production', ['display ads', 'banner', 'banners', 'digital ads', 'programmatic', 'google ads', 'paid social', 'html5', 'ad sizes'], { [T.DES]: 12, [T.SDES]: 4, [T.CW]: 2 }, 0.08),
-      L('ooh', 'Out-of-home & print ads', 'production', ['ooh', 'billboard', 'out of home', 'out-of-home', 'print ad', 'press ad', 'poster', 'signage', 'bus shelter', 'adshel'], { [T.SDES]: 10, [T.CW]: 3 }, 0.3),
-      L('edm', 'EDM / email design', 'production', ['edm', 'email', 'newsletter', 'mailchimp', 'klaviyo', 'email campaign'], { [T.DES]: 6, [T.CW]: 3, [T.DEV]: 4 }, 0.4),
-      L('copy', 'Copywriting', 'production', ['copywriting', 'copy', 'content writing', 'scripts', 'scriptwriting', 'headlines'], { [T.CW]: 20 }),
-      L('video', 'Video production', 'production', ['video', 'tvc', 'film', 'shoot', 'commercial', 'youtube', 'brand film', 'hero film'], { [T.CD]: 8, [T.PR]: 16, [T.MO]: 24, [T.CW]: 6 }, 0.5),
-      L('motion', 'Motion graphics & animation', 'production', ['motion', 'animation', 'animated', 'gif', 'explainer', 'motion graphics'], { [T.MO]: 20, [T.CD]: 2 }, 0.4),
-      L('photo', 'Photography direction', 'production', ['photography', 'photo shoot', 'photoshoot', 'product photography', 'lifestyle imagery'], { [T.CD]: 6, [T.PR]: 10, [T.SDES]: 6 }),
-      L('print', 'Print collateral', 'production', ['brochure', 'flyer', 'collateral', 'annual report', 'booklet', 'business cards', 'stationery', 'catalogue', 'menu'], { [T.SDES]: 8, [T.DES]: 10, [T.CW]: 4 }, 0.25),
-      L('packaging', 'Packaging design', 'production', ['packaging', 'label', 'pack design', 'labels', 'can design', 'bottle'], { [T.CD]: 6, [T.SDES]: 30 }, 0.35),
-      L('presentation', 'Presentation / pitch deck', 'production', ['deck', 'presentation', 'pitch deck', 'powerpoint', 'keynote', 'sales deck'], { [T.SDES]: 12, [T.CW]: 6 }),
-      L('launch', 'Launch support & handover', 'delivery', ['launch', 'handover', 'go live', 'go-live', 'rollout', 'roll out', 'training', 'artwork files'], { [T.AM]: 6, [T.PR]: 6 }),
-      L('reporting', 'Reporting & optimisation', 'delivery', ['reporting', 'analytics', 'optimisation', 'optimization', 'performance', 'kpis', 'results', 'measurement'], { [T.SD]: 8, [T.AM]: 4 }),
-    ],
-    past: [], scopes: [],
-  };
+  return { version: 3, settings: { ...DEFAULT_SETTINGS }, people: seedPeople(), templates: clone(SEED_TEMPLATES), library: clone(SEED_LIBRARY), externals: clone(SEED_EXTERNALS), past: [], scopes: [] };
 }
-/* migrate v1 (roles) -> v2 (people) */
-function migrate(d) {
-  if (!d || d.version >= 2) return d;
-  const byId = {}; (d.roles || []).forEach(r => byId[r.id] = r);
-  d.people = (d.roles || []).map(r => ({ id: r.id, name: '', title: r.name, rate: r.rate }));
-  d.library.forEach(l => { const t = {}; for (const [rid, h] of Object.entries(l.tasks || {})) if (byId[rid]) t[byId[rid].name] = h; l.tasks = t; });
-  d.scopes.forEach(s => s.phases.forEach(p => p.items.forEach(i => i.lines.forEach(l => { l.personId = l.roleId; delete l.roleId; }))));
-  d.settings.pmTitle = byId.am?.name || 'Account Manager';
-  delete d.roles; d.version = 2; return d;
+/* bring any older data (v1/v2) up to v3 */
+const OLD_TITLE_MAP = { 'Creative Director': T.CD, 'Strategy Director': T.SD, 'Account Manager': T.AM, 'Producer': T.AM, 'Senior Designer': T.AD, 'Designer': T.DES, 'Copywriter': T.CW, 'UX Designer': T.DES, 'Developer': T.DEV, 'Motion Designer': T.MO };
+function normalize(d) {
+  if (!d) return d;
+  if (d.roles && !d.people) { d.people = d.roles.map(r => ({ id: r.id, name: '', title: r.name, rate: r.rate })); d.scopes?.forEach(s => s.phases.forEach(p => p.items.forEach(i => i.lines.forEach(l => { if (l.roleId) { l.personId = l.roleId; delete l.roleId; } })))); delete d.roles; }
+  d.settings = { ...DEFAULT_SETTINGS, ...(d.settings || {}) };
+  if (!d.templates) {
+    d.templates = clone(SEED_TEMPLATES); d.library = clone(SEED_LIBRARY); d.externals = clone(SEED_EXTERNALS); delete d.phaseTpl;
+    const oldSeed = (d.people || []).every(p => !p.name) && (d.people || []).every(p => OLD_TITLE_MAP[p.title]);
+    if (oldSeed) {
+      const fresh = seedPeople(), map = {};
+      (d.people || []).forEach(p => { const n = fresh.find(f => f.title === OLD_TITLE_MAP[p.title]); if (n) map[p.id] = n.id; });
+      d.people = fresh; d.settings.personMap = { ...(d.settings.personMap || {}), ...map };
+      if (d.settings.amTitle === 'Account Manager' || !d.settings.amTitle) d.settings.amTitle = T.AM;
+      d.settings.round = 10;
+    }
+  }
+  d.externals = d.externals || clone(SEED_EXTERNALS);
+  (d.people || []).forEach(p => { if (!isNum(p.cost)) p.cost = Math.round((+p.rate || 0) * 0.42); });
+  (d.scopes || []).forEach(s => normScope(s, d));
+  d.version = 3; return d;
+}
+function normScope(s, d = S) {
+  const map = d?.settings?.personMap || {};
+  s.weeks = s.weeks || s.signals?.weeks || 6; s.team = s.team || []; s.clientCo = s.clientCo || { name: '', address: '', abn: '' };
+  s.phases.forEach(p => p.items.forEach(i => {
+    if (!i.kind) i.kind = i.pm ? 'am' : 'core';
+    i.lines.forEach(l => { if (!l.type) l.type = 'int'; if (l.personId && map[l.personId]) l.personId = map[l.personId]; });
+  }));
+  return s;
 }
 let S;
-try { S = migrate(JSON.parse(localStorage.getItem(LS))) || seed(); } catch (e) { S = seed(); }
+try { S = normalize(JSON.parse(localStorage.getItem(LS))) || seed(); } catch (e) { S = seed(); }
+
 /* ---------------- shared storage (server) ----------------
    The server is the source of truth. localStorage is only an offline cache.
    Records: config:main, scope:<id>, past:<id>. API key never leaves this browser. */
@@ -330,7 +455,7 @@ let saveT;
 function save() { clearTimeout(saveT); saveT = setTimeout(() => { cacheLocal(); if (SYNC.mode === 'server') push(); }, 350); }
 function records() {
   const settings = { ...S.settings }; delete settings.apiKey;
-  const m = { 'config:main': { kind: 'config', id: 'main', data: { version: S.version, settings, people: S.people, library: S.library, phaseTpl: S.phaseTpl } } };
+  const m = { 'config:main': { kind: 'config', id: 'main', data: { version: S.version, settings, people: S.people, templates: S.templates, library: S.library, externals: S.externals } } };
   S.scopes.forEach(x => m['scope:' + x.id] = { kind: 'scope', id: x.id, data: x });
   S.past.forEach(x => m['past:' + x.id] = { kind: 'past', id: x.id, data: x });
   return m;
@@ -356,8 +481,16 @@ async function push() {
 }
 function applyRec(r) {
   const k = r.kind + ':' + r.id;
-  if (r.kind === 'config') { if (r.deleted) return; const d = r.data; Object.assign(S.settings, d.settings, { apiKey: S.settings.apiKey }); S.people = d.people; S.library = d.library; S.phaseTpl = d.phaseTpl; }
-  else { const arr = r.kind === 'scope' ? S.scopes : S.past; const i = arr.findIndex(x => x.id === r.id); if (r.deleted) { if (i >= 0) arr.splice(i, 1); } else if (i >= 0) arr[i] = r.data; else arr.push(r.data); }
+  if (r.kind === 'config') {
+    if (r.deleted) return; const d = clone(r.data);
+    S.settings = { ...DEFAULT_SETTINGS, ...d.settings, apiKey: S.settings.apiKey };
+    S.people = d.people || S.people; S.library = d.library || S.library; S.templates = d.templates; S.externals = d.externals;
+    if (!d.templates) { const tmp = normalize({ settings: S.settings, people: S.people, scopes: S.scopes }); S.settings = tmp.settings; S.people = tmp.people; S.templates = tmp.templates; S.library = tmp.library; S.externals = tmp.externals; S.scopes.forEach(x => normScope(x)); }
+  } else {
+    const arr = r.kind === 'scope' ? S.scopes : S.past; const i = arr.findIndex(x => x.id === r.id);
+    const data = r.deleted ? null : (r.kind === 'scope' ? normScope(clone(r.data)) : r.data);
+    if (r.deleted) { if (i >= 0) arr.splice(i, 1); } else if (i >= 0) arr[i] = data; else arr.push(data);
+  }
   if (r.deleted) delete SYNC.synced[k]; else SYNC.synced[k] = canon(r.data);
 }
 async function pull() {
@@ -367,8 +500,8 @@ async function pull() {
   const pend = pendingKeys(); let changed = false;
   for (const rec of j.records) {
     const k = rec.kind + ':' + rec.id;
-    if (pend.has(k)) continue;                                   // unsaved local edit — ours goes up next push
-    if (!rec.deleted && SYNC.synced[k] === canon(rec.data)) continue; // echo of our own save
+    if (pend.has(k)) continue;
+    if (!rec.deleted && SYNC.synced[k] === canon(rec.data)) continue;
     if (rec.deleted && !(k in SYNC.synced) && !records()[k]) continue;
     applyRec(rec); changed = true;
   }
@@ -381,9 +514,7 @@ async function connect() {
     if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) throw new Error('no server');
     const j = await r.json(); SYNC.storage = j.storage; SYNC.since = j.now;
     let migrated = false; try { migrated = !!localStorage.getItem(MIGLS); } catch (e) {}
-    const live = j.records.filter(x => !x.deleted);
-    if (migrated || live.length) { if (migrated) { S.scopes = []; S.past = []; } }
-    // server wins; on a browser's first connect, anything it had locally that the server lacks gets uploaded
+    if (migrated) { S.scopes = []; S.past = []; }
     j.records.forEach(applyRec);
     SYNC.mode = 'server'; cacheLocal(); render(); push();
     setInterval(poll, 8000);
@@ -397,10 +528,10 @@ async function poll() {
 }
 function softRender() {
   const a = document.activeElement;
-  if (document.querySelector('.modal-bg') || (a && a.closest && a.closest('#main,#topbar') && a.matches('input,textarea,select'))) { SYNC.needRender = true; return; }
+  if (view === 'new' || document.querySelector('.modal-bg') || (a && a.closest && a.closest('#main,#topbar') && a.matches('input,textarea,select'))) { SYNC.needRender = true; return; }
   SYNC.needRender = false; const y = window.scrollY; render(); window.scrollTo(0, y);
 }
-document.addEventListener('focusout', () => setTimeout(() => { if (SYNC.needRender) softRender(); }, 150));
+document.addEventListener('focusout', () => setTimeout(() => { if (SYNC.needRender && view !== 'new') softRender(); }, 150));
 function setStatus(st) {
   SYNC.lastStatus = st;
   const el = document.getElementById('sync'); if (!el) return;
@@ -409,58 +540,77 @@ function setStatus(st) {
   el.className = 'sync ' + M[2]; el.innerHTML = `<i class="fa-solid ${M[0]}"></i><span>${M[1]}</span>`; el.title = M[1];
 }
 let view = 'home', curId = null;
+let UI = { tab: 'front', filter: 'all', libTab: 'deliverables' };
+try { UI = { ...UI, ...JSON.parse(localStorage.getItem('bornScope.ui') || '{}') }; } catch (e) {}
+const saveUI = () => { try { localStorage.setItem('bornScope.ui', JSON.stringify(UI)); } catch (e) {} };
 
 /* ---------------- people + calc ---------------- */
-const person = id => S.people.find(p => p.id === id) || { id, name: '', title: 'Unassigned', rate: 0 };
+const person = id => S.people.find(p => p.id === id) || { id, name: '', title: 'Unassigned', rate: 0, cost: 0 };
 const pLabel = p => p.name ? `${p.name} · ${p.title}` : p.title;
 const titles = () => [...new Set(S.people.map(p => p.title).filter(Boolean))];
 const titleRate = t => { const ps = S.people.filter(p => p.title.toLowerCase() === String(t).toLowerCase()); return ps.length ? ps.reduce((a, p) => a + +p.rate, 0) / ps.length : 0; };
-function personFor(title) {
+function personFor(title, team = []) {
   const t = String(title || '').toLowerCase().trim();
-  return S.people.find(p => p.title.toLowerCase() === t) || S.people.find(p => p.title.toLowerCase().includes(t) || t.includes(p.title.toLowerCase())) || S.people[0];
+  const inTeam = team.map(person).filter(p => S.people.includes(p));
+  const m = p => p.title.toLowerCase() === t, f = p => p.title.toLowerCase().includes(t) || t.includes(p.title.toLowerCase());
+  return inTeam.find(m) || S.people.find(m) || inTeam.find(f) || S.people.find(f) || inTeam[0] || S.people[0];
 }
 const lib = id => S.library.find(d => d.id === id);
-const isNum = v => v !== '' && v != null && !isNaN(+v);
+const extLib = id => S.externals.find(d => d.id === id);
+const tpl = id => S.templates.find(t => t.id === id) || S.templates[0];
 const lineRate = l => isNum(l.rate) ? +l.rate : +person(l.personId).rate || 0;
-const lineCost = l => (+l.hours || 0) * lineRate(l);
-const itemHours = it => it.lines.reduce((a, l) => a + (+l.hours || 0), 0);
+const lineCostRate = l => isNum(l.costRate) ? +l.costRate : +person(l.personId).cost || 0;
+const lineClient = l => l.type === 'ext' ? (isNum(l.price) ? +l.price : (+l.cost || 0) * (1 + (+l.markup || 0) / 100)) : (+l.hours || 0) * lineRate(l);
+const lineCost = l => l.type === 'ext' ? +l.cost || 0 : (+l.hours || 0) * lineCostRate(l);
+const lineHours = l => l.type === 'ext' ? 0 : +l.hours || 0;
+const itemHours = it => it.lines.reduce((a, l) => a + lineHours(l), 0);
 const phaseHours = p => p.items.reduce((a, i) => a + itemHours(i), 0);
-const phaseCalc = p => p.items.reduce((a, i) => a + i.lines.reduce((b, l) => b + lineCost(l), 0), 0);
+const phaseWorkHours = p => p.items.filter(i => i.kind !== 'am' && i.kind !== 'wip').reduce((a, i) => a + itemHours(i), 0);
+const phaseCalc = p => p.items.reduce((a, i) => a + i.lines.reduce((b, l) => b + lineClient(l), 0), 0);
+const phaseCostSum = p => p.items.reduce((a, i) => a + i.lines.reduce((b, l) => b + lineCost(l), 0), 0);
 const phaseInternal = p => isNum(p.override) ? +p.override : phaseCalc(p);
 const roundTo = n => { const r = +S.settings.round || 1; return Math.round(n / r) * r; };
 const clientPhase = (s, p) => roundTo(phaseInternal(p) * (1 + (+s.contingency || 0) / 100));
 function totals(s) {
   const phasesClient = s.phases.map(p => clientPhase(s, p));
   const sub = phasesClient.reduce((a, b) => a + b, 0), disc = +s.discount || 0, ex = sub - disc, gst = ex * (+S.settings.gst || 0) / 100;
-  return { sub, disc, ex, gst, inc: ex + gst, hours: s.phases.reduce((a, p) => a + phaseHours(p), 0), work: s.phases.reduce((a, p) => a + phaseCalc(p), 0), phasesClient };
+  let intCost = 0, extCost = 0, intClient = 0, extClient = 0;
+  s.phases.forEach(p => p.items.forEach(i => i.lines.forEach(l => { if (l.type === 'ext') { extCost += lineCost(l); extClient += lineClient(l); } else { intCost += lineCost(l); intClient += lineClient(l); } })));
+  const cost = intCost + extCost;
+  return { sub, disc, ex, gst, inc: ex + gst, hours: s.phases.reduce((a, p) => a + phaseHours(p), 0), work: intClient + extClient, phasesClient, intCost, extCost, intClient, extClient, cost, margin: ex - cost, marginPct: ex ? (ex - cost) / ex : 0 };
 }
+const trackHours = (d, track, qty) => { const t = d?.tracks?.[track]; return t ? (+t.base || 0) + (+t.per || 0) * Math.max(0, +qty || 0) : 0; };
+const libHours = (d, qty) => Object.fromEntries(TRACKS.map(([k]) => [k, Math.round(trackHours(d, k, qty) * 2) / 2]));
 
-/* ---------------- brief analysis ---------------- */
+/* ---------------- brief reading (built-in) ---------------- */
 const NUMW = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, fifteen: 15, twenty: 20, thirty: 30, forty: 40, fifty: 50 };
 const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const kwCache = {};
 const kwRe = k => kwCache[k] || (kwCache[k] = new RegExp('(^|[^a-z])' + reEsc(k.toLowerCase()).replace(/\s+/g, '[\\s-]+') + '(?:s|es)?(?=[^a-z]|$)', 'g'));
-const QTY_RE = new RegExp('(?:^|[^\\d,.$])(\\d{1,3}|\\b(?:' + Object.keys(NUMW).join('|') + ')\\b)\\s*(?:x\\s*)?(?:[a-z&/-]+\\s+){0,3}$', 'i');
+const QTY_RE = new RegExp('(?:^|[^\\da-z,.$])(\\d{1,3}|\\b(?:' + Object.keys(NUMW).join('|') + ')\\b)\\s*(?:x\\s*)?(?:[a-z0-9&/:-]+\\s+){0,3}$', 'i');
 const UNIT_RE = /\d\s*-?\s*(s|secs?|seconds?|mins?|minutes?|hrs?|hours?|days?|weeks?|wks?|months?|years?|yr|k|m|percent|%)\b|\b(seconds?|minutes?|weeks?|months?|years?|days?)\b/i;
-function detect(text, withAlways = true) {
+function scan(text, list) {
   const t = ' ' + String(text || '').toLowerCase().replace(/\s+/g, ' ') + ' ';
   const out = [];
-  for (const d of S.library) {
-    let score = 0, qty = 1;
-    for (const k of d.kw) {
+  for (const d of list) {
+    let score = 0, qty = 0, at = -1;
+    for (const k of d.kw || []) {
       const re = kwRe(k); re.lastIndex = 0; let m;
       while ((m = re.exec(t))) {
-        score += k.includes(' ') ? 2 : 1;
+        score += k.includes(' ') ? 2 : 1; if (at < 0) at = m.index;
         const q = t.slice(Math.max(0, m.index - 30), m.index + 1).match(QTY_RE);
         if (q && !UNIT_RE.test(q[0])) { const n = +q[1] || NUMW[q[1].toLowerCase()]; if (n && n < 300) qty = Math.max(qty, n); }
+        const after = t.slice(m.index, m.index + 45).match(/(\d{1,3})\s*(?:x\s*)?(sizes?|formats?|posts?|assets?|pages?|pp|versions?|executions?|emails?|videos?|scripts?|skus?|signs?|templates?)\b/);
+        if (after && !UNIT_RE.test(after[0])) qty = Math.max(qty, +after[1]);
+        if (d.unit === 'page') { const w = t.slice(Math.max(0, m.index - 40), m.index + 60).match(/(\d{1,3})\s*(?:-|\s)?(?:pp|pages?|page)\b/); if (w) qty = Math.max(qty, +w[1]); }
       }
     }
-    if (d.id === 'web-design' || d.id === 'web-build') { const pm = t.match(/(\d{1,3})\s*(?:x\s*)?(?:[a-z-]+\s+){0,2}pages?\b/); if (pm) qty = Math.max(qty, +pm[1]); }
-    if (score >= 1) out.push({ id: d.id, score, qty: d.unit ? qty : 1 });
+    if (score) out.push({ id: d.id, score, qty: qty || 1, at });
   }
-  if (withAlways) for (const d of S.library) if (d.always && !out.find(o => o.id === d.id)) out.push({ id: d.id, score: 0, qty: 1 });
   return out;
 }
+const detect = text => scan(text, S.library);
+const detectExt = text => scan(text, S.externals);
 function signals(text) {
   const t = String(text || ''); let budget = null, weeks = null;
   const b = t.match(/budget[^$\d]{0,40}\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(k|m|thousand|million)?/i) || t.match(/\$\s?(\d[\d,]*(?:\.\d+)?)\s*(k|m)?[^.\n]{0,30}budget/i);
@@ -470,6 +620,7 @@ function signals(text) {
   return { budget, weeks };
 }
 const sentences = t => String(t || '').replace(/\s+/g, ' ').split(/(?<=[.!?])\s+(?=[A-Z0-9"'])/).map(s => s.trim()).filter(Boolean);
+function sentenceAt(text, idx) { const t = String(text || '').replace(/\s+/g, ' '); let a = t.lastIndexOf('.', idx - 1) + 1, b = t.indexOf('.', idx); if (b < 0) b = t.length; return t.slice(a, b + 1).trim().slice(0, 220); }
 function briefContext(brief) {
   let goal = null, aud = null;
   for (const s of sentences(brief)) {
@@ -481,6 +632,15 @@ function briefContext(brief) {
   }
   return { goal, aud };
 }
+function guessType(text) { const sc = S.templates.map(t => ({ id: t.id, s: scan(text, [{ id: t.id, kw: t.kw }])[0]?.score || 0 })).sort((a, b) => b.s - a.s); return sc[0].s ? sc[0].id : 'other'; }
+function guessSize(budget, nDeliv) { if (budget) return budget < 35000 ? 'small' : budget < 120000 ? 'mid' : 'big'; return nDeliv <= 3 ? 'small' : nDeliv <= 7 ? 'mid' : 'big'; }
+const normTxt = s => String(s || '').toLowerCase().replace(/[^a-z0-9$%]+/g, ' ').trim();
+function inBrief(src, brief) {
+  if (!src) return false; const a = normTxt(src), b = normTxt(brief); if (!a) return false;
+  if (b.includes(a.slice(0, 80))) return true;
+  const w = a.split(' ').filter(x => x.length > 2); if (!w.length) return false;
+  return w.filter(x => b.includes(x)).length / w.length >= 0.85;
+}
 
 /* ---------------- pricing model (learns from past scopes) ---------------- */
 const STOP = new Set('the and for with that this from are will our your you have has was were their they them into over more also all any can its per via who what when where which while about would should could been being than then there these those such only just onto across within without other some most very much many make made need needs want wants using use new project client brief please include including deliver deliverables work'.split(' '));
@@ -491,19 +651,20 @@ function similar(text) {
   const docs = P.map(p => toks(p.text + ' ' + p.name)), q = toks(text), N = docs.length + 1, df = {};
   [...docs, q].forEach(d => new Set(d).forEach(w => df[w] = (df[w] || 0) + 1));
   const vec = d => { const tf = {}; d.forEach(w => tf[w] = (tf[w] || 0) + 1); const v = {}; let n = 0; for (const w in tf) { const x = (1 + Math.log(tf[w])) * Math.log(1 + N / df[w]); v[w] = x; n += x * x; } return { v, n: Math.sqrt(n) || 1 }; };
-  const qv = vec(q), qd = new Set(detect(text, false).map(d => d.id));
+  const qv = vec(q), qd = new Set(detect(text).map(d => d.id));
   return P.map((p, i) => {
     const dv = vec(docs[i]); let dot = 0; for (const w in qv.v) if (dv.v[w]) dot += qv.v[w] * dv.v[w];
     const pd = new Set(p.detected || []); const inter = [...qd].filter(x => pd.has(x)).length; const uni = new Set([...qd, ...pd]).size || 1;
     return { p, sim: 0.6 * (dot / (qv.n * dv.n)) + 0.4 * (inter / uni) };
   }).sort((a, b) => b.sim - a.sim);
 }
-function modelCost(picks) {
-  let c = 0;
-  for (const pk of picks) { const d = lib(pk.id); if (!d) continue; const f = 1 + (Math.max(1, pk.qty) - 1) * (d.unit || 0); for (const [t, h] of Object.entries(d.tasks)) c += h * f * titleRate(t); }
-  return c * (1 + (+S.settings.pmPct || 0) / 100);
+function modelCostText(text) {
+  let c = 0; const t = tpl(guessType(text));
+  t.phases.forEach(ph => ph.items.forEach(it => it.lines.forEach(l => c += (l.hours.mid || 0) * titleRate(l.title))));
+  for (const m of detect(text)) { const d = lib(m.id); TRACKS.forEach(([k]) => { const tr = d.tracks[k]; if (tr) c += trackHours(d, k, m.qty) * titleRate(tr.title); }); }
+  return c * (1 + (+S.settings.amPct || 0) / 100);
 }
-const pastRatio = p => { const mc = modelCost(detect(p.text)); return mc ? clamp(p.total / mc, 0.33, 3) : null; };
+const pastRatio = p => { const mc = modelCostText(p.text); return mc ? clamp(p.total / mc, 0.33, 3) : null; };
 function globalIndex() {
   const rs = inModel().map(pastRatio).filter(Boolean);
   if (!rs.length) return { factor: 1, n: 0 };
@@ -511,19 +672,13 @@ function globalIndex() {
 }
 function calibrate(text) {
   const g = globalIndex(); let w = 0, acc = 0; const matches = [];
-  for (const { p, sim } of similar(text).slice(0, 5)) {
-    if (sim < 0.05) continue; const r = pastRatio(p); if (!r) continue;
-    acc += sim * r; w += sim; matches.push({ id: p.id, sim, ratio: r });
-  }
+  for (const { p, sim } of similar(text).slice(0, 5)) { if (sim < 0.05) continue; const r = pastRatio(p); if (!r) continue; acc += sim * r; w += sim; matches.push({ id: p.id, sim, ratio: r }); }
   const conf = Math.min(1, w / 0.6), simF = w ? acc / w : 1;
   return { factor: clamp(conf * simF + (1 - conf) * g.factor, 0.5, 2.2), matches, global: g.factor };
 }
-function learnedHours(id) {
-  const v = inModel().map(p => p.itemHours && p.itemHours[id]).filter(x => x > 0);
-  return v.length ? { avg: v.reduce((a, b) => a + b, 0) / v.length, n: v.length } : null;
-}
-const PHASE_MAP = [['discovery', /discover|research|insight|audit|immersion|kick/i], ['strategy', /strateg|plan|position|platform/i], ['creative', /concept|creative|idea|ideation/i], ['delivery', /deliver|launch|handover|deploy|build|develop|implement|optimi|report|live/i], ['production', /design|produc|content|artwork|video|shoot|asset|execution|roll/i]];
-const phaseKeyOf = name => (PHASE_MAP.find(([, re]) => re.test(name)) || ['production'])[0];
+function learnedHours(id) { const v = inModel().map(p => p.itemHours && p.itemHours[id]).filter(x => x > 0); return v.length ? { avg: v.reduce((a, b) => a + b, 0) / v.length, n: v.length } : null; }
+const SPLIT = [['discovery', 'Discovery / getting to know', /discover|research|insight|audit|immersion|getting to know|kick/i], ['strategy', 'Strategy', /strateg|plan|position|platform/i], ['creative', 'Ideation & concept', /concept|creative|idea|ideation|identity/i], ['delivery', 'Media & delivery', /deliver|launch|handover|deploy|media|optimi|report/i], ['production', 'Roll out & production', /.*/]];
+const phaseKeyOf = name => SPLIT.find(([, , re]) => re.test(name))[0];
 function learnedSplit() {
   const acc = {}; let n = 0;
   for (const p of inModel()) { const tot = p.phases.reduce((a, x) => a + x.cost, 0); if (!tot || p.phases.length < 2) continue; n++; p.phases.forEach(x => { const k = phaseKeyOf(x.name); acc[k] = (acc[k] || 0) + x.cost / tot; }); }
@@ -531,36 +686,33 @@ function learnedSplit() {
 }
 
 /* ---------------- copy (built-in) ---------------- */
-const PHASE_COPY = {
-  discovery: ['We start by getting under the skin of {client}{goal}. Through {list}, we\'ll align on objectives, audience and what success looks like before any creative work begins.', 'Every good outcome starts with the right questions. This phase covers {list}, giving us a shared understanding of {client}\'s business, audience and ambitions{goal}.'],
-  strategy: ['With the insight in hand we sharpen the thinking. This phase delivers {list}{aud}, giving everything that follows a clear, defensible foundation.', 'Strategy turns insight into direction. We\'ll develop {list}{aud}, landing a plan that {client} and our team can rally behind.'],
-  creative: ['We\'ll develop {list}, presenting distinct creative routes for {client} to react to before refining the strongest into the hero direction.', 'We explore the work in a few directions before landing on one. This phase covers {list}, with a clear recommendation and rationale.'],
-  production: ['We bring the chosen direction to life across every touchpoint, producing {list}. Each asset is crafted, reviewed and refined with two rounds of feedback built in.', 'This phase covers {list}, with every asset designed to work hard and stay true to the agreed direction.'],
-  delivery: ['We take the work across the line — {list} — making sure everything launches smoothly and {client} is set up for what comes next.', 'The final stretch: {list}. We handle the detail so launch is smooth, and leave {client} with everything needed to keep momentum.'],
-  custom: ['This phase covers {list}.', 'In this phase we\'ll deliver {list}.'],
-};
 const lcFirst = s => /^[A-Z][a-z]/.test(s) ? s[0].toLowerCase() + s.slice(1) : s;
 const joinList = a => a.length <= 1 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
-const clientItems = p => p.items.filter(i => !i.pm);
+const clientItems = p => { const seen = new Set(); return p.items.filter(i => i.kind !== 'am' && i.kind !== 'wip' && !seen.has(i.name.toLowerCase()) && seen.add(i.name.toLowerCase())); };
 function genPhaseDesc(s, p, v = 0) {
-  const tpls = PHASE_COPY[p.key] || PHASE_COPY.custom;
-  const names = clientItems(p).map(i => lcFirst(i.name) + (i.qty > 1 ? ` (×${i.qty})` : ''));
+  const names = clientItems(p).map(i => lcFirst(i.name) + (i.qty > 1 ? ` (×${i.qty})` : '')).slice(0, 6);
   const list = names.length ? joinList(names) : 'the work outlined';
-  const ctx = briefContext(s.brief), client = s.client || 'the client';
-  return tpls[v % tpls.length].replace('{list}', list).replace(/\{client\}/g, client)
-    .replace('{goal}', ctx.goal ? `, with a sharp focus on the core goal — to ${lcFirst(ctx.goal).replace(/^to\s+/i, '')}` : '')
-    .replace('{aud}', ctx.aud ? `, tailored to ${lcFirst(ctx.aud)}` : '');
+  const client = s.client || 'the client', ctx = briefContext(s.brief);
+  const goal = ctx.goal ? ` with a clear focus on the core goal — to ${lcFirst(ctx.goal).replace(/^to\s+/i, '')}` : '';
+  const k = phaseKeyOf(p.name);
+  const T = {
+    discovery: [`We start by getting under the skin of ${client}${goal}. Through ${list}, we'll align on objectives, audience and what success looks like.`, `This phase covers ${list}, giving us a shared understanding of ${client}'s business, audience and ambitions.`],
+    strategy: [`With insight in hand we sharpen the thinking, delivering ${list} as a clear, defensible foundation for everything that follows.`, `Strategy turns insight into direction. We'll develop ${list}, landing a plan ${client} and our team can rally behind.`],
+    creative: [`We'll develop ${list}, presenting distinct creative routes for ${client} to react to before refining the strongest into the hero direction.`, `We explore the work in a few directions before landing on one. This phase covers ${list}, with a clear recommendation and rationale.`],
+    production: [`We bring the agreed direction to life across every touchpoint, producing ${list}. Each asset is crafted, reviewed and refined with two rounds of changes.`, `This phase covers ${list}, with every asset built to work hard and stay true to the agreed direction.`],
+    delivery: [`This phase covers ${list}, managed by our team to make sure everything lands on time and on budget.`, `We manage ${list} end to end so the work reaches the right people.`],
+  }[k];
+  return T[v % T.length];
 }
 function genOverview(s) {
   const ctx = briefContext(s.brief);
-  const top = s.phases.flatMap(p => clientItems(p).filter(i => !lib(i.libId)?.always)).slice(0, 4).map(i => lcFirst(i.name));
-  const weeks = s.signals?.weeks || Math.max(3, Math.round(totals(s).hours / 70));
+  const top = s.phases.flatMap(p => clientItems(p)).slice(0, 5).map(i => lcFirst(i.name));
   return `${s.client || 'The client'} has briefed ${S.settings.agency} on ${s.name || 'this project'}.` + (ctx.goal ? ` The core goal is to ${lcFirst(ctx.goal).replace(/^to\s+/i, '')}.` : '') +
-    ` This estimate sets out a ${s.phases.length}-phase approach${top.length ? ' covering ' + joinList(top) : ''}, with an indicative timeline of around ${weeks} weeks.`;
+    ` This scope sets out a ${s.phases.length}-phase approach${top.length ? ' covering ' + joinList(top) : ''}, over approximately ${s.weeks} weeks.`;
 }
 
 /* ---------------- AI ---------------- */
-async function callAI(system, user, maxTokens = 6000) {
+async function callAI(system, user, maxTokens = 8000) {
   const body = { model: S.settings.model || 'claude-sonnet-5-5', max_tokens: maxTokens, system, messages: [{ role: 'user', content: user }] };
   const r = S.settings.apiKey
     ? await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': S.settings.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }, body: JSON.stringify(body) })
@@ -569,76 +721,116 @@ async function callAI(system, user, maxTokens = 6000) {
   const txt = ((await r.json()).content || []).map(c => c.text || '').join('');
   return JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
 }
-const aiSystem = () => `You are a senior producer at ${S.settings.agency}, an Australian creative agency, building cost estimates from client briefs. You price by job title and hours. Never mention any individual person's name. Write client-facing copy in Australian English: confident, plain, no jargon or hype. Respond with a single JSON object only.`;
-function aiContext(brief) {
-  const team = titles().map(t => `${t} | $${Math.round(titleRate(t))}/h`).join('\n');
-  const libTxt = S.library.map(d => { const lh = learnedHours(d.id); return `${d.id} | ${d.name} | ${d.phase} | ${Object.entries(d.tasks).map(([t, h]) => `${t} ${h}h`).join(', ')}${d.unit ? ` | +${Math.round(d.unit * 100)}% per extra unit` : ''}${lh ? ` | history avg ${Math.round(lh.avg)}h total` : ''}`; }).join('\n');
-  const c = calibrate(brief);
-  const hist = c.matches.map(m => S.past.find(p => p.id === m.id)).filter(Boolean).map(p => `${p.name} (${p.client || '—'}): total $${p.total} ex GST — ${p.phases.map(x => `${x.name} $${x.cost}`).join(', ')}`).join('\n');
-  return { team, libTxt, hist, factor: c.factor };
-}
-async function aiEstimate(name, client, brief) {
-  const x = aiContext(brief);
-  const user = `PROJECT: ${name}\nCLIENT: ${client}\n\nBRIEF:\n${brief}\n\nTEAM (job title | hourly rate):\n${x.team}\n\nDELIVERABLE LIBRARY (id | name | phase | baseline hours per title for one unit | scaling | learned history):\n${x.libTxt}\n\nSIMILAR PAST SCOPES (what we actually charged):\n${hist(x.hist)}\nPRICING INDEX: our past pricing runs at ×${x.factor.toFixed(2)} of library baseline.\n\nPHASES: ${S.phaseTpl.map(p => p.key + ' = ' + p.name).join(', ')}\n\nBuild the estimate as a line-item table. Use library baselines and history to set hours; adjust for this brief's scale and complexity. Use ONLY the job titles listed. Return JSON:
-{"title":"short project title","overview":"2-3 sentence client-facing overview",
-"phases":[{"key":"phase key","name":"phase name","description":"2-3 sentence client-facing description of this phase for this project",
-"items":[{"name":"deliverable name","libraryId":"library id or null","qty":1,"lines":[{"title":"job title","hours":4}]}]}]}
-Include a kickoff. Do not include project management lines (added automatically). Only include phases that have items.`;
+const aiSystem = () => `You are a senior producer at ${S.settings.agency}, an Australian creative agency. You scope work from client briefs with forensic care: you read every line, you never miss a requested deliverable, you never invent one, and you quote the brief to prove where each item came from. You price by job title, never by individual. Respond with a single JSON object only.`;
+async function aiReadBrief(name, client, brief) {
+  const libTxt = S.library.map(d => `${d.id} | ${d.name} | per ${d.unit}`).join('\n');
+  const extTxt = S.externals.map(d => `${d.id} | ${d.name} | ${d.group}`).join('\n');
+  const user = `PROJECT: ${name || '(untitled)'}\nCLIENT: ${client || '(unknown)'}\n\n<brief>\n${brief}\n</brief>\n
+DELIVERABLE LIBRARY (id | name | unit):\n${libTxt}\n\nEXTERNAL COST LIBRARY (id | name | group):\n${extTxt}\n
+PROJECT TYPES: ${S.templates.map(t => t.id + ' (' + t.name + ')').join(', ')}\nSIZES: small, mid, big\nJOB TITLES AVAILABLE: ${titles().join(', ')}\n
+Read the brief twice. Then:
+1. List EVERY deliverable the brief asks for — one row per distinct deliverable or format (e.g. separate rows for "6 x Instagram posts" and "3 x OOH 48-sheets"). Use the brief's own wording for "name" and keep specifics (sizes, page counts, formats, durations) in "spec". Quantity must match the brief exactly; if the brief is vague ("a suite of social"), choose a sensible quantity and add an assumption.
+2. Map each row to the closest libraryId and set "unit_qty" in that library unit (pages for brochures, sizes for banners, assets for social). If nothing fits, libraryId null and estimate design_hours, copy_hours, production_hours.
+3. "source" must be an exact, verbatim quote from the brief (max 25 words) that requested the item.
+4. Separate third-party/external costs (production companies, printing, media spend, research, photographers) into "external".
+5. Work out project length in weeks from dates/timing in the brief (null if not stated) and quote the source.
+6. Recommend the rough team as job titles from the list.
+Return JSON:
+{"title":"short project title","summary":"one sentence on what the client needs","projectType":"campaign|branding|other","size":"small|mid|big",
+"weeks":number|null,"weeksSource":"quote or null","budget":number|null,
+"deliverables":[{"name":"","spec":"","qty":1,"libraryId":"id or null","unit_qty":1,"design_hours":0,"copy_hours":0,"production_hours":0,"source":"verbatim quote"}],
+"external":[{"name":"","externalId":"id or null","cost":number|null,"source":"verbatim quote"}],
+"team":["job title"],"teamReason":"one sentence","assumptions":["anything unclear, assumed or missing from the brief"]}`;
   return callAI(aiSystem(), user);
 }
-const hist = h => h ? h + '\n' : '(none yet)\n';
-async function aiRewrite(s) {
+async function aiCopy(s) {
   const ph = s.phases.map(p => `${p.id} | ${p.name} | ${clientItems(p).map(i => i.name + (i.qty > 1 ? ' x' + i.qty : '')).join(', ')}`).join('\n');
-  const user = `PROJECT: ${s.name}\nCLIENT: ${s.client}\n\nBRIEF:\n${s.brief}\n\nPHASES (id | name | deliverables):\n${ph}\n\nReturn JSON: {"overview":"2-3 sentence client-facing overview","phaseDescriptions":{"<phase id>":"2-3 sentence client-facing description"}}`;
-  return callAI(aiSystem(), user, 2500);
+  const user = `PROJECT: ${s.name}\nCLIENT: ${s.client}\nLENGTH: ${s.weeks} weeks\n\n<brief>\n${s.brief}\n</brief>\n\nPHASES (id | name | items):\n${ph}\n\nWrite client-facing scope copy in Australian English — confident, plain, specific to this brief, no jargon or hype, never mention individual people. Return JSON: {"overview":"2-3 sentences about the project and our approach","phaseDescriptions":{"<phase id>":"1-2 sentences on what happens in this phase"}}`;
+  return callAI(`You write scope-of-work copy for ${S.settings.agency}, an Australian creative agency. Respond with a single JSON object only.`, user, 2500);
+}
+
+/* ---------------- review (step 2 of a new estimate) ---------------- */
+const unitOf = id => lib(id)?.unit || 'each';
+function rowFromLib(d, qty, extra = {}) { return { id: uid(), on: true, name: d.name, libId: d.id, qty, spec: '', source: '', verified: true, auto: true, hours: libHours(d, qty), ...extra }; }
+function extRow(x, extra = {}) { return { id: uid(), on: true, name: x.name, extId: x.id, group: x.group, supplier: x.supplier || '', cost: x.cost || 0, markup: x.markup ?? S.settings.markup, source: '', ...extra }; }
+function suggestTeam(type, size, rows) {
+  const ts = new Set([S.settings.amTitle]);
+  tpl(type).phases.forEach(ph => ph.items.forEach(it => it.lines.forEach(l => { if ((l.hours[size] || 0) > 0) ts.add(l.title); })));
+  rows.filter(r => r.on).forEach(r => { const d = lib(r.libId); TRACKS.forEach(([k]) => { if ((r.hours[k] || 0) > 0) ts.add(d?.tracks[k]?.title || (k === 'copy' ? T.CW : T.DES)); }); });
+  return [...ts].map(t => personFor(t)?.id).filter((v, i, a) => v && a.indexOf(v) === i);
+}
+function localReview(d) {
+  const rows = detect(d.brief).sort((a, b) => a.at - b.at).map(m => { const L = lib(m.id); return rowFromLib(L, m.qty, { source: sentenceAt(d.brief, m.at), verified: true }); });
+  const ext = detectExt(d.brief).map(m => extRow(extLib(m.id), { source: sentenceAt(d.brief, m.at) }));
+  const sg = signals(d.brief), type = guessType(d.brief), size = guessSize(sg.budget, rows.length);
+  return { type, size, weeks: sg.weeks || tpl(type).weeks[size], weeksSource: sg.weeks ? 'From brief' : 'Template default', budget: sg.budget, rows, ext, team: suggestTeam(type, size, rows), teamReason: '', assumptions: [], ai: false, summary: '' };
+}
+function aiToReview(d, ai) {
+  const rows = (ai.deliverables || []).map(x => {
+    const L = lib(x.libraryId), qty = Math.max(1, +x.unit_qty || +x.qty || 1);
+    const hours = L ? libHours(L, qty) : { design: +x.design_hours || 0, copy: +x.copy_hours || 0, production: +x.production_hours || 0 };
+    return { id: uid(), on: true, name: x.name || L?.name || 'Deliverable', libId: L ? L.id : null, qty, spec: x.spec || '', source: x.source || '', verified: inBrief(x.source, d.brief), auto: !!L, hours };
+  });
+  const got = new Set(rows.map(r => r.libId).filter(Boolean));
+  detect(d.brief).filter(m => !got.has(m.id)).forEach(m => rows.push(rowFromLib(lib(m.id), m.qty, { on: false, missed: true, source: sentenceAt(d.brief, m.at) })));
+  const ext = (ai.external || []).map(x => { const L = extLib(x.externalId) || S.externals.find(e => normTxt(e.name) === normTxt(x.name)); return extRow(L || { name: x.name, group: /media|spend|buy/i.test(x.name) ? 'media' : 'production', cost: 0, markup: S.settings.markup }, { name: x.name || L?.name, cost: isNum(x.cost) ? +x.cost : (L?.cost || 0), source: x.source || '', verified: inBrief(x.source, d.brief) }); });
+  const sg = signals(d.brief), type = S.templates.find(t => t.id === ai.projectType) ? ai.projectType : guessType(d.brief), size = ['small', 'mid', 'big'].includes(ai.size) ? ai.size : guessSize(ai.budget || sg.budget, rows.length);
+  let team = (ai.team || []).map(t => personFor(t)?.id).filter(Boolean); const am = personFor(S.settings.amTitle)?.id; if (am) team.unshift(am);
+  team = [...new Set(team.length > 1 ? team : suggestTeam(type, size, rows))];
+  const weeks = +ai.weeks || sg.weeks || tpl(type).weeks[size];
+  return { type, size, weeks, weeksSource: ai.weeks ? (ai.weeksSource || 'From brief') : sg.weeks ? 'From brief' : 'Template default — not stated in brief', budget: ai.budget || sg.budget, rows, ext, team, teamReason: ai.teamReason || '', assumptions: ai.assumptions || [], ai: true, summary: ai.summary || '', title: ai.title };
 }
 
 /* ---------------- building ---------------- */
-const r05 = h => Math.max(0.5, Math.round(h * 2) / 2);
-const mkLine = (title, hours) => ({ id: uid(), personId: personFor(title)?.id, hours: r05(hours), rate: null });
-function itemFromLib(d, qty = 1, factor = 1) {
-  const q = Math.max(1, qty), f = 1 + (q - 1) * (d.unit || 0);
-  const it = { id: uid(), libId: d.id, name: d.name, qty: q, lines: Object.entries(d.tasks).map(([t, h]) => mkLine(t, h * f)) };
-  const lh = learnedHours(d.id), model = itemHours(it);
-  let scale = factor;
-  if (lh && model) scale *= (0.5 * model + 0.5 * lh.avg * f) / model;
-  it.lines.forEach(l => l.hours = r05(l.hours * scale));
-  return it;
-}
-const pmItem = h => ({ id: uid(), libId: null, pm: true, name: 'Project management', qty: 1, lines: [mkLine(S.settings.pmTitle || 'Account Manager', h)] });
-function addPM(phases) { const pct = (+S.settings.pmPct || 0) / 100; if (pct) phases.forEach(p => { if (!p.items.some(i => i.pm)) p.items.push(pmItem(phaseHours(p) * pct)); }); }
-const newPhase = (key, name, i) => ({ id: uid(), key, name, color: PHASE_DOTS[i % PHASE_DOTS.length], desc: '', override: '', items: [], v: 0 });
-function buildLocal(picks, factor) {
-  const phases = S.phaseTpl.map((t, i) => newPhase(t.key, t.name, i));
-  for (const pk of picks) { const d = lib(pk.id); if (d) (phases.find(p => p.key === d.phase) || phases[phases.length - 1]).items.push(itemFromLib(d, pk.qty, factor)); }
-  const out = phases.filter(p => p.items.length); addPM(out); return out;
-}
-function buildFromAI(ai) {
-  const out = (ai.phases || []).map((ph, i) => {
-    const tpl = S.phaseTpl.find(t => t.key === ph.key);
-    const p = newPhase(tpl ? ph.key : 'custom', ph.name || tpl?.name || 'Phase', S.phaseTpl.indexOf(tpl) >= 0 ? S.phaseTpl.indexOf(tpl) : i);
-    p.desc = ph.description || '';
-    p.items = (ph.items || []).map(it => ({ id: uid(), libId: lib(it.libraryId) ? it.libraryId : null, name: it.name || 'Deliverable', qty: Math.max(1, +it.qty || 1), lines: (it.lines || []).filter(l => +l.hours > 0).map(l => mkLine(l.title, +l.hours)) })).filter(i => i.lines.length);
-    return p;
-  }).filter(p => p.items.length);
-  addPM(out); return out;
-}
-async function createScope({ name, client, brief, useAI }) {
-  const s = { id: uid(), name: name || 'Untitled estimate', client, brief, status: 'draft', created: Date.now(), updated: Date.now(), contingency: 0, discount: 0, notes: S.settings.notes, overview: '', phases: [], signals: signals(brief), detected: [] };
-  s.calib = calibrate(brief);
-  let ai = null;
-  if (useAI) { try { ai = await aiEstimate(s.name, client, brief); } catch (e) { toast('AI unavailable — used the built-in engine'); } }
-  if (ai && ai.phases?.length) {
-    s.phases = buildFromAI(ai); s.aiUsed = true;
-    if (!name && ai.title) s.name = ai.title;
-    s.overview = ai.overview || '';
-    s.detected = [...new Set(s.phases.flatMap(p => p.items.map(i => i.libId)).filter(Boolean))];
+const intLine = (title, hours, team) => ({ id: uid(), type: 'int', personId: personFor(title, team)?.id, hours: r05(hours), rate: null, costRate: null });
+const extLine = x => ({ id: uid(), type: 'ext', supplier: x.supplier || '', cost: +x.cost || 0, markup: +x.markup || 0, price: null });
+const newPhase = (name, i, extra = {}) => ({ id: uid(), name, color: PHASE_DOTS[i % PHASE_DOTS.length], desc: '', override: '', items: [], v: 0, ...extra });
+function deliverableItems(r, team, factor = 1) {
+  const d = lib(r.libId), out = [];
+  const lh = d && learnedHours(d.id); let blend = 1;
+  if (lh) { const model = TRACKS.reduce((a, [k]) => a + (r.hours[k] || 0), 0); if (model) blend = (0.5 * model + 0.5 * lh.avg * Math.max(1, r.qty)) / model; }
+  for (const [k] of TRACKS) {
+    const h = (+r.hours[k] || 0) * (r.auto ? blend * factor : 1); if (!(h > 0)) continue;
+    const title = d?.tracks[k]?.title || (k === 'copy' ? T.CW : k === 'production' ? T.DES : T.AD);
+    out.push({ id: uid(), libId: r.libId, kind: k, name: r.name, qty: r.qty, unit: d?.unit || '', spec: r.spec, lines: [intLine(title, h, team)] });
   }
-  if (!s.phases.length) {
-    const picks = detect(brief); s.phases = buildLocal(picks, s.calib.factor); s.detected = picks.map(p => p.id);
+  return out;
+}
+function addAM(s) {
+  const st = S.settings, pct = (+st.amPct || 0) / 100, team = s.team;
+  s.phases.forEach(p => p.items = p.items.filter(i => i.kind !== 'am' && i.kind !== 'wip'));
+  const hrsBy = s.phases.map(phaseWorkHours), tot = hrsBy.reduce((a, b) => a + b, 0) || 1, W = Math.max(0, Math.round(+s.weeks || 0));
+  const raw = hrsBy.map(h => h > 0 ? W * h / tot : 0), wk = raw.map(Math.floor);
+  let left = W - wk.reduce((a, b) => a + b, 0);
+  raw.map((v, i) => [v - Math.floor(v), i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0 && hrsBy[i] > 0) { wk[i]++; left--; } });
+  s.phases.forEach((p, i) => {
+    p.items.push({ id: uid(), libId: null, kind: 'am', name: 'Account management', qty: 1, lines: [intLine(st.amTitle, Math.max(+st.amMin || 0.5, hrsBy[i] * pct), team)] });
+    if (wk[i] > 0 && +st.wipHours > 0) p.items.push({ id: uid(), libId: null, kind: 'wip', name: `Weekly WIP meetings (${wk[i]} week${wk[i] > 1 ? 's' : ''})`, qty: wk[i], lines: [intLine(st.amTitle, wk[i] * st.wipHours, team)] });
+  });
+}
+function buildScope(d) {
+  const rv = d.review, t = tpl(rv.type), size = rv.size, team = rv.team;
+  const factor = S.settings.calibrate && d.applyCal !== false ? (rv.calib?.factor || 1) : 1;
+  const s = { id: uid(), name: d.name || rv.title || 'Untitled estimate', client: d.client, brief: d.brief, status: 'draft', created: Date.now(), updated: Date.now(), contingency: 0, discount: 0, notes: S.settings.notes, overview: '', phases: [], signals: { budget: rv.budget, weeks: rv.weeks }, weeks: rv.weeks, team, type: rv.type, size, calib: rv.calib, clientCo: { name: d.client || '', address: '', abn: '' }, detected: rv.rows.filter(r => r.on && r.libId).map(r => r.libId), aiUsed: rv.ai, assumptions: rv.assumptions };
+  let i = 0;
+  for (const ph of t.phases) {
+    const p = newPhase(ph.name, i);
+    ph.items.forEach(it => { const lines = it.lines.filter(l => (l.hours[size] || 0) > 0).map(l => intLine(l.title, l.hours[size] * factor, team)); if (lines.length) p.items.push({ id: uid(), libId: null, kind: 'core', name: it.name, qty: 1, lines }); });
+    (ph.ext || []).forEach(x => { const c = x.cost[size] || 0; if (c > 0) p.items.push({ id: uid(), libId: null, kind: 'ext', name: x.name, qty: 1, lines: [extLine({ ...x, cost: c })] }); });
+    if (p.items.length) { s.phases.push(p); i++; }
   }
-  s.phases.forEach(p => { if (!p.desc) p.desc = genPhaseDesc(s, p); });
-  if (!s.overview) s.overview = genOverview(s);
+  const des = newPhase(t.designPhase, i++), prod = newPhase(t.productionPhase, i++), media = newPhase(t.mediaPhase, i++, { media: true });
+  rv.rows.filter(r => r.on).forEach(r => deliverableItems(r, team, factor).forEach(it => (it.kind === 'production' ? prod : des).items.push(it)));
+  rv.ext.filter(x => x.on).forEach(x => {
+    const it = { id: uid(), libId: null, extId: x.extId, kind: 'ext', name: x.name, qty: 1, lines: [extLine(x)] };
+    if (x.group === 'media') media.items.push(it);
+    else if (x.group === 'research') (s.phases.find(p => /research|getting to know/i.test(p.name)) || prod).items.push(it);
+    else prod.items.push(it);
+  });
+  [des, prod, media].forEach(p => { if (p.items.length) s.phases.push(p); });
+  addAM(s);
+  s.phases.forEach(p => p.desc = genPhaseDesc(s, p));
+  s.overview = genOverview(s);
   return s;
 }
 
@@ -753,7 +945,7 @@ function confirmBox(msg, yes = 'Delete') {
     m.querySelector('[data-x=yes]').onclick = () => { close(); res(true); };
   }));
 }
-function loader(msg) { const el = document.createElement('div'); el.className = 'loader'; el.innerHTML = `<div><div class="spin"></div>${esc(msg)}</div>`; document.body.appendChild(el); return () => el.remove(); }
+function loader(msg) { const el = document.createElement('div'); el.className = 'loader'; el.innerHTML = `<div><div class="spin"></div><span id="ldm">${esc(msg)}</span></div>`; document.body.appendChild(el); return Object.assign(() => el.remove(), { set: m => { const x = el.querySelector('#ldm'); if (x) x.textContent = m; } }); }
 const cur = () => S.scopes.find(s => s.id === curId);
 const findPhase = id => cur()?.phases.find(p => p.id === id);
 const findItem = (pid, iid) => findPhase(pid)?.items.find(i => i.id === iid);
@@ -761,9 +953,11 @@ const findLine = (pid, iid, lid) => findItem(pid, iid)?.lines.find(l => l.id ===
 const touch = () => { const s = cur(); if (s) s.updated = Date.now(); save(); };
 const fmtDate = t => new Date(t).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
 function autosize(t) { t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
+const A = o => Object.entries(o).map(([k, v]) => `data-${k}="${esc(v)}"`).join(' ');
+const seg = (name, val, opts) => `<div class="seg">${opts.map(([k, l]) => `<button class="${val === k ? 'on' : ''}" data-act="seg" data-k="${name}" data-v="${k}">${l}</button>`).join('')}</div>`;
 
 /* ---------------- shell ---------------- */
-const NAV = [['home', 'fa-layer-group', 'Estimates'], ['new', 'fa-plus', 'New estimate'], ['model', 'fa-chart-line', 'Pricing model'], ['rates', 'fa-users', 'Rate card'], ['library', 'fa-cubes', 'Deliverables'], ['settings', 'fa-gear', 'Settings']];
+const NAV = [['home', 'fa-layer-group', 'Estimates'], ['new', 'fa-plus', 'New estimate'], ['model', 'fa-chart-line', 'Pricing model'], ['rates', 'fa-users', 'Rate card'], ['library', 'fa-cubes', 'Library'], ['settings', 'fa-gear', 'Settings']];
 function go(v, id) { view = v; if (id !== undefined) curId = id; render(); window.scrollTo(0, 0); }
 function render() {
   $('#agencyTag').textContent = S.settings.agency;
@@ -771,10 +965,12 @@ function render() {
   const V = { home: vHome, new: vNew, edit: vEdit, model: vModel, rates: vRates, library: vLibrary, settings: vSettings }[view] || vHome;
   const [top, body] = V();
   $('#topbar').innerHTML = top; $('#main').innerHTML = body;
-  if (view === 'edit') { updateTotals(); document.querySelectorAll('textarea[data-auto]').forEach(autosize); }
-  if (view === 'new') liveChips();
+  if (view === 'edit') updateTotals();
+  document.querySelectorAll('textarea[data-auto]').forEach(autosize);
+  if (view === 'new' && !window._draft?.review) liveChips();
 }
 
+/* ---------------- home ---------------- */
 function vHome() {
   const q = (window._q || '').toLowerCase();
   const list = S.scopes.filter(s => !q || (s.name + ' ' + s.client).toLowerCase().includes(q)).sort((a, b) => b.updated - a.updated);
@@ -786,55 +982,114 @@ function vHome() {
     <div class="card stat"><div class="lbl">Won</div><div class="v num">${money(sum('won'))}</div></div>
     <div class="card stat"><div class="lbl">Scopes in pricing model</div><div class="v">${inModel().length}</div></div>
   </div>
-  <div class="card">${list.length ? `<table class="tbl"><thead><tr><th>Project</th><th>Client</th><th>Status</th><th class="r">Phases</th><th class="r">Hours</th><th class="r">Total ex GST</th><th>Updated</th><th></th></tr></thead><tbody>
-    ${list.map(s => { const t = totals(s); return `<tr class="click" data-act="open" data-id="${s.id}"><td><b style="font-weight:500">${esc(s.name)}</b></td><td class="muted">${esc(s.client || '—')}</td><td><span class="pill st-${s.status}">${s.status}</span></td><td class="r num">${s.phases.length}</td><td class="r num muted">${hrs(t.hours)}</td><td class="r num"><b style="font-weight:600">${money(t.ex)}</b></td><td class="faint">${fmtDate(s.updated)}</td><td class="r" style="white-space:nowrap"><button class="ib" title="Duplicate" data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i></button><button class="ib del" title="Delete" data-act="delscope" data-id="${s.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
-  </tbody></table>` : `<div class="empty"><h3>${S.scopes.length ? 'No matches' : 'No estimates yet'}</h3><p>${S.scopes.length ? 'Try a different search.' : 'Start from a brief. Load past scopes into the pricing model first for sharper numbers.'}</p></div>`}</div>`];
+  <div class="card">${list.length ? `<table class="tbl"><thead><tr><th>Project</th><th>Client</th><th>Status</th><th class="r">Weeks</th><th class="r">Margin</th><th class="r">Total ex GST</th><th>Updated</th><th></th></tr></thead><tbody>
+    ${list.map(s => { const t = totals(s); return `<tr class="click" data-act="open" data-id="${s.id}"><td><b style="font-weight:500">${esc(s.name)}</b><div class="hint">${esc(tpl(s.type).name)} · ${esc(s.size || '')}</div></td><td class="muted">${esc(s.client || '—')}</td><td><span class="pill st-${s.status}">${s.status}</span></td><td class="r num muted">${s.weeks}</td><td class="r num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${Math.round(t.marginPct * 100)}%</td><td class="r num"><b style="font-weight:600">${money(t.ex)}</b></td><td class="faint">${fmtDate(s.updated)}</td><td class="r" style="white-space:nowrap"><button class="ib" title="Duplicate" data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i></button><button class="ib del" title="Delete" data-act="delscope" data-id="${s.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
+  </tbody></table>` : `<div class="empty"><h3>${S.scopes.length ? 'No matches' : 'No estimates yet'}</h3><p>${S.scopes.length ? 'Try a different search.' : 'Start from a brief.'}</p></div>`}</div>`];
 }
 
+/* ---------------- new estimate: brief → review → build ---------------- */
 function vNew() {
   const d = window._draft || (window._draft = { name: '', client: '', brief: '' });
-  const g = globalIndex();
-  return [`<h1>New estimate</h1>`,
+  if (d.review) return vReview(d);
+  return [`<h1>New estimate</h1><span class="sub">Step 1 of 2 · Brief</span>`,
   `<div class="split">
     <div class="card pad" style="display:flex;flex-direction:column;gap:14px">
       <div class="row" style="gap:12px;flex-wrap:wrap">
         <label class="field grow"><span>Project</span><input class="in" data-draft="name" value="${esc(d.name)}" placeholder="e.g. Summer range launch"></label>
         <label class="field grow"><span>Client</span><input class="in" data-draft="client" value="${esc(d.client)}" placeholder="e.g. Coopers"></label>
       </div>
-      <label class="field"><span>Brief</span><textarea class="in" style="min-height:300px" data-draft="brief" placeholder="Paste the brief — objectives, audience, deliverables, timing, budget">${esc(d.brief)}</textarea></label>
+      <label class="field"><span>Brief</span><textarea class="in" style="min-height:320px" data-draft="brief" placeholder="Paste the full brief — objectives, audience, deliverables, timing, budget">${esc(d.brief)}</textarea></label>
       <div class="row" style="flex-wrap:wrap">
         <label class="upl"><input type="file" accept=".pdf,.docx,.txt,.md" data-briefup><i class="fa-solid fa-paperclip"></i>Upload brief</label>
         <label class="tog"><input type="checkbox" data-aitog ${S.settings.ai ? 'checked' : ''}><span class="sw"></span>Use AI</label>
         <span class="grow"></span>
-        <button class="btn pri" data-act="scopeit"><i class="fa-solid fa-wand-magic-sparkles"></i>Build estimate</button>
+        <button class="btn pri" data-act="readbrief">Read brief<i class="fa-solid fa-arrow-right"></i></button>
       </div>
       <div id="livechips"></div>
     </div>
     <div class="card pad">
-      <div class="sec-h"><h3>How it's built</h3></div>
+      <div class="sec-h"><h3>How it works</h3></div>
       <ol class="steps">
-        <li><b>Reads the brief</b> for deliverables, quantities, budget and timing.</li>
-        <li><b>Prices it</b> using your deliverables library and rate card.</li>
-        <li><b>Calibrates</b> against ${inModel().length} past scope${inModel().length === 1 ? '' : 's'} in the pricing model${g.n ? ` (running at ×${g.factor.toFixed(2)})` : ''}.</li>
-        <li><b>Outputs an editable table</b> — phases, deliverables, team, hours, rates.</li>
+        <li><b>Reads the brief</b> — every deliverable, quantity, spec, timing and budget, with the quote it came from.</li>
+        <li><b>You confirm</b> the deliverables, project type & size, length in weeks and the rough team.</li>
+        <li><b>Builds the estimate</b> from Born's templates and deliverable library, with design and production split out, plus account management and weekly WIPs in every phase.</li>
+        <li><b>Refine</b> in the table — front-end and back-end costs, internal and external.</li>
       </ol>
-      ${inModel().length ? '' : `<button class="btn sm" data-act="go" data-v="model">Add past scopes</button>`}
     </div>
   </div>`];
 }
 function liveChips() {
   const el = $('#livechips'); if (!el) return;
   const b = window._draft?.brief; if (!b || b.length < 20) { el.innerHTML = ''; return; }
-  const d = detect(b, false), sg = signals(b);
-  el.innerHTML = `<div class="lbl" style="margin-bottom:6px">Spotted</div><div class="tags">${d.map(x => `<span class="tag">${esc(lib(x.id).name)}${x.qty > 1 ? ' ×' + x.qty : ''}</span>`).join('') || '<span class="hint">Nothing yet</span>'}${sg.budget ? `<span class="tag"><i class="fa-solid fa-dollar-sign"></i>${money(sg.budget)} budget</span>` : ''}${sg.weeks ? `<span class="tag"><i class="fa-regular fa-clock"></i>${sg.weeks} weeks</span>` : ''}</div>`;
+  const d = detect(b), x = detectExt(b), sg = signals(b);
+  el.innerHTML = `<div class="lbl" style="margin-bottom:6px">Spotted so far</div><div class="tags">${d.map(m => `<span class="tag">${esc(lib(m.id).name)}${m.qty > 1 ? ' ×' + m.qty : ''}</span>`).join('')}${x.map(m => `<span class="tag"><i class="fa-solid fa-arrow-up-right-from-square"></i>${esc(extLib(m.id).name)}</span>`).join('')}${sg.budget ? `<span class="tag"><i class="fa-solid fa-dollar-sign"></i>${money(sg.budget)}</span>` : ''}${sg.weeks ? `<span class="tag"><i class="fa-regular fa-clock"></i>${sg.weeks} weeks</span>` : ''}${!d.length && !x.length ? '<span class="hint">Nothing yet</span>' : ''}</div>`;
+}
+function highlightBrief(brief, rows) {
+  const ranges = []; const low = brief.toLowerCase();
+  rows.forEach(r => { if (!r.source) return; const q = r.source.toLowerCase().replace(/^["'“]+|["'”.]+$/g, '').trim(); if (q.length < 4) return; let i = low.indexOf(q); if (i < 0) i = low.indexOf(q.slice(0, 40)); if (i >= 0) ranges.push([i, i + (low.indexOf(q) >= 0 ? q.length : 40), r.id]); });
+  ranges.sort((a, b) => a[0] - b[0]); let out = '', p = 0;
+  for (const [a, b, id] of ranges) { if (a < p) continue; out += esc(brief.slice(p, a)) + `<mark data-src="${id}">${esc(brief.slice(a, b))}</mark>`; p = b; }
+  return out + esc(brief.slice(p));
+}
+function vReview(d) {
+  const rv = d.review, t = tpl(rv.type);
+  const libOpts = sel => `<option value="">Custom</option>` + S.library.map(x => `<option value="${x.id}" ${x.id === sel ? 'selected' : ''}>${esc(x.name)}</option>`).join('');
+  const tot = rv.rows.filter(r => r.on).reduce((a, r) => a + TRACKS.reduce((b, [k]) => b + (+r.hours[k] || 0), 0), 0);
+  const unverified = rv.rows.filter(r => r.on && r.source && !r.verified).length;
+  return [`<button class="ib" data-act="rvback" title="Back to brief"><i class="fa-solid fa-arrow-left"></i></button><h1>${esc(d.name || rv.title || 'New estimate')}</h1><span class="sub">Step 2 of 2 · Confirm what the brief needs</span><span class="grow"></span><button class="btn pri" data-act="build"><i class="fa-solid fa-table"></i>Build estimate</button>`,
+  `<div class="rv-grid"><div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+    ${rv.summary ? `<div class="note" style="margin:0">${esc(rv.summary)}</div>` : ''}
+    <div class="card pad">
+      <div class="row" style="gap:14px;flex-wrap:wrap;align-items:flex-end">
+        <label class="field"><span>Project type</span><select class="in" data-rv="type">${S.templates.map(x => `<option value="${x.id}" ${x.id === rv.type ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>
+        <label class="field"><span>Size</span><select class="in" data-rv="size">${SIZES.map(([k, l]) => `<option value="${k}" ${k === rv.size ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+        <label class="field" style="width:110px"><span>Length (weeks)</span><input class="in num" type="number" min="1" data-rv="weeks" value="${rv.weeks}"></label>
+        <div class="hint grow" style="padding-bottom:8px"><i class="fa-regular fa-clock"></i> ${esc(rv.weeksSource || '')}${rv.budget ? ` · <i class="fa-solid fa-dollar-sign"></i> Brief budget ${money(rv.budget)}` : ''}</div>
+      </div>
+      <p class="hint" style="margin-top:10px">${esc(t.name)} template (${rv.size}) adds: ${t.phases.map(p => esc(p.name)).join(' → ')}. Account management + ${S.settings.wipHours}h weekly WIP added to every phase across ${rv.weeks} weeks.</p>
+    </div>
+    <div class="card pad">
+      <div class="sec-h"><h3>Team</h3><span class="hint grow">${esc(rv.teamReason || 'Suggested from the template and deliverables')}</span></div>
+      <div class="chips">${S.people.map(p => { const on = rv.team.includes(p.id); return `<label class="pick ${on ? 'on' : ''}"><input type="checkbox" data-rvteam="${p.id}" ${on ? 'checked' : ''}>${esc(p.name || p.title)}${p.name ? `<small>${esc(p.title)}</small>` : ''}</label>`; }).join('')}</div>
+    </div>
+    <div class="card">
+      <div class="pad" style="padding-bottom:0"><div class="sec-h"><h3>Deliverables</h3><span class="hint grow">${rv.rows.filter(r => r.on).length} included · ${hrs(tot)}${unverified ? ` · <span style="color:var(--danger)">${unverified} not found in brief — check</span>` : ''}</span><button class="btn sm" data-act="rvaddrow"><i class="fa-solid fa-plus"></i>Add</button></div></div>
+      <div style="overflow-x:auto"><table class="rv"><thead><tr><th></th><th>Deliverable</th><th style="width:190px">Library match</th><th class="h" style="text-align:right">Qty</th><th style="width:70px">Unit</th>${TRACKS.map(([, l]) => `<th class="h" style="text-align:right">${l} h</th>`).join('')}<th style="width:30px"></th></tr></thead><tbody>
+      ${rv.rows.map(r => `<tr class="${r.on ? '' : 'off'}" data-src-row="${r.id}"><td class="chk"><input type="checkbox" data-rvrow="${r.id}" data-k="on" ${r.on ? 'checked' : ''}></td>
+        <td><input data-rvrow="${r.id}" data-k="name" value="${esc(r.name)}"><input data-rvrow="${r.id}" data-k="spec" value="${esc(r.spec)}" placeholder="Spec / notes" style="font-size:12px;color:var(--t2)"></td>
+        <td><select data-rvrow="${r.id}" data-k="libId">${libOpts(r.libId)}</select></td>
+        <td><input type="number" min="1" data-rvrow="${r.id}" data-k="qty" value="${r.qty}"></td>
+        <td class="hint" style="padding-top:10px">${esc(r.libId ? unitOf(r.libId) : 'each')}</td>
+        ${TRACKS.map(([k]) => `<td><input type="number" step="0.5" min="0" data-rvrow="${r.id}" data-k="h_${k}" value="${r.hours[k] || 0}"></td>`).join('')}
+        <td><button class="ib del" data-act="rvdelrow" data-id="${r.id}"><i class="fa-solid fa-xmark"></i></button></td></tr>
+        ${r.source || r.missed ? `<tr class="${r.on ? '' : 'off'}"><td></td><td colspan="${5 + TRACKS.length}"><div class="src ${r.source && !r.verified ? 'bad' : ''}">${r.missed ? '<i class="fa-solid fa-magnifying-glass"></i><b>Possibly missed</b> — keyword found in brief. Tick to include. ' : ''}${r.source ? (r.verified ? '<i class="fa-solid fa-quote-left"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>Quote not found in brief: ') + esc(r.source) : ''}</div></td></tr>` : ''}`).join('')}
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="pad" style="padding-bottom:0"><div class="sec-h"><h3>External costs</h3><span class="hint grow">Suppliers, production, research and media — priced as cost + markup</span><button class="btn sm" data-act="rvaddext"><i class="fa-solid fa-plus"></i>Add</button></div></div>
+      ${rv.ext.length ? `<table class="rv"><thead><tr><th></th><th>Item</th><th>Supplier</th><th style="width:120px;text-align:right">Cost</th><th style="width:90px;text-align:right">Markup %</th><th style="width:110px">Group</th><th style="width:30px"></th></tr></thead><tbody>
+      ${rv.ext.map(x => `<tr class="${x.on ? '' : 'off'}"><td class="chk"><input type="checkbox" data-rvext="${x.id}" data-k="on" ${x.on ? 'checked' : ''}></td><td><input data-rvext="${x.id}" data-k="name" value="${esc(x.name)}">${x.source ? `<div class="src ${x.verified === false ? 'bad' : ''}"><i class="fa-solid fa-quote-left"></i>${esc(x.source)}</div>` : ''}</td><td><input data-rvext="${x.id}" data-k="supplier" value="${esc(x.supplier)}" placeholder="Supplier"></td><td><input type="number" step="100" data-rvext="${x.id}" data-k="cost" value="${x.cost}"></td><td><input type="number" data-rvext="${x.id}" data-k="markup" value="${x.markup}"></td><td><select data-rvext="${x.id}" data-k="group">${[['production', 'Production'], ['research', 'Research'], ['media', 'Media buy']].map(([k, l]) => `<option value="${k}" ${x.group === k ? 'selected' : ''}>${l}</option>`).join('')}</select></td><td><button class="ib del" data-act="rvdelext" data-id="${x.id}"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('')}
+      </tbody></table>` : '<p class="hint pad" style="padding-top:0">None in the brief.</p>'}
+    </div>
+    ${rv.assumptions.length ? `<div class="card pad"><div class="sec-h"><h3>Assumptions & gaps</h3><span class="hint">Worth confirming with the client</span></div><ul class="assume">${rv.assumptions.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>` : ''}
+    <div class="row"><label class="tog"><input type="checkbox" data-applycal ${d.applyCal !== false ? 'checked' : ''}><span class="sw"></span>Calibrate hours with pricing model (×${(rv.calib?.factor || 1).toFixed(2)})</label><span class="grow"></span><button class="btn pri" data-act="build"><i class="fa-solid fa-table"></i>Build estimate</button></div>
+  </div>
+  <div class="card pad rv-brief"><div class="lbl" style="margin-bottom:8px">Brief ${rv.ai ? '· highlighted where each item came from' : ''}</div>${highlightBrief(d.brief, [...rv.rows.filter(r => r.verified), ...rv.ext])}</div></div>`];
 }
 
-function personOpts(sel) {
-  return S.people.map(p => `<option value="${p.id}" ${p.id === sel ? 'selected' : ''}>${esc(pLabel(p))}</option>`).join('') + (sel && !S.people.find(p => p.id === sel) ? `<option selected value="${sel}">Removed person</option>` : '');
+/* ---------------- editor ---------------- */
+function personOpts(sel, team) {
+  const t = S.people.filter(p => team.includes(p.id)), o = S.people.filter(p => !team.includes(p.id));
+  const opt = p => `<option value="${p.id}" ${p.id === sel ? 'selected' : ''}>${esc(pLabel(p))}</option>`;
+  return (t.length ? `<optgroup label="Team">${t.map(opt).join('')}</optgroup><optgroup label="Others">${o.map(opt).join('')}</optgroup>` : S.people.map(opt).join('')) + (sel && !S.people.find(p => p.id === sel) ? `<option selected value="${sel}">Removed person</option>` : '');
+}
+function addOptions() {
+  return `<option value="">+ Add line</option><optgroup label="Deliverables (design + copy + production)">${S.library.map(d => `<option value="lib:${d.id}">${esc(d.name)}</option>`).join('')}</optgroup>
+  <optgroup label="External costs">${S.externals.map(x => `<option value="ext:${x.id}">${esc(x.name)}</option>`).join('')}</optgroup>
+  <optgroup label="Other"><option value="custom:int">Custom internal line</option><option value="custom:ext">Custom external cost</option><option value="custom:am">Account management</option></optgroup>`;
 }
 function vEdit() {
   const s = cur(); if (!s) { view = 'home'; return vHome(); }
-  const addOpts = `<option value="">+ Add deliverable</option>` + S.phaseTpl.map(t => `<optgroup label="${esc(t.name)}">${S.library.filter(d => d.phase === t.key).map(d => `<option value="${d.id}">${esc(d.name)}</option>`).join('')}</optgroup>`).join('') + `<option value="__custom">Custom line</option><option value="__pm">Project management</option>`;
   return [`<button class="ib" data-act="go" data-v="home" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
     <input class="ghost title-in" data-f="scope.name" value="${esc(s.name)}">
     <input class="ghost client-in" data-f="scope.client" value="${esc(s.client)}" placeholder="Client">
@@ -842,104 +1097,142 @@ function vEdit() {
     <span class="grow"></span>
     <button class="btn" data-act="airewrite" title="Rewrite overview and phase descriptions"><i class="fa-solid fa-pen-nib"></i>Rewrite copy</button>
     <button class="btn" data-act="tomodel" title="Add this estimate to the pricing model"><i class="fa-solid fa-chart-line"></i>${S.past.some(p => p.fromScope === s.id) ? 'Update model' : 'Add to model'}</button>
-    <button class="btn pri" data-act="export"><i class="fa-solid fa-file-pdf"></i>Export PDF</button>`,
+    <button class="btn pri" data-act="export"><i class="fa-solid fa-file-pdf"></i>Scope of Work</button>`,
   `<div class="ed-grid"><div class="ed-main">
-    <details class="card"><summary class="pad"><i class="fa-solid fa-chevron-right"></i><h3 style="font-size:15px">Brief</h3><span class="tags grow">${(s.detected || []).slice(0, 6).map(id => lib(id) ? `<span class="tag">${esc(lib(id).name)}</span>` : '').join('')}</span>${s.aiUsed ? '<span class="pill"><i class="fa-solid fa-wand-magic-sparkles"></i>AI</span>' : ''}</summary>
-      <div style="padding:0 20px 18px"><textarea class="in" style="min-height:180px" data-f="scope.brief">${esc(s.brief)}</textarea>
-      <div class="row" style="margin-top:10px"><span class="hint grow">Re-building replaces the whole table.</span><button class="btn sm" data-act="rescope"><i class="fa-solid fa-rotate"></i>Rebuild from brief</button></div></div>
+    <details class="card"><summary class="pad"><i class="fa-solid fa-chevron-right"></i><h3 style="font-size:15px">Brief & client details</h3><span class="tags grow">${(s.detected || []).slice(0, 5).map(id => lib(id) ? `<span class="tag">${esc(lib(id).name)}</span>` : '').join('')}</span>${s.aiUsed ? '<span class="pill"><i class="fa-solid fa-wand-magic-sparkles"></i>AI read</span>' : ''}</summary>
+      <div style="padding:0 20px 18px;display:flex;flex-direction:column;gap:12px">
+        <div class="row" style="gap:10px;flex-wrap:wrap">
+          <label class="field grow"><span>Client company (SOW)</span><input class="in" data-f="co.name" value="${esc(s.clientCo.name)}"></label>
+          <label class="field grow"><span>Client address</span><input class="in" data-f="co.address" value="${esc(s.clientCo.address)}"></label>
+          <label class="field" style="width:200px"><span>Client ABN</span><input class="in" data-f="co.abn" value="${esc(s.clientCo.abn)}"></label>
+        </div>
+        <textarea class="in" style="min-height:160px" data-f="scope.brief">${esc(s.brief)}</textarea>
+        ${(s.assumptions || []).length ? `<div><div class="lbl">Assumptions from brief read</div><ul class="assume" style="margin-top:6px">${s.assumptions.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>` : ''}
+        <div class="row"><span class="hint grow">Changed the brief? Start a new read — this replaces the table.</span><button class="btn sm" data-act="rescope"><i class="fa-solid fa-rotate"></i>Re-read brief</button></div>
+      </div>
     </details>
-    <div class="card pad"><div class="sec-h"><h3>Overview</h3><span class="hint grow">First paragraph of the PDF</span><button class="ib" data-act="regenov" title="Regenerate"><i class="fa-solid fa-rotate"></i></button></div>
+    <div class="card pad"><div class="sec-h"><h3>Overview</h3><span class="hint grow">Opens the Scope of Work</span><button class="ib" data-act="regenov" title="Regenerate"><i class="fa-solid fa-rotate"></i></button></div>
       <textarea class="in" data-auto data-f="scope.overview">${esc(s.overview)}</textarea></div>
     <div class="card">
-      <div class="est-wrap"><table class="est">
-        <thead><tr><th>Deliverable</th><th class="c-q n">Qty</th><th>Team member</th><th class="c-h n">Hours</th><th class="c-r n">Rate</th><th class="c-c n">Cost</th><th class="c-del"></th></tr></thead>
-        ${s.phases.map((p, i) => phaseRows(s, p, i, addOpts)).join('')}
-      </table></div>
-      <div class="est-foot"><button class="btn sm" data-act="addphase"><i class="fa-solid fa-plus"></i>Add phase</button><span class="hint">Descriptions and phase prices go on the PDF. Names, hours and rates stay internal.</span><span class="tt num" data-t="foot"></span></div>
+      <div class="est-bar">${seg('tab', UI.tab, [['front', 'Front end'], ['back', 'Back end']])}${seg('filter', UI.filter, [['int', 'Internal'], ['all', 'All'], ['ext', 'External']])}<span class="grow"></span><span class="hint">${UI.tab === 'front' ? 'Client pricing' : 'Born costs & margin'}${UI.filter !== 'all' ? ` · showing ${UI.filter === 'int' ? 'internal' : 'external'} only` : ''}</span></div>
+      <div class="est-wrap"><table class="est">${estHead()}${s.phases.map((p, i) => phaseRows(s, p, i)).join('')}</table></div>
+      <div class="est-foot"><button class="btn sm" data-act="addphase"><i class="fa-solid fa-plus"></i>Add phase</button><button class="btn sm" data-act="recalcam" title="Rebuild account management and WIP lines from current hours and weeks"><i class="fa-solid fa-rotate"></i>Recalculate account mgmt</button><span class="tt num" data-t="foot"></span></div>
     </div>
-    <div class="card pad"><div class="sec-h"><h3>Notes & assumptions</h3></div><textarea class="in" data-auto data-f="scope.notes">${esc(s.notes)}</textarea></div>
+    <div class="card pad"><div class="sec-h"><h3>Notes & assumptions</h3><span class="hint">Shown on the SOW</span></div><textarea class="in" data-auto data-f="scope.notes">${esc(s.notes)}</textarea></div>
   </div>
   <aside class="side"><div id="sideDyn"></div>
+    <div class="card pad"><div class="sec-h"><h3>Team</h3></div>
+      <div class="chips">${s.team.map(id => `<span class="chip">${esc(pLabel(person(id)))}<button class="ib" data-act="teamrm" data-id="${id}"><i class="fa-solid fa-xmark"></i></button></span>`).join('')}</div>
+      <select class="in" style="margin-top:10px" data-chg="teamadd"><option value="">+ Add to team</option>${S.people.filter(p => !s.team.includes(p.id)).map(p => `<option value="${p.id}">${esc(pLabel(p))}</option>`).join('')}</select></div>
     <div class="card pad"><div class="sec-h"><h3>Adjustments</h3></div>
-      <div class="row" style="gap:10px"><label class="field grow"><span>Contingency %</span><input class="in num" type="number" step="1" data-f="scope.contingency" value="${esc(s.contingency)}"></label><label class="field grow"><span>Discount $</span><input class="in num" type="number" step="50" data-f="scope.discount" value="${esc(s.discount)}"></label></div>
-      <p class="hint" style="margin-top:8px">Contingency is folded into phase prices. Phases round to $${S.settings.round}.</p></div>
+      <div class="row" style="gap:10px"><label class="field grow"><span>Weeks</span><input class="in num" type="number" min="1" data-f="scope.weeks" value="${esc(s.weeks)}"></label><label class="field grow"><span>Contingency %</span><input class="in num" type="number" step="1" data-f="scope.contingency" value="${esc(s.contingency)}"></label><label class="field grow"><span>Discount $</span><input class="in num" type="number" step="50" data-f="scope.discount" value="${esc(s.discount)}"></label></div>
+      <p class="hint" style="margin-top:8px">Change weeks then <b>Recalculate account mgmt</b> to update WIPs. Contingency is folded into phase fees.</p></div>
   </aside></div>`];
 }
-function phaseRows(s, p, i, addOpts) {
-  const A = (o) => Object.entries(o).map(([k, v]) => `data-${k}="${v}"`).join(' ');
-  let rows = `<tbody data-pid="${p.id}">
-  <tr class="ph"><td colspan="3"><div class="row" style="gap:6px"><span class="dot" style="background:${p.color}"></span><input class="pname" data-f="phase.name" ${A({ pid: p.id })} value="${esc(p.name)}"></div></td>
-    <td class="n num faint" data-t="phh-${p.id}"></td>
-    <td><input class="lock ${isNum(p.override) ? 'on' : ''}" type="number" step="50" data-f="phase.override" ${A({ pid: p.id })} value="${esc(p.override)}" placeholder="Lock $" title="Lock this phase to a fixed price (before contingency)"></td>
-    <td class="n price num" data-t="ph-${p.id}"></td>
+const COLS = { front: ['Item', 'Qty', 'Team member / supplier', 'Scope', 'Hrs / qty', 'Rate', 'Total ex GST'], back: ['Item', 'Team member / supplier', 'Hours', 'Cost rate', 'Est. cost', 'Markup', 'Total ex GST', 'Margin'] };
+function estHead() {
+  const c = COLS[UI.tab], cls = UI.tab === 'front' ? ['', 'c-q n', '', 'c-s', 'c-h n', 'c-r n', 'c-c n'] : ['', '', 'c-h n', 'c-r n', 'c-c n', 'c-q n', 'c-c n', 'c-c n'];
+  return `<thead><tr>${c.map((h, i) => `<th class="${cls[i]}">${h}</th>`).join('')}<th class="c-del"></th></tr></thead>`;
+}
+const visible = l => UI.filter === 'all' || (UI.filter === 'ext' ? l.type === 'ext' : l.type !== 'ext');
+function phaseRows(s, p, i) {
+  const vis = p.items.flatMap(it => it.lines.filter(visible).map(l => [it, l]));
+  if (UI.filter !== 'all' && !vis.length) return '';
+  const ncol = COLS[UI.tab].length + 1, front = UI.tab === 'front';
+  const head = front
+    ? `<td class="n num faint" data-t="phh-${p.id}"></td><td><input class="lock ${isNum(p.override) ? 'on' : ''}" type="number" step="50" data-f="phase.override" ${A({ pid: p.id })} value="${esc(p.override)}" placeholder="Lock $" title="Lock this phase fee (before contingency)"></td><td class="n price num" data-t="ph-${p.id}"></td>`
+    : `<td></td><td class="n num faint" data-t="phc-${p.id}"></td><td></td><td class="n price num" data-t="ph-${p.id}"></td><td class="n num" data-t="phm-${p.id}"></td>`;
+  let rows = `<tbody data-pid="${p.id}"><tr class="ph"><td colspan="${front ? 4 : 2}"><div class="row" style="gap:6px"><span class="dot" style="background:${p.color}"></span><input class="pname" data-f="phase.name" ${A({ pid: p.id })} value="${esc(p.name)}"></div></td>${front ? '' : `<td class="n num faint" data-t="phh-${p.id}"></td>`}${head}
     <td class="ph-tools"><button class="ib" data-act="phmove" ${A({ pid: p.id, d: -1 })} title="Move up"><i class="fa-solid fa-arrow-up"></i></button><button class="ib" data-act="phmove" ${A({ pid: p.id, d: 1 })} title="Move down"><i class="fa-solid fa-arrow-down"></i></button><button class="ib del" data-act="phdel" ${A({ pid: p.id })} title="Delete phase"><i class="fa-regular fa-trash-can"></i></button></td></tr>
-  <tr class="desc"><td colspan="6"><textarea rows="1" data-auto data-f="phase.desc" ${A({ pid: p.id })} placeholder="Phase description (shown on PDF)">${esc(p.desc)}</textarea></td><td class="c-del" style="vertical-align:top;padding-top:8px"><button class="ib" data-act="phregen" ${A({ pid: p.id })} title="Regenerate description"><i class="fa-solid fa-rotate"></i></button></td></tr>`;
+  <tr class="desc"><td colspan="${ncol - 1}"><textarea rows="1" data-auto data-f="phase.desc" ${A({ pid: p.id })} placeholder="Phase description (shown on SOW)">${esc(p.desc)}</textarea></td><td class="c-del" style="vertical-align:top;padding-top:8px"><button class="ib" data-act="phregen" ${A({ pid: p.id })} title="Regenerate description"><i class="fa-solid fa-rotate"></i></button></td></tr>`;
   for (const it of p.items) {
-    const d = lib(it.libId);
-    it.lines.forEach((l, li) => {
-      const ids = A({ pid: p.id, iid: it.id, lid: l.id });
-      rows += `<tr class="ln ${li === 0 ? 'first' : ''}">
-        <td>${li === 0 ? `<input class="iname" data-f="item.name" ${A({ pid: p.id, iid: it.id })} value="${esc(it.name)}"${it.pm ? ' style="font-style:italic;color:var(--t2)"' : ''}>` : ''}</td>
-        <td class="c-q">${li === 0 && (d?.unit || it.qty > 1) ? `<input type="number" min="1" data-fc="item.qty" ${A({ pid: p.id, iid: it.id })} value="${it.qty}">` : ''}</td>
-        <td><select data-fc="line.personId" ${ids}>${personOpts(l.personId)}</select></td>
-        <td class="c-h"><input type="number" step="0.5" min="0" data-f="line.hours" ${ids} value="${+l.hours}"></td>
-        <td class="c-r"><input type="number" step="5" data-f="line.rate" ${ids} value="${isNum(l.rate) ? l.rate : ''}" placeholder="${lineRate({ personId: l.personId })}"></td>
-        <td class="c-c n cost num" data-t="lc-${l.id}"></td>
-        <td class="c-del">${li === 0 ? `<button class="ib" data-act="lnadd" ${A({ pid: p.id, iid: it.id })} title="Add team member"><i class="fa-solid fa-user-plus"></i></button>` : ''}<button class="ib del" data-act="lndel" ${ids} title="Remove line"><i class="fa-solid fa-xmark"></i></button></td></tr>`;
+    const lines = it.lines.filter(visible); if (!lines.length) continue;
+    lines.forEach((l, li) => {
+      const ids = A({ pid: p.id, iid: it.id, lid: l.id }), first = li === 0, ext = l.type === 'ext';
+      const nameCell = first ? `<td><div class="row" style="gap:0"><input class="iname" data-f="item.name" ${A({ pid: p.id, iid: it.id })} value="${esc(it.name)}"${it.kind === 'am' || it.kind === 'wip' ? ' style="color:var(--t2)"' : ''}><span class="trk ${it.kind}">${{ design: 'Design', copy: 'Copy', production: 'Prod', ext: 'Ext', am: 'AM', wip: 'WIP' }[it.kind] || ''}</span></div></td>` : '<td></td>';
+      const who = ext ? `<input data-f="line.supplier" ${ids} value="${esc(l.supplier)}" placeholder="Supplier">` : `<select data-fc="line.personId" ${ids}>${personOpts(l.personId, s.team)}</select>`;
+      const actions = `<td class="c-del">${first && !ext ? `<button class="ib" data-act="lnadd" ${A({ pid: p.id, iid: it.id })} title="Add team member"><i class="fa-solid fa-user-plus"></i></button>` : ''}<button class="ib del" data-act="lndel" ${ids} title="Remove"><i class="fa-solid fa-xmark"></i></button></td>`;
+      if (front) {
+        const qty = first && (it.qty > 1 || it.libId) && it.kind !== 'wip' ? `<input type="number" min="1" data-fc="item.qty" ${A({ pid: p.id, iid: it.id })} value="${it.qty}" title="${esc(it.unit || '')}">` : '';
+        rows += `<tr class="ln ${first ? 'first' : ''}">${nameCell}<td class="c-q">${qty}</td><td>${who}</td><td class="c-s flat">${ext ? 'Flat fee' : 'Hours'}</td>
+          <td class="c-h">${ext ? '<span class="ro">1</span>' : `<input type="number" step="0.5" min="0" data-f="line.hours" ${ids} value="${+l.hours}">`}</td>
+          <td class="c-r">${ext ? `<input type="number" step="50" data-f="line.price" ${ids} value="${isNum(l.price) ? l.price : ''}" placeholder="${Math.round(lineClient({ ...l, price: null }))}">` : `<input type="number" step="5" data-f="line.rate" ${ids} value="${isNum(l.rate) ? l.rate : ''}" placeholder="${lineRate({ personId: l.personId })}">`}</td>
+          <td class="c-c n cost num" data-t="lc-${l.id}"></td>${actions}</tr>`;
+      } else {
+        rows += `<tr class="ln ${first ? 'first' : ''}">${nameCell}<td>${who}</td>
+          <td class="c-h">${ext ? '<span class="ro">—</span>' : `<input type="number" step="0.5" min="0" data-f="line.hours" ${ids} value="${+l.hours}">`}</td>
+          <td class="c-r">${ext ? '<span class="ro">—</span>' : `<input type="number" step="5" data-f="line.costRate" ${ids} value="${isNum(l.costRate) ? l.costRate : ''}" placeholder="${lineCostRate({ personId: l.personId })}">`}</td>
+          <td class="c-c">${ext ? `<input type="number" step="50" data-f="line.cost" ${ids} value="${+l.cost || 0}">` : `<span class="ro num" data-t="lk-${l.id}"></span>`}</td>
+          <td class="c-q">${ext ? `<input type="number" step="1" data-f="line.markup" ${ids} value="${+l.markup || 0}" title="Markup %">` : `<span class="ro num" data-t="lm-${l.id}"></span>`}</td>
+          <td class="c-c n cost num" data-t="lc-${l.id}"></td><td class="c-c n num" data-t="lg-${l.id}"></td>${actions}</tr>`;
+      }
     });
   }
-  return rows + `<tr class="add"><td colspan="7"><select data-chg="additem" data-pid="${p.id}">${addOpts}</select></td></tr></tbody>`;
+  return rows + `<tr class="add"><td colspan="${ncol}"><select data-chg="additem" data-pid="${p.id}">${addOptions()}</select></td></tr></tbody>`;
 }
 function updateTotals() {
   const s = cur(); if (!s) return; const t = totals(s);
-  const set = (k, v) => { const el = document.querySelector(`[data-t="${k}"]`); if (el) el.textContent = v; };
-  s.phases.forEach((p, i) => { set('ph-' + p.id, money(t.phasesClient[i])); set('phh-' + p.id, hrs(phaseHours(p))); p.items.forEach(it => it.lines.forEach(l => set('lc-' + l.id, money(lineCost(l))))); });
-  set('foot', `${hrs(t.hours)} · ${money(t.ex)} ex GST`);
+  const set = (k, v, cls) => { const el = document.querySelector(`[data-t="${k}"]`); if (el) { el.textContent = v; if (cls != null) el.className = el.className.replace(/ ?margin-(pos|neg)/g, '') + ' ' + cls; } };
+  let vh = 0, vc = 0, vk = 0;
+  s.phases.forEach((p, i) => {
+    let ph = 0, pc = 0, pk = 0;
+    p.items.forEach(it => it.lines.forEach(l => {
+      const c = lineClient(l), k = lineCost(l);
+      set('lc-' + l.id, money(c)); set('lk-' + l.id, money(k));
+      set('lm-' + l.id, k ? Math.round((c / k - 1) * 100) + '%' : '—');
+      set('lg-' + l.id, money(c - k), c - k >= 0 ? 'margin-pos' : 'margin-neg');
+      if (visible(l)) { ph += lineHours(l); pc += c; pk += k; }
+    }));
+    const fee = UI.filter === 'all' ? t.phasesClient[i] : pc;
+    set('ph-' + p.id, money(fee)); set('phh-' + p.id, hrs(ph)); set('phc-' + p.id, money(pk)); set('phm-' + p.id, money(fee - pk), fee - pk >= 0 ? 'margin-pos' : 'margin-neg');
+    vh += ph; vc += UI.filter === 'all' ? 0 : pc; vk += pk;
+  });
+  set('foot', UI.filter === 'all' ? `${hrs(t.hours)} · ${money(t.ex)} ex GST` : `${UI.filter === 'int' ? 'Internal' : 'External'}: ${money(vc)} · cost ${money(vk)}`);
   const el = $('#sideDyn'); if (el) el.innerHTML = sidePanel(s, t);
 }
 function sidePanel(s, t) {
-  const byP = {}; s.phases.forEach(p => p.items.forEach(it => it.lines.forEach(l => { const r = byP[l.personId] || (byP[l.personId] = { h: 0, c: 0 }); r.h += +l.hours || 0; r.c += lineCost(l); })));
-  const ppl = Object.entries(byP).sort((a, b) => b[1].c - a[1].c), maxC = Math.max(1, ...ppl.map(r => r[1].c));
-  const matches = (s.calib?.matches || []).map(m => ({ ...m, p: S.past.find(p => p.id === m.id) })).filter(m => m.p);
-  const sg = s.signals || {};
+  const byP = {}; s.phases.forEach(p => p.items.forEach(it => it.lines.forEach(l => { if (l.type === 'ext') return; const r = byP[l.personId] || (byP[l.personId] = { h: 0, c: 0 }); r.h += +l.hours || 0; r.c += lineClient(l); })));
+  const ppl = Object.entries(byP).sort((a, b) => b[1].h - a[1].h), maxH = Math.max(1, ...ppl.map(r => r[1].h));
+  const sg = s.signals || {}, matches = (s.calib?.matches || []).map(m => ({ ...m, p: S.past.find(p => p.id === m.id) })).filter(m => m.p);
   return `<div class="card pad"><div class="lbl">Total ex GST</div><div class="big num">${money(t.ex)}</div>
     <div class="kv"><span>Inc GST</span><b class="num">${money(t.inc)}</b></div>
-    <div class="kv"><span>Hours</span><b class="num">${hrs(t.hours)}</b></div>
-    <div class="kv"><span>Effective rate</span><b class="num">${t.hours ? money(t.ex / t.hours) + '/h' : '—'}</b></div>
-    ${sg.budget ? `<div class="note ${t.ex > sg.budget ? 'warn' : 'ok'}">Brief budget ${money(sg.budget)} · ${money(Math.abs(t.ex - sg.budget))} ${t.ex > sg.budget ? 'over' : 'under'}</div>` : ''}
-    ${sg.weeks ? `<div class="note">${sg.weeks} weeks in brief · ${hrs(t.hours / sg.weeks)}/week</div>` : ''}</div>
+    <div class="kv"><span>Internal (Born)</span><b class="num">${money(t.intClient)}</b></div>
+    <div class="kv"><span>External</span><b class="num">${money(t.extClient)}</b></div>
+    <div style="border-top:1px solid var(--border-lt);margin:8px 0"></div>
+    <div class="kv"><span>Born cost</span><b class="num">${money(t.intCost)}</b></div>
+    <div class="kv"><span>Supplier cost</span><b class="num">${money(t.extCost)}</b></div>
+    <div class="kv"><span>Margin</span><b class="num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${money(t.margin)} · ${Math.round(t.marginPct * 100)}%</b></div>
+    <div class="kv"><span>Hours · weeks</span><b class="num">${hrs(t.hours)} · ${s.weeks}</b></div>
+    ${sg.budget ? `<div class="note ${t.ex > sg.budget ? 'warn' : 'ok'}">Brief budget ${money(sg.budget)} · ${money(Math.abs(t.ex - sg.budget))} ${t.ex > sg.budget ? 'over' : 'under'}</div>` : ''}</div>
   <div class="card pad"><div class="sec-h"><h3>Phases</h3></div><div class="bars">${s.phases.map((p, i) => `<div class="b"><div class="bt"><span><span class="dot" style="background:${p.color};margin-right:6px"></span>${esc(p.name)}</span><b class="num" style="font-weight:500">${money(t.phasesClient[i])}</b></div><div class="track"><i style="width:${t.sub ? t.phasesClient[i] / t.sub * 100 : 0}%;background:${p.color}"></i></div></div>`).join('')}</div></div>
-  <div class="card pad"><div class="sec-h"><h3>Team time</h3></div><div class="bars">${ppl.map(([id, r]) => `<div class="b"><div class="bt"><span>${esc(pLabel(person(id)))}</span><span class="num muted">${hrs(r.h)}</span></div><div class="track"><i style="width:${r.c / maxC * 100}%"></i></div></div>`).join('') || '<p class="hint">No time yet.</p>'}</div></div>
-  <div class="card pad"><div class="sec-h"><h3>Pricing model</h3></div>
-    ${matches.length || s.calib?.global !== 1 ? `<p class="hint">Calibrated ×${(s.calib?.factor || 1).toFixed(2)}${matches.length ? ` using ${matches.length} similar scope${matches.length > 1 ? 's' : ''}` : ' from overall pricing'}.</p>${matches.map(m => `<div class="kv"><span>${esc(m.p.name)} <span class="faint">${Math.round(m.sim * 100)}%</span></span><b class="num">${money(m.p.total)}</b></div>`).join('')}`
-      : `<p class="hint">${inModel().length ? 'No close matches — library defaults used.' : 'Model is empty — library defaults used.'}</p>`}</div>`;
+  <div class="card pad"><div class="sec-h"><h3>Team time</h3></div><div class="bars">${ppl.map(([id, r]) => `<div class="b"><div class="bt"><span>${esc(pLabel(person(id)))}</span><span class="num muted">${hrs(r.h)}</span></div><div class="track"><i style="width:${r.h / maxH * 100}%"></i></div></div>`).join('') || '<p class="hint">No time yet.</p>'}</div></div>
+  ${matches.length ? `<div class="card pad"><div class="sec-h"><h3>Pricing model</h3></div><p class="hint">Calibrated ×${(s.calib?.factor || 1).toFixed(2)} using:</p>${matches.map(m => `<div class="kv"><span>${esc(m.p.name)} <span class="faint">${Math.round(m.sim * 100)}%</span></span><b class="num">${money(m.p.total)}</b></div>`).join('')}</div>` : ''}`;
 }
 
 /* ---------------- pricing model page ---------------- */
 function vModel() {
   const P = S.past.slice().sort((a, b) => b.date - a.date), g = globalIndex(), sp = learnedSplit();
-  const learned = S.library.map(d => ({ d, lh: learnedHours(d.id), base: Object.values(d.tasks).reduce((a, b) => a + b, 0) })).filter(x => x.lh);
+  const learned = S.library.map(d => ({ d, lh: learnedHours(d.id) })).filter(x => x.lh);
   const used = {}; inModel().forEach(p => (p.detected || []).forEach(id => used[id] = (used[id] || 0) + 1));
   return [`<h1>Pricing model</h1><span class="sub">${inModel().length} of ${S.past.length} scopes active</span><span class="grow"></span><button class="btn" data-act="addpast"><i class="fa-solid fa-plus"></i>Add manually</button>`,
   `<label class="drop" id="drop"><input type="file" multiple accept=".pdf,.xlsx,.xls,.csv,.docx,.txt" data-pastup><i class="fa-solid fa-cloud-arrow-up"></i><div><b style="color:var(--t1);font-weight:500">Upload past scopes</b><div class="hint">PDF or Excel/CSV · drop several at once · you'll confirm each before it's added</div></div></label>
   <div class="mgrid">
     <div class="card">${P.length ? `<table class="tbl"><thead><tr><th style="width:48px">Use</th><th>Scope</th><th>Client</th><th class="r">Total ex GST</th><th class="r">vs library</th><th>Added</th><th></th></tr></thead><tbody>
       ${P.map(p => { const r = pastRatio(p); return `<tr class="${p.off ? 'off' : ''}"><td><label class="tog" title="${p.off ? 'Excluded from learning' : 'Included in learning'}"><input type="checkbox" data-pasttog="${p.id}" ${p.off ? '' : 'checked'}><span class="sw"></span></label></td>
-        <td><b style="font-weight:500">${esc(p.name)}</b><div class="hint">${esc(p.source.toUpperCase())} · ${p.phases.length} phases${Object.keys(p.itemHours || {}).length ? ' · hours learned' : ''}</div></td>
-        <td class="muted">${esc(p.client || '—')}</td><td class="r num">${money(p.total)}</td>
-        <td class="r num ${r > 1.15 ? '' : r < .85 ? '' : 'faint'}">${r ? '×' + r.toFixed(2) : '—'}</td><td class="faint">${fmtDate(p.date)}</td>
+        <td><b style="font-weight:500">${esc(p.name)}</b><div class="hint">${esc(String(p.source).toUpperCase())} · ${p.phases.length} phases${Object.keys(p.itemHours || {}).length ? ' · hours learned' : ''}</div></td>
+        <td class="muted">${esc(p.client || '—')}</td><td class="r num">${money(p.total)}</td><td class="r num faint">${r ? '×' + r.toFixed(2) : '—'}</td><td class="faint">${fmtDate(p.date)}</td>
         <td class="r" style="white-space:nowrap"><button class="ib" data-act="editpast" data-id="${p.id}" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button><button class="ib del" data-act="delpast" data-id="${p.id}" title="Remove from model"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
     </tbody></table>` : `<div class="empty"><h3>No past scopes yet</h3><p>Upload old quotes and scope sheets. The more you add, the closer new estimates get to how ${esc(S.settings.agency)} really prices.</p></div>`}</div>
     <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="card pad"><div class="lbl">Pricing index</div><div class="big num">×${g.factor.toFixed(2)}</div><p class="hint">${g.n ? `Past scopes price at ×${g.raw.toFixed(2)} of library baseline (median of ${g.n}). New estimates blend this with the closest matches.` : 'Add past scopes to calibrate.'}</p></div>
-      ${sp ? `<div class="card pad"><div class="sec-h"><h3>Typical phase split</h3><span class="hint">${sp.n} scopes</span></div><div class="bars">${S.phaseTpl.filter(t => sp.split[t.key]).map((t, i) => `<div class="b"><div class="bt"><span>${esc(t.name)}</span><span class="num muted">${Math.round(sp.split[t.key] * 100)}%</span></div><div class="track"><i style="width:${sp.split[t.key] * 100}%"></i></div></div>`).join('')}</div></div>` : ''}
-      <div class="card pad"><div class="sec-h"><h3>Learned hours</h3></div>${learned.length ? learned.map(x => `<div class="kv"><span>${esc(x.d.name)}</span><b class="num">${hrs(x.lh.avg)} <span class="faint" style="font-weight:400">vs ${hrs(x.base)}</span></b></div>`).join('') : '<p class="hint">Comes from spreadsheets with an hours column.</p>'}</div>
+      <div class="card pad"><div class="lbl">Pricing index</div><div class="big num">×${g.factor.toFixed(2)}</div><p class="hint">${g.n ? `Past scopes price at ×${g.raw.toFixed(2)} of template + library baseline (median of ${g.n}).` : 'Add past scopes to calibrate.'}</p></div>
+      ${sp ? `<div class="card pad"><div class="sec-h"><h3>Typical phase split</h3><span class="hint">${sp.n} scopes</span></div><div class="bars">${SPLIT.filter(([k]) => sp.split[k]).map(([k, n]) => `<div class="b"><div class="bt"><span>${n}</span><span class="num muted">${Math.round(sp.split[k] * 100)}%</span></div><div class="track"><i style="width:${sp.split[k] * 100}%"></i></div></div>`).join('')}</div></div>` : ''}
+      <div class="card pad"><div class="sec-h"><h3>Learned hours</h3></div>${learned.length ? learned.map(x => `<div class="kv"><span>${esc(x.d.name)}</span><b class="num">${hrs(x.lh.avg)}</b></div>`).join('') : '<p class="hint">Comes from spreadsheets with an hours column.</p>'}</div>
       ${Object.keys(used).length ? `<div class="card pad"><div class="sec-h"><h3>Most common deliverables</h3></div><div class="tags">${Object.entries(used).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([id, n]) => `<span class="tag">${esc(lib(id)?.name || id)} · ${n}</span>`).join('')}</div></div>` : ''}
     </div>
   </div>`];
 }
 function pastModal(p, queue = []) {
-  const det = detect(p.text, false).map(d => d.id);
+  const det = detect(p.text).map(d => d.id);
   modal(`
     <div class="hint">${queue.length ? queue.length + ' more after this' : ''}</div>
     <h2>${p._new ? 'Check before adding' : 'Edit past scope'}</h2>
@@ -969,7 +1262,7 @@ function pastModal(p, queue = []) {
         p.name = m.querySelector('#pName').value.trim() || 'Untitled'; p.client = m.querySelector('#pClient').value.trim();
         p.total = +m.querySelector('#pTotal').value || 0; p.text = m.querySelector('#pText').value;
         p.phases = [...tbl.querySelectorAll('tr')].map(tr => { const [a, b] = tr.querySelectorAll('input'); return { name: a.value.trim(), cost: +b.value || 0 }; }).filter(x => x.name);
-        p.detected = detect(p.text, false).map(d => d.id);
+        p.detected = detect(p.text).map(d => d.id);
         const isNew = p._new; delete p._new;
         if (isNew) S.past.push(p); else { const i = S.past.findIndex(x => x.id === p.id); if (i >= 0) S.past[i] = p; }
         save(); toast(isNew ? 'Added to pricing model' : 'Saved'); next();
@@ -979,111 +1272,182 @@ function pastModal(p, queue = []) {
 
 /* ---------------- rate card ---------------- */
 function vRates() {
-  return [`<h1>Rate card</h1><span class="sub">Names are internal only — exports never show them</span><span class="grow"></span><button class="btn pri" data-act="addperson"><i class="fa-solid fa-plus"></i>Add person</button>`,
-  `<div class="card" style="max-width:860px"><table class="tbl"><thead><tr><th>Name</th><th>Job title</th><th class="r" style="width:150px">Rate / hour</th><th style="width:44px"></th></tr></thead><tbody>
+  return [`<h1>Rate card</h1><span class="sub">Names are internal only — the Scope of Work never shows them</span><span class="grow"></span><button class="btn pri" data-act="addperson"><i class="fa-solid fa-plus"></i>Add person</button>`,
+  `<div class="card" style="max-width:960px"><table class="tbl"><thead><tr><th>Name</th><th>Job title</th><th class="r" style="width:150px">Charge rate / h</th><th class="r" style="width:150px">Cost rate / h</th><th class="r" style="width:80px">Margin</th><th style="width:44px"></th></tr></thead><tbody>
     ${S.people.map(p => `<tr><td><input class="in" data-f="person.name" data-id="${p.id}" value="${esc(p.name)}" placeholder="Name"></td>
       <td><input class="in" list="titleList" data-f="person.title" data-id="${p.id}" value="${esc(p.title)}"></td>
       <td><div class="row" style="gap:6px"><span class="faint">$</span><input class="in num" style="text-align:right" type="number" step="5" data-f="person.rate" data-id="${p.id}" value="${p.rate}"></div></td>
+      <td><div class="row" style="gap:6px"><span class="faint">$</span><input class="in num" style="text-align:right" type="number" step="5" data-f="person.cost" data-id="${p.id}" value="${p.cost}"></div></td>
+      <td class="r num faint">${p.rate ? Math.round((1 - p.cost / p.rate) * 100) + '%' : '—'}</td>
       <td><button class="ib del" data-act="delperson" data-id="${p.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`).join('')}
   </tbody></table><datalist id="titleList">${titles().map(t => `<option value="${esc(t)}">`).join('')}</datalist></div>
-  <p class="hint" style="margin-top:12px;max-width:860px">The deliverables library and AI price by job title, then assign the first person with that title — swap people in the estimate table. Two people can share a title at different rates.</p>`];
+  <p class="hint" style="margin-top:12px;max-width:960px">Charge rate is the front-end (client) rate. Cost rate is the back-end internal cost. Templates and the library assign work by job title, preferring people on the project team.</p>`];
 }
-/* ---------------- library ---------------- */
+
+/* ---------------- library (deliverables · externals · templates) ---------------- */
 function vLibrary() {
-  const ts = titles();
-  return [`<h1>Deliverables</h1><span class="sub">Baseline hours per job title for one unit</span><span class="grow"></span><button class="btn pri" data-act="addlib"><i class="fa-solid fa-plus"></i>Add deliverable</button>`,
-  S.phaseTpl.map((t, ti) => `<div class="lbl" style="margin:18px 0 8px;display:flex;align-items:center;gap:8px"><span class="dot" style="background:${PHASE_DOTS[ti % PHASE_DOTS.length]}"></span>${esc(t.name)}</div>
-  ${S.library.filter(d => d.phase === t.key).map(d => { const h = Object.values(d.tasks).reduce((a, b) => a + b, 0), c = Object.entries(d.tasks).reduce((a, [k, v]) => a + v * titleRate(k), 0), lh = learnedHours(d.id); return `<details class="card lib" ${window._openLib === d.id ? 'open' : ''}><summary><i class="fa-solid fa-chevron-right"></i><b style="font-weight:500" class="grow">${esc(d.name)}</b>${lh ? `<span class="tag">learned ${hrs(lh.avg)}</span>` : ''}<span class="faint num">${hrs(h)} · ${money(c)}</span></summary>
-    <div class="body"><div class="row" style="gap:10px;flex-wrap:wrap;margin-top:12px">
-      <input class="in" style="flex:1;min-width:200px" data-f="lib.name" data-id="${d.id}" value="${esc(d.name)}">
-      <select class="in" style="width:190px" data-fc="lib.phase" data-id="${d.id}">${S.phaseTpl.map(x => `<option value="${x.key}" ${x.key === d.phase ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select>
-      <label class="row hint" style="gap:6px" title="Extra share of base hours per additional unit (0 = no quantity)">Per extra unit <input class="in num" style="width:76px" type="number" step="0.05" min="0" data-f="lib.unit" data-id="${d.id}" value="${d.unit || 0}"></label>
-      <button class="ib del" data-act="dellib" data-id="${d.id}"><i class="fa-regular fa-trash-can"></i></button></div>
-    <label class="field" style="margin-top:10px"><span>Brief keywords</span><input class="in" data-f="lib.kw" data-id="${d.id}" value="${esc(d.kw.join(', '))}"></label>
-    <div class="tasks">${[...new Set([...ts, ...Object.keys(d.tasks)])].map(tt => `<label class="${d.tasks[tt] ? 'has' : ''}"><span>${esc(tt)}</span><input type="number" step="0.5" min="0" data-f="lib.task" data-id="${d.id}" data-title="${esc(tt)}" value="${d.tasks[tt] || ''}" placeholder="0">h</label>`).join('')}</div></div></details>`; }).join('') || '<p class="hint">None.</p>'}`).join('')];
+  const tab = UI.libTab;
+  const tabs = `<div class="tabs">${[['deliverables', 'Deliverables'], ['externals', 'External costs'], ['templates', 'Project templates']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" data-act="libtab" data-v="${k}">${l}</button>`).join('')}</div>`;
+  const tOpts = sel => titles().map(t => `<option ${t === sel ? 'selected' : ''}>${esc(t)}</option>`).join('');
+  let body = '';
+  if (tab === 'deliverables') {
+    body = `<p class="hint" style="margin-bottom:12px">Hours = base + per unit × quantity, split into design, copy and production. e.g. Brochure: 1.5h design + 1h copy + 0.5h production per page → A4 2 pages = 6h.</p>
+    <div class="card" style="overflow-x:auto"><table class="ed"><thead><tr><th>Deliverable</th><th style="width:90px">Unit</th>${TRACKS.map(([, l]) => `<th colspan="3" style="text-align:center">${l} <span class="faint" style="text-transform:none;font-weight:400">base · per · who</span></th>`).join('')}<th style="width:70px;text-align:right">e.g. ×2</th><th style="width:34px"></th></tr></thead><tbody>
+    ${S.library.map(d => `<tr><td><input data-f="lib.name" data-id="${d.id}" value="${esc(d.name)}"><input data-f="lib.kw" data-id="${d.id}" value="${esc(d.kw.join(', '))}" placeholder="brief keywords" style="font-size:11.5px;color:var(--t3)"></td><td><input data-f="lib.unit" data-id="${d.id}" value="${esc(d.unit)}"></td>
+      ${TRACKS.map(([k]) => { const t = d.tracks[k] || {}; return `<td class="n"><input type="number" step="0.5" min="0" data-f="lib.base" data-id="${d.id}" data-tr="${k}" value="${t.base ?? ''}" placeholder="0"></td><td class="n"><input type="number" step="0.25" min="0" data-f="lib.per" data-id="${d.id}" data-tr="${k}" value="${t.per ?? ''}" placeholder="0"></td><td style="width:120px"><select data-fc="lib.title" data-id="${d.id}" data-tr="${k}"><option value="">—</option>${tOpts(t.title)}</select></td>`; }).join('')}
+      <td class="num faint" style="text-align:right">${hrs(TRACKS.reduce((a, [k]) => a + trackHours(d, k, 2), 0))}</td><td><button class="ib del" data-act="dellib" data-id="${d.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`).join('')}
+    </tbody></table></div>`;
+  } else if (tab === 'externals') {
+    body = `<p class="hint" style="margin-bottom:12px">Third-party costs. Client price = cost × (1 + markup). Media is usually passed through at 0%.</p>
+    <div class="card" style="max-width:1000px"><table class="ed"><thead><tr><th>Item</th><th>Brief keywords</th><th style="width:130px">Group</th><th style="width:150px">Default supplier</th><th class="n" style="width:110px;text-align:right">Default cost</th><th class="n" style="text-align:right">Markup %</th><th style="width:34px"></th></tr></thead><tbody>
+    ${S.externals.map(x => `<tr><td><input data-f="ext.name" data-id="${x.id}" value="${esc(x.name)}"></td><td><input data-f="ext.kw" data-id="${x.id}" value="${esc(x.kw.join(', '))}" style="color:var(--t2)"></td><td><select data-fc="ext.group" data-id="${x.id}">${[['production', 'Production'], ['research', 'Research'], ['media', 'Media buy']].map(([k, l]) => `<option value="${k}" ${x.group === k ? 'selected' : ''}>${l}</option>`).join('')}</select></td><td><input data-f="ext.supplier" data-id="${x.id}" value="${esc(x.supplier)}"></td><td><input type="number" step="100" data-f="ext.cost" data-id="${x.id}" value="${x.cost}"></td><td><input type="number" data-f="ext.markup" data-id="${x.id}" value="${x.markup}"></td><td><button class="ib del" data-act="delext" data-id="${x.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`).join('')}
+    </tbody></table></div>`;
+  } else {
+    const t = tpl(UI.tplId || S.templates[0].id);
+    body = `<div class="row" style="margin-bottom:12px;flex-wrap:wrap">${seg('tplId', t.id, S.templates.map(x => [x.id, x.name]))}<span class="hint grow">Core phases from Born's quote templates. Hours per size; 0 = not included. Deliverables are added after these.</span></div>
+    <div class="card pad" style="margin-bottom:12px"><div class="row" style="gap:10px;flex-wrap:wrap">
+      <label class="field grow"><span>Template name</span><input class="in" data-f="tpl.name" data-id="${t.id}" value="${esc(t.name)}"></label>
+      <label class="field grow"><span>Deliverables design phase</span><input class="in" data-f="tpl.designPhase" data-id="${t.id}" value="${esc(t.designPhase)}"></label>
+      <label class="field grow"><span>Production phase</span><input class="in" data-f="tpl.productionPhase" data-id="${t.id}" value="${esc(t.productionPhase)}"></label>
+      ${SIZES.map(([k, l]) => `<label class="field" style="width:90px"><span>${l} weeks</span><input class="in num" type="number" data-f="tpl.weeks" data-id="${t.id}" data-size="${k}" value="${t.weeks[k]}"></label>`).join('')}
+    </div></div>
+    <div class="card" style="overflow-x:auto"><table class="ed"><thead><tr><th>Item</th><th style="width:180px">Job title</th>${SIZES.map(([, l]) => `<th class="n" style="text-align:right">${l}</th>`).join('')}<th style="width:34px"></th></tr></thead>
+    ${t.phases.map((ph, pi) => `<tbody><tr class="grp"><td colspan="2"><input data-f="tplph.name" data-id="${t.id}" data-pi="${pi}" value="${esc(ph.name)}" style="font-weight:600"></td><td colspan="3" class="hint" style="text-align:right">${SIZES.map(([k, l]) => `${l} ${hrs(ph.items.reduce((a, it) => a + it.lines.reduce((b, ln) => b + (ln.hours[k] || 0), 0), 0))}`).join(' · ')}</td><td><button class="ib del" data-act="tpldelph" data-id="${t.id}" data-pi="${pi}"><i class="fa-regular fa-trash-can"></i></button></td></tr>
+      ${ph.items.map((it, ii) => it.lines.map((ln, li) => `<tr><td>${li === 0 ? `<input data-f="tplit.name" data-id="${t.id}" data-pi="${pi}" data-ii="${ii}" value="${esc(it.name)}">` : ''}</td><td><select data-fc="tplln.title" data-id="${t.id}" data-pi="${pi}" data-ii="${ii}" data-li="${li}">${tOpts(ln.title)}</select></td>${SIZES.map(([k]) => `<td class="n"><input type="number" step="0.5" min="0" data-f="tplln.hours" data-id="${t.id}" data-pi="${pi}" data-ii="${ii}" data-li="${li}" data-size="${k}" value="${ln.hours[k] || 0}"></td>`).join('')}<td style="white-space:nowrap">${li === 0 ? `<button class="ib" data-act="tpladdln" data-id="${t.id}" data-pi="${pi}" data-ii="${ii}" title="Add role"><i class="fa-solid fa-user-plus"></i></button>` : ''}<button class="ib del" data-act="tpldelln" data-id="${t.id}" data-pi="${pi}" data-ii="${ii}" data-li="${li}"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('')).join('')}
+      ${(ph.ext || []).map((x, xi) => `<tr><td><input data-f="tplx.name" data-id="${t.id}" data-pi="${pi}" data-xi="${xi}" value="${esc(x.name)}"><span class="trk ext">Ext</span></td><td class="hint">Cost · ${x.markup}% markup</td>${SIZES.map(([k]) => `<td class="n"><input type="number" step="100" data-f="tplx.cost" data-id="${t.id}" data-pi="${pi}" data-xi="${xi}" data-size="${k}" value="${x.cost[k] || 0}"></td>`).join('')}<td><button class="ib del" data-act="tpldelx" data-id="${t.id}" data-pi="${pi}" data-xi="${xi}"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('')}
+      <tr><td colspan="6"><button class="btn sm" data-act="tpladdit" data-id="${t.id}" data-pi="${pi}"><i class="fa-solid fa-plus"></i>Item</button></td></tr></tbody>`).join('')}
+    </table></div>
+    <div class="row" style="margin-top:12px"><button class="btn sm" data-act="tpladdph" data-id="${t.id}"><i class="fa-solid fa-plus"></i>Add phase</button><button class="btn sm" data-act="tpladd"><i class="fa-solid fa-plus"></i>New template</button></div>`;
+  }
+  const add = { deliverables: ['addlib', 'Add deliverable'], externals: ['addext', 'Add external cost'], templates: null }[tab];
+  return [`<h1>Library</h1><span class="grow"></span>${add ? `<button class="btn pri" data-act="${add[0]}"><i class="fa-solid fa-plus"></i>${add[1]}</button>` : ''}`, tabs + body];
 }
+
 /* ---------------- settings ---------------- */
 function vSettings() {
   const st = S.settings;
+  const f = (k, l, w, type = 'text') => `<label class="field" style="${w ? 'width:' + w : 'flex:1'}"><span>${l}</span><input class="in${type === 'number' ? ' num' : ''}" type="${type}" data-f="set.${k}" value="${esc(st[k])}"></label>`;
+  const tg = (k, l) => `<label class="tog"><input type="checkbox" data-settog="${k}" ${st[k] ? 'checked' : ''}><span class="sw"></span>${l}</label>`;
   return [`<h1>Settings</h1>`,
-  `<div class="split"><div class="card pad" style="display:flex;flex-direction:column;gap:14px">
-    <div class="row" style="gap:10px;flex-wrap:wrap">
-      <label class="field grow"><span>Agency name (PDF)</span><input class="in" data-f="set.agency" value="${esc(st.agency)}"></label>
-      <label class="field" style="width:90px"><span>GST %</span><input class="in num" type="number" data-f="set.gst" value="${st.gst}"></label>
-      <label class="field" style="width:130px"><span>Round phases to</span><select class="in" data-fc="set.round">${[1, 10, 50, 100, 250, 500].map(v => `<option value="${v}" ${+st.round === v ? 'selected' : ''}>$${v}</option>`).join('')}</select></label>
+  `<div class="split"><div style="display:flex;flex-direction:column;gap:16px">
+    <div class="card pad" style="display:flex;flex-direction:column;gap:12px"><div class="sec-h" style="margin:0"><h3>Scope of Work</h3></div>
+      <div class="row" style="gap:10px;flex-wrap:wrap">${f('agency', 'Logo text', '140px')}${f('company', 'Company name')}${f('abn', 'ABN', '200px')}</div>
+      <label class="field"><span>Address</span><textarea class="in" data-f="set.address" rows="2">${esc(st.address)}</textarea></label>
+      <div class="row" style="gap:10px;flex-wrap:wrap">${f('gst', 'GST %', '90px', 'number')}<label class="field" style="width:140px"><span>Round phase fees to</span><select class="in" data-fc="set.round">${[1, 10, 50, 100, 250, 500].map(v => `<option value="${v}" ${+st.round === v ? 'selected' : ''}>$${v}</option>`).join('')}</select></label>${f('sowNote', 'Footnote')}</div>
+      <label class="field"><span>Terms</span><textarea class="in" data-f="set.terms" rows="2">${esc(st.terms)}</textarea></label>
+      <label class="field"><span>Default notes</span><textarea class="in" data-f="set.notes" rows="3">${esc(st.notes)}</textarea></label>
+      <div class="row" style="gap:18px;flex-wrap:wrap">${tg('sowNumber', 'Number phases (Phase One: …)')}${tg('sowDesc', 'Show phase descriptions')}${tg('sowAM', 'List account management')}</div>
     </div>
-    <div class="row" style="gap:10px;flex-wrap:wrap">
-      <label class="field" style="width:150px"><span>Project mgmt %</span><input class="in num" type="number" data-f="set.pmPct" value="${st.pmPct}"></label>
-      <label class="field grow"><span>Project mgmt job title</span><input class="in" list="tl2" data-f="set.pmTitle" value="${esc(st.pmTitle)}"><datalist id="tl2">${titles().map(t => `<option value="${esc(t)}">`).join('')}</datalist></label>
+    <div class="card pad" style="display:flex;flex-direction:column;gap:12px"><div class="sec-h" style="margin:0"><h3>Estimating</h3></div>
+      <div class="row" style="gap:10px;flex-wrap:wrap">${f('amPct', 'Account mgmt % of phase hours', '200px', 'number')}${f('amMin', 'Min AM hours / phase', '160px', 'number')}${f('wipHours', 'WIP hours / week', '140px', 'number')}
+      <label class="field grow"><span>Account mgmt job title</span><select class="in" data-fc="set.amTitle">${titles().map(t => `<option ${t === st.amTitle ? 'selected' : ''}>${esc(t)}</option>`).join('')}</select></label></div>
+      <div class="row" style="gap:10px;flex-wrap:wrap">${f('markup', 'Default external markup %', '200px', 'number')}${tg('calibrate', 'Calibrate hours with pricing model')}</div>
     </div>
-    <label class="field"><span>Default notes & assumptions</span><textarea class="in" style="min-height:110px" data-f="set.notes">${esc(st.notes)}</textarea></label>
-    <div class="sec-h" style="margin:6px 0 0"><h3>AI</h3></div>
-    <p class="hint" style="margin-top:-6px">Set <code>ANTHROPIC_API_KEY</code> on the Railway service (recommended). A key pasted here stays in this browser only.</p>
-    <div class="row" style="gap:10px;flex-wrap:wrap">
-      <label class="field grow"><span>API key (optional)</span><input class="in" type="password" data-f="set.apiKey" value="${esc(st.apiKey)}" placeholder="Blank = use server"></label>
-      <label class="field" style="width:200px"><span>Model</span><input class="in" data-f="set.model" value="${esc(st.model)}"></label>
-    </div>
-    <div class="row"><button class="btn sm" data-act="testai">Test connection</button><span class="hint" id="aiStatus"></span></div>
-  </div>
-  <div class="card pad"><div class="sec-h"><h3>Data</h3></div><p class="hint">${SYNC.mode === 'server' ? (SYNC.storage === 'file-temporary' ? '<b style="color:var(--warning)">Shared, but the server has no database — data will be lost on redeploy. Add Postgres in Railway.</b>' : 'Stored on the server and shared with everyone who opens this site. Changes from others appear within a few seconds.') : '<b style="color:var(--warning)">Not connected to the server — changes are only saved in this browser.</b>'}</p>
+    <div class="card pad" style="display:flex;flex-direction:column;gap:12px"><div class="sec-h" style="margin:0"><h3>AI</h3></div>
+      <p class="hint" style="margin-top:-6px">Set <code>ANTHROPIC_API_KEY</code> on the Railway service (recommended). A key pasted here stays in this browser only.</p>
+      <div class="row" style="gap:10px;flex-wrap:wrap"><label class="field grow"><span>API key (optional)</span><input class="in" type="password" data-f="set.apiKey" value="${esc(st.apiKey)}" placeholder="Blank = use server"></label>${f('model', 'Model', '200px')}</div>
+      <div class="row"><button class="btn sm" data-act="testai">Test connection</button><span class="hint" id="aiStatus"></span></div>
+    </div></div>
+  <div class="card pad"><div class="sec-h"><h3>Data</h3></div><p class="hint">${SYNC.mode === 'server' ? (SYNC.storage === 'file-temporary' ? '<b style="color:var(--warning)">Shared, but the server has no database — data will be lost on redeploy. Add Postgres in Railway.</b>' : 'Stored on the server and shared with everyone who opens this site.') : '<b style="color:var(--warning)">Not connected to the server — changes are only saved in this browser.</b>'}</p>
     <div class="row" style="margin-top:12px;flex-wrap:wrap"><button class="btn sm" data-act="exportjson"><i class="fa-solid fa-download"></i>Export backup</button><label class="btn sm"><i class="fa-solid fa-upload"></i>Import backup<input type="file" accept=".json" data-importjson style="display:none"></label></div>
-    <div style="border-top:1px solid var(--border);margin:16px 0"></div><button class="btn sm" data-act="reset" style="color:var(--danger)">Reset everything</button></div></div>`];
+    <div style="border-top:1px solid var(--border);margin:16px 0"></div>
+    <button class="btn sm" data-act="resetlib">Reset templates & library to Born defaults</button>
+    <div style="height:8px"></div><button class="btn sm" data-act="reset" style="color:var(--danger)">Reset everything</button></div></div>`];
 }
 
-/* ---------------- PDF ---------------- */
+/* ---------------- Scope of Work (PDF via print) ---------------- */
+const WORDS = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
 function buildPrint(s) {
-  const t = totals(s);
-  const ref = (s.client || 'BRN').replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase() + '-' + s.id.slice(0, 4).toUpperCase();
+  const t = totals(s), st = S.settings; let n = 0;
+  const co = s.clientCo || {};
+  const phases = s.phases.map((p, i) => {
+    const label = st.sowNumber && !p.media ? `Phase ${WORDS[n++] || n}: ${p.name}` : p.name;
+    let items = clientItems(p).map(it => it.name + (it.qty > 1 ? ` x ${it.qty}${it.unit ? ' ' + it.unit + (/s$/.test(it.unit) ? '' : 's') : ''}` : ''));
+    if (st.sowAM && p.items.some(i => i.kind === 'am' || i.kind === 'wip')) items.push('Account management & WIP meetings');
+    return `<div class="sow-ph"><div class="l"><div class="pn">${esc(label)}</div>${st.sowDesc && p.desc ? `<div class="pd">${esc(p.desc)}</div>` : ''}${items.map(x => `<div class="it">${esc(x)}</div>`).join('')}</div><div class="fee">${money2(t.phasesClient[i])}</div></div>`;
+  }).join('');
   $('#print').innerHTML = `
-  <div class="p-head"><div class="ag">${esc(S.settings.agency)}</div><div class="meta"><b>Estimate</b><br>Ref ${ref}<br>${fmtDate(Date.now())}</div></div>
-  <div class="p-title">${esc(s.name)}</div><div class="p-client">Prepared for ${esc(s.client || '—')}</div>
-  ${s.overview ? `<p class="p-ov">${esc(s.overview)}</p>` : ''}
-  <table class="p-tbl"><thead><tr><th>Phase</th><th>Cost</th></tr></thead><tbody>
-  ${s.phases.map((p, i) => { const inc = clientItems(p).map(x => x.name + (x.qty > 1 ? ' ×' + x.qty : '')); return `<tr><td><div class="pn">${i + 1}. ${esc(p.name)}</div>${p.desc ? `<div class="pd">${esc(p.desc)}</div>` : ''}${inc.length ? `<div class="pi">Includes: ${esc(inc.join(', '))}</div>` : ''}</td><td class="c">${money(t.phasesClient[i])}</td></tr>`; }).join('')}
-  </tbody></table>
-  <div class="p-tot">${t.disc ? `<div><span>Subtotal</span><span>${money(t.sub)}</span></div><div><span>Discount</span><span>−${money(t.disc)}</span></div>` : ''}
-    <div><span>Total ex GST</span><span>${money(t.ex)}</span></div><div><span>GST ${S.settings.gst}%</span><span>${money(t.gst)}</span></div><div class="g"><span>Total inc GST</span><span>${money(t.inc)}</span></div></div>
-  ${s.notes ? `<div class="p-notes"><b>Notes</b>${esc(s.notes)}</div>` : ''}`;
+  <div class="sow-top"><div class="sow-logo">${esc(st.agency)}</div><div class="sow-title"><b>Scope of Work</b><span>${fmtDate(Date.now())}</span></div></div>
+  <div class="sow-parties"><div>${esc(co.name || s.client || '')}${co.address ? '\n' + esc(co.address) : ''}${co.abn ? '\n' + esc(co.abn) : ''}</div><div>${esc(st.company)}\n${esc(st.address)}\n${esc(st.abn)}</div></div>
+  <div class="sow-head"><span>${esc(s.name)}</span><span>Fee</span></div>
+  ${s.overview ? `<p class="sow-ov">${esc(s.overview)}</p>` : ''}
+  ${phases}
+  <div class="sow-note">${esc(st.sowNote)}${s.notes ? '<br>' + esc(s.notes).replace(/\n/g, '<br>') : ''}</div>
+  <div class="sow-tot">${t.disc ? `<div><span>Subtotal</span><span>$${money2(t.sub)}</span></div><div><span>Discount</span><span>−$${money2(t.disc)}</span></div>` : ''}<div><span>Total</span><span>$${money2(t.ex)}</span></div><div><span>(GST)</span><span>$${money2(t.gst)}</span></div><div class="g"><span>Grand Total $ (AUD)</span><span>$${money2(t.inc)}</span></div></div>
+  <div class="sow-sign"><div>CLIENT SIGNATURE</div><div>DATE</div></div>
+  <div class="sow-terms">${esc(st.terms).replace(/\n/g, '<br>')}</div>`;
 }
 function exportPDF() {
   const s = cur(); if (!s) return; buildPrint(s);
-  const old = document.title; document.title = `${S.settings.agency} Estimate - ${s.client ? s.client + ' - ' : ''}${s.name}`;
+  const old = document.title; document.title = `${S.settings.agency} Scope of Work - ${s.client ? s.client + ' - ' : ''}${s.name}`;
   setTimeout(() => { try { window.print(); } catch (e) { toast('Printing is blocked here'); } document.title = old; }, 100);
 }
 
 /* ---------------- actions ---------------- */
+async function readBrief() {
+  const d = window._draft; if (!d.brief || d.brief.trim().length < 15) return toast('Add a brief first');
+  const done = loader(S.settings.ai ? 'Reading the brief…' : 'Scanning the brief…');
+  let rv = null;
+  if (S.settings.ai) { try { rv = aiToReview(d, await aiReadBrief(d.name, d.client, d.brief)); } catch (e) { toast('AI unavailable — used the built-in reader'); } }
+  if (!rv) rv = localReview(d);
+  rv.calib = calibrate(d.brief); d.review = rv; if (!d.name && rv.title) d.name = rv.title;
+  done(); render(); window.scrollTo(0, 0);
+}
+async function buildFromDraft() {
+  const d = window._draft; const done = loader('Building estimate…');
+  try {
+    let s = buildScope(d);
+    const old = d.replace && S.scopes.find(x => x.id === d.replace);
+    if (old) { Object.assign(s, { id: old.id, created: old.created, status: old.status, clientCo: old.clientCo, notes: old.notes, contingency: old.contingency, discount: old.discount }); }
+    if (S.settings.ai && d.review.ai) { done.set('Writing scope copy…'); try { const r = await aiCopy(s); if (r.overview) s.overview = r.overview; s.phases.forEach(p => { if (r.phaseDescriptions?.[p.id]) p.desc = r.phaseDescriptions[p.id]; }); } catch (e) {} }
+    if (old) S.scopes[S.scopes.indexOf(old)] = s; else S.scopes.push(s);
+    save(); window._draft = null; done(); go('edit', s.id);
+  } catch (e) { done(); console.error(e); toast('Could not build: ' + e.message); }
+}
+function addLineTo(p, v) {
+  const s = cur(), [kind, id] = v.split(':');
+  if (kind === 'lib') { const d = lib(id); deliverableItems({ libId: id, name: d.name, qty: 1, spec: '', auto: true, hours: libHours(d, 1) }, s.team, 1).forEach(it => p.items.push(it)); }
+  else if (kind === 'ext') { const x = extLib(id); p.items.push({ id: uid(), libId: null, extId: id, kind: 'ext', name: x.name, qty: 1, lines: [extLine(x)] }); }
+  else if (id === 'int') p.items.push({ id: uid(), libId: null, kind: 'core', name: 'Custom line', qty: 1, lines: [intLine(T.DES, 2, s.team)] });
+  else if (id === 'ext') p.items.push({ id: uid(), libId: null, kind: 'ext', name: 'External cost', qty: 1, lines: [extLine({ cost: 0, markup: S.settings.markup })] });
+  else if (id === 'am') p.items.push({ id: uid(), libId: null, kind: 'am', name: 'Account management', qty: 1, lines: [intLine(S.settings.amTitle, 1, s.team)] });
+}
 const ACT = {
   go: a => go(a.dataset.v),
   open: (a, e) => { if (e.target.closest('button')) return; go('edit', a.dataset.id); },
-  dup: a => { const c = JSON.parse(JSON.stringify(S.scopes.find(x => x.id === a.dataset.id))); c.id = uid(); c.name += ' (copy)'; c.status = 'draft'; c.created = c.updated = Date.now(); S.scopes.push(c); save(); render(); toast('Duplicated'); },
+  seg: a => { UI[a.dataset.k] = a.dataset.v; saveUI(); render(); },
+  libtab: a => { UI.libTab = a.dataset.v; saveUI(); render(); },
+  dup: a => { const c = clone(S.scopes.find(x => x.id === a.dataset.id)); c.id = uid(); c.name += ' (copy)'; c.status = 'draft'; c.created = c.updated = Date.now(); S.scopes.push(c); save(); render(); toast('Duplicated'); },
   delscope: async a => { if (await confirmBox('Delete this estimate?')) { S.scopes = S.scopes.filter(x => x.id !== a.dataset.id); save(); render(); } },
-  scopeit: async () => {
-    const d = window._draft; if (!d.brief || d.brief.trim().length < 15) return toast('Add a brief first');
-    const done = loader(S.settings.ai ? 'Building estimate with AI…' : 'Building estimate…');
-    try { const s = await createScope({ name: d.name.trim(), client: d.client.trim(), brief: d.brief, useAI: S.settings.ai }); S.scopes.push(s); save(); window._draft = null; done(); go('edit', s.id); }
-    catch (e) { done(); toast('Something went wrong: ' + e.message); }
-  },
+  readbrief: readBrief,
+  rvback: () => { window._draft.review = null; render(); },
+  build: buildFromDraft,
+  rvaddrow: () => { window._draft.review.rows.push({ id: uid(), on: true, name: 'New deliverable', libId: null, qty: 1, spec: '', source: '', verified: true, auto: false, hours: { design: 2, copy: 0, production: 0 } }); render(); },
+  rvdelrow: a => { const rv = window._draft.review; rv.rows = rv.rows.filter(r => r.id !== a.dataset.id); render(); },
+  rvaddext: () => { window._draft.review.ext.push(extRow({ name: 'External cost', group: 'production', cost: 0, markup: S.settings.markup })); render(); },
+  rvdelext: a => { const rv = window._draft.review; rv.ext = rv.ext.filter(r => r.id !== a.dataset.id); render(); },
   phmove: a => { const s = cur(), i = s.phases.findIndex(p => p.id === a.dataset.pid), j = i + +a.dataset.d; if (j < 0 || j >= s.phases.length) return; [s.phases[i], s.phases[j]] = [s.phases[j], s.phases[i]]; touch(); render(); },
   phdel: async a => { if (await confirmBox('Delete this phase and its lines?')) { const s = cur(); s.phases = s.phases.filter(p => p.id !== a.dataset.pid); touch(); render(); } },
   phregen: a => { const s = cur(), p = findPhase(a.dataset.pid); p.v = (p.v || 0) + 1; p.desc = genPhaseDesc(s, p, p.v); touch(); render(); },
   regenov: () => { const s = cur(); s.overview = genOverview(s); touch(); render(); },
-  addphase: () => { const s = cur(); s.phases.push(newPhase('custom', 'New phase', s.phases.length)); touch(); render(); },
+  addphase: () => { const s = cur(); s.phases.push(newPhase('New phase', s.phases.length)); touch(); render(); },
+  recalcam: () => { addAM(cur()); touch(); render(); toast('Account management & WIPs recalculated'); },
   lndel: a => { const p = findPhase(a.dataset.pid), it = findItem(a.dataset.pid, a.dataset.iid); it.lines = it.lines.filter(l => l.id !== a.dataset.lid); if (!it.lines.length) p.items = p.items.filter(i => i !== it); touch(); render(); },
-  lnadd: a => { const it = findItem(a.dataset.pid, a.dataset.iid); it.lines.push({ id: uid(), personId: S.people[0]?.id, hours: 1, rate: null }); touch(); render(); },
+  lnadd: a => { const it = findItem(a.dataset.pid, a.dataset.iid); it.lines.push({ id: uid(), type: 'int', personId: cur().team[0] || S.people[0]?.id, hours: 1, rate: null, costRate: null }); touch(); render(); },
+  teamrm: a => { const s = cur(); s.team = s.team.filter(x => x !== a.dataset.id); touch(); render(); },
   rescope: async () => {
-    const s = cur(); if (!(await confirmBox('Rebuild the whole table from the brief? Your edits will be replaced.', 'Rebuild'))) return;
-    const done = loader('Rebuilding…'); const n = await createScope({ name: s.name, client: s.client, brief: s.brief, useAI: S.settings.ai });
-    Object.assign(s, { phases: n.phases, overview: n.overview, calib: n.calib, signals: n.signals, detected: n.detected, aiUsed: n.aiUsed }); touch(); done(); render();
+    const s = cur(); if (!(await confirmBox('Re-read the brief and rebuild? This replaces the whole table.', 'Re-read'))) return;
+    window._draft = { name: s.name, client: s.client, brief: s.brief, replace: s.id }; view = 'new'; await readBrief();
   },
   airewrite: async () => {
     const s = cur(), done = loader('Rewriting copy…');
-    try { const r = await aiRewrite(s); if (r.overview) s.overview = r.overview; s.phases.forEach(p => { if (r.phaseDescriptions?.[p.id]) p.desc = r.phaseDescriptions[p.id]; }); toast('Copy rewritten'); }
+    try { const r = await aiCopy(s); if (r.overview) s.overview = r.overview; s.phases.forEach(p => { if (r.phaseDescriptions?.[p.id]) p.desc = r.phaseDescriptions[p.id]; }); toast('Copy rewritten'); }
     catch (e) { s.phases.forEach(p => { p.v = (p.v || 0) + 1; p.desc = genPhaseDesc(s, p, p.v); }); s.overview = genOverview(s); toast('AI not connected — refreshed built-in copy'); }
     done(); touch(); render();
   },
   tomodel: () => {
     const s = cur(), t = totals(s), ih = {};
-    s.phases.forEach(p => p.items.forEach(it => { if (it.libId) ih[it.libId] = (ih[it.libId] || 0) + itemHours(it) / (1 + (it.qty - 1) * (lib(it.libId)?.unit || 0)); }));
+    s.phases.forEach(p => p.items.forEach(it => { if (it.libId) ih[it.libId] = (ih[it.libId] || 0) + itemHours(it) / Math.max(1, it.qty); }));
     const ex = S.past.find(p => p.fromScope === s.id);
     const rec = { id: ex?.id || uid(), fromScope: s.id, name: s.name, client: s.client, date: Date.now(), source: 'estimate', text: s.brief + '\n' + s.phases.map(p => p.name + ': ' + p.items.map(i => i.name).join(', ')).join('\n'), total: Math.round(t.ex), phases: s.phases.map((p, i) => ({ name: p.name, cost: t.phasesClient[i] })), itemHours: ih, detected: [...new Set(s.phases.flatMap(p => p.items.map(i => i.libId)).filter(Boolean))], off: ex?.off || false };
     if (ex) Object.assign(ex, rec); else S.past.push(rec);
@@ -1091,63 +1455,111 @@ const ACT = {
   },
   export: exportPDF,
   addpast: () => pastModal({ id: uid(), _new: true, name: '', client: '', date: Date.now(), source: 'manual', text: '', total: 0, phases: [], itemHours: {} }),
-  editpast: a => pastModal(JSON.parse(JSON.stringify(S.past.find(p => p.id === a.dataset.id)))),
+  editpast: a => pastModal(clone(S.past.find(p => p.id === a.dataset.id))),
   delpast: async a => { if (await confirmBox('Remove this scope from the pricing model?', 'Remove')) { S.past = S.past.filter(p => p.id !== a.dataset.id); save(); render(); } },
-  addperson: () => { S.people.push({ id: uid(), name: '', title: '', rate: 150 }); save(); render(); },
+  addperson: () => { S.people.push({ id: uid(), name: '', title: '', rate: 200, cost: 80 }); save(); render(); },
   delperson: async a => { const used = S.scopes.some(s => s.phases.some(p => p.items.some(i => i.lines.some(l => l.personId === a.dataset.id)))); if (await confirmBox(used ? 'This person is on existing estimates — those lines will show $0 until reassigned. Delete?' : 'Delete this person?')) { S.people = S.people.filter(r => r.id !== a.dataset.id); save(); render(); } },
-  addlib: () => { const d = { id: uid(), name: 'New deliverable', phase: 'production', kw: [], tasks: {}, unit: 0 }; S.library.push(d); window._openLib = d.id; save(); render(); },
+  addlib: () => { S.library.unshift({ id: uid(), name: 'New deliverable', unit: 'each', kw: [], tracks: { design: { base: 0, per: 2, title: T.DES } } }); save(); render(); },
   dellib: async a => { if (await confirmBox('Remove this deliverable from the library?')) { S.library = S.library.filter(d => d.id !== a.dataset.id); save(); render(); } },
+  addext: () => { S.externals.unshift({ id: uid(), name: 'New external cost', group: 'production', kw: [], cost: 0, markup: S.settings.markup, supplier: '' }); save(); render(); },
+  delext: async a => { if (await confirmBox('Remove this external cost?')) { S.externals = S.externals.filter(d => d.id !== a.dataset.id); save(); render(); } },
+  tpladd: () => { const t = { id: uid(), name: 'New template', designPhase: 'Design', productionPhase: 'Production', mediaPhase: 'Media Buy', weeks: { small: 4, mid: 8, big: 12 }, kw: [], phases: [{ name: 'Getting to know', key: 'discovery', items: [TI('Briefing', [[S.settings.amTitle, 1, 2, 2]])], ext: [] }] }; S.templates.push(t); UI.tplId = t.id; save(); render(); },
+  tpladdph: a => { tpl(a.dataset.id).phases.push({ name: 'New phase', items: [], ext: [] }); save(); render(); },
+  tpldelph: async a => { if (await confirmBox('Delete this template phase?')) { tpl(a.dataset.id).phases.splice(+a.dataset.pi, 1); save(); render(); } },
+  tpladdit: a => { tpl(a.dataset.id).phases[+a.dataset.pi].items.push(TI('New item', [[titles()[0], 0, 2, 4]])); save(); render(); },
+  tpladdln: a => { tpl(a.dataset.id).phases[+a.dataset.pi].items[+a.dataset.ii].lines.push({ title: titles()[0], hours: { small: 0, mid: 0, big: 0 } }); save(); render(); },
+  tpldelln: a => { const it = tpl(a.dataset.id).phases[+a.dataset.pi].items, i = it[+a.dataset.ii]; i.lines.splice(+a.dataset.li, 1); if (!i.lines.length) it.splice(+a.dataset.ii, 1); save(); render(); },
+  tpldelx: a => { tpl(a.dataset.id).phases[+a.dataset.pi].ext.splice(+a.dataset.xi, 1); save(); render(); },
   exportjson: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ ...S, settings: { ...S.settings, apiKey: '' } }, null, 2)], { type: 'application/json' })); a.download = `born-scope-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click(); },
+  resetlib: async () => { if (await confirmBox('Replace templates, deliverables and external costs with the Born defaults? Estimates and rate card are kept.', 'Reset')) { S.templates = clone(SEED_TEMPLATES); S.library = clone(SEED_LIBRARY); S.externals = clone(SEED_EXTERNALS); save(); render(); } },
   reset: async () => { if (await confirmBox('Wipe all estimates, the pricing model, rate card and library — for everyone using this site? Export a backup first.', 'Reset')) { const k = S.settings.apiKey; S = seed(); S.settings.apiKey = k; save(); render(); } },
   testai: async () => { const el = $('#aiStatus'); el.textContent = 'Testing…'; try { await callAI('Reply with JSON only.', 'Return {"ok":true}', 50); el.textContent = 'Connected'; } catch (e) { el.textContent = e.message + (S.settings.apiKey ? '' : ' — set ANTHROPIC_API_KEY on the server'); } },
 };
 document.addEventListener('click', e => { const a = e.target.closest('[data-act]'); if (a && ACT[a.dataset.act]) ACT[a.dataset.act](a, e); });
 
 function setField(el) {
-  const [obj, key] = (el.dataset.f || el.dataset.fc).split('.'); const v = el.value;
-  const numKeys = ['hours', 'contingency', 'discount', 'gst', 'round', 'pmPct', 'unit'];
+  const [obj, key] = (el.dataset.f || el.dataset.fc).split('.'); const v = el.value, d = el.dataset;
+  const numKeys = ['hours', 'contingency', 'discount', 'gst', 'round', 'amPct', 'amMin', 'wipHours', 'markup', 'cost', 'weeks', 'base', 'per'];
   const val = numKeys.includes(key) ? (v === '' ? 0 : +v) : v;
   if (obj === 'scope') { cur()[key] = val; if (key === 'status') el.className = 'pill st-' + v; touch(); return updateTotals(); }
-  if (obj === 'phase') { findPhase(el.dataset.pid)[key] = val; if (key === 'override') el.classList.toggle('on', isNum(v)); touch(); return updateTotals(); }
+  if (obj === 'co') { cur().clientCo[key] = v; touch(); return; }
+  if (obj === 'phase') { findPhase(d.pid)[key] = val; if (key === 'override') el.classList.toggle('on', isNum(v)); touch(); return updateTotals(); }
   if (obj === 'item') {
-    const it = findItem(el.dataset.pid, el.dataset.iid);
-    if (key === 'qty') { const u = lib(it.libId)?.unit ?? 1; const q = Math.max(1, Math.round(+v || 1)); const f0 = 1 + (it.qty - 1) * u, f1 = 1 + (q - 1) * u; it.lines.forEach(l => l.hours = r05(+l.hours * f1 / f0)); it.qty = q; touch(); return render(); }
+    const it = findItem(d.pid, d.iid);
+    if (key === 'qty') {
+      const q = Math.max(1, Math.round(+v || 1)), L = lib(it.libId);
+      if (L && L.tracks[it.kind]) { const h0 = trackHours(L, it.kind, it.qty), h1 = trackHours(L, it.kind, q); it.lines.forEach(l => { if (l.type !== 'ext') l.hours = r05(h0 ? +l.hours * h1 / h0 : h1 / it.lines.length); }); }
+      else it.lines.forEach(l => { if (l.type !== 'ext') l.hours = r05(+l.hours * q / it.qty); });
+      it.qty = q; touch(); return render();
+    }
     it[key] = val; touch(); return;
   }
-  if (obj === 'line') { const l = findLine(el.dataset.pid, el.dataset.iid, el.dataset.lid); if (key === 'rate') l.rate = v === '' ? null : +v; else l[key] = val; touch(); if (key === 'personId') return render(); return updateTotals(); }
+  if (obj === 'line') {
+    const l = findLine(d.pid, d.iid, d.lid);
+    if (['rate', 'costRate', 'price'].includes(key)) l[key] = v === '' ? null : +v; else l[key] = val;
+    if (key === 'markup') l.price = null;
+    touch(); if (key === 'personId') return render(); return updateTotals();
+  }
   if (obj === 'set') { S.settings[key] = val; save(); if (key === 'agency') $('#agencyTag').textContent = v; return; }
   if (obj === 'person') {
-    const p = S.people.find(x => x.id === el.dataset.id);
-    if (key === 'title') { const old = p.title; p.title = v; if (old && v && !S.people.some(x => x !== p && x.title === old)) S.library.forEach(d => { if (d.tasks[old] != null) { d.tasks[v] = (d.tasks[v] || 0) + d.tasks[old]; delete d.tasks[old]; } }); }
-    else p[key] = key === 'rate' ? +v || 0 : v;
+    const p = S.people.find(x => x.id === d.id);
+    if (key === 'title') {
+      const old = p.title; p.title = v;
+      if (old && v && !S.people.some(x => x !== p && x.title === old)) {
+        S.library.forEach(L => Object.values(L.tracks).forEach(t => { if (t.title === old) t.title = v; }));
+        S.templates.forEach(t => t.phases.forEach(ph => ph.items.forEach(it => it.lines.forEach(ln => { if (ln.title === old) ln.title = v; }))));
+        if (S.settings.amTitle === old) S.settings.amTitle = v;
+      }
+    } else p[key] = (key === 'rate' || key === 'cost') ? +v || 0 : v;
     save(); return;
   }
   if (obj === 'lib') {
-    const d = S.library.find(x => x.id === el.dataset.id); window._openLib = d.id;
-    if (key === 'kw') d.kw = v.split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
-    else if (key === 'task') { const h = +v; if (h > 0) d.tasks[el.dataset.title] = h; else delete d.tasks[el.dataset.title]; el.closest('label').classList.toggle('has', h > 0); }
-    else d[key] = val;
-    save(); if (key === 'phase') render(); return;
+    const L = S.library.find(x => x.id === d.id);
+    if (key === 'kw') L.kw = v.split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+    else if (['base', 'per', 'title'].includes(key)) { const t = L.tracks[d.tr] || (L.tracks[d.tr] = { base: 0, per: 0, title: d.tr === 'copy' ? T.CW : T.DES }); t[key] = key === 'title' ? v : +v || 0; if (!t.base && !t.per && key !== 'title') delete L.tracks[d.tr]; }
+    else L[key] = v;
+    save(); return;
   }
+  if (obj === 'ext') { const x = S.externals.find(e => e.id === d.id); if (key === 'kw') x.kw = v.split(',').map(y => y.trim().toLowerCase()).filter(Boolean); else x[key] = ['cost', 'markup'].includes(key) ? +v || 0 : v; save(); return; }
+  if (obj === 'tpl') { const t = tpl(d.id); if (key === 'weeks') t.weeks[d.size] = +v || 1; else t[key] = v; save(); return; }
+  const t = obj.startsWith('tpl') ? tpl(d.id) : null;
+  if (obj === 'tplph') { t.phases[+d.pi].name = v; save(); return; }
+  if (obj === 'tplit') { t.phases[+d.pi].items[+d.ii].name = v; save(); return; }
+  if (obj === 'tplln') { const ln = t.phases[+d.pi].items[+d.ii].lines[+d.li]; if (key === 'hours') ln.hours[d.size] = +v || 0; else ln.title = v; save(); return; }
+  if (obj === 'tplx') { const x = t.phases[+d.pi].ext[+d.xi]; if (key === 'cost') x.cost[d.size] = +v || 0; else x.name = v; save(); return; }
+}
+function setReview(el) {
+  const rv = window._draft.review, d = el.dataset;
+  if (d.rv) { rv[d.rv] = d.rv === 'weeks' ? Math.max(1, +el.value || 1) : el.value; if (d.rv === 'type' || d.rv === 'size') { rv.team = [...new Set([...rv.team, ...suggestTeam(rv.type, rv.size, rv.rows)])]; if (!/brief/i.test(rv.weeksSource || '')) rv.weeks = tpl(rv.type).weeks[rv.size]; render(); } return; }
+  if (d.rvteam) { const id = d.rvteam; rv.team = el.checked ? [...rv.team, id] : rv.team.filter(x => x !== id); el.closest('.pick').classList.toggle('on', el.checked); return; }
+  if (d.rvrow) {
+    const r = rv.rows.find(x => x.id === d.rvrow), k = d.k;
+    if (k === 'on') { r.on = el.checked; return render(); }
+    if (k.startsWith('h_')) { r.hours[k.slice(2)] = +el.value || 0; r.auto = false; return; }
+    if (k === 'qty') { r.qty = Math.max(1, +el.value || 1); if (r.auto && r.libId) { r.hours = libHours(lib(r.libId), r.qty); render(); } return; }
+    if (k === 'libId') { r.libId = el.value || null; if (r.libId) { r.auto = true; r.hours = libHours(lib(r.libId), r.qty); } return render(); }
+    r[k] = el.value; return;
+  }
+  if (d.rvext) { const x = rv.ext.find(y => y.id === d.rvext), k = d.k; if (k === 'on') { x.on = el.checked; return render(); } x[k] = ['cost', 'markup'].includes(k) ? +el.value || 0 : el.value; }
 }
 document.addEventListener('input', e => {
   const el = e.target;
-  if (el.dataset.f && !(el.dataset.f === 'person.title')) setField(el);
+  if (el.dataset.f && el.dataset.f !== 'person.title') setField(el);
   if (el.hasAttribute('data-auto')) autosize(el);
   if (el.dataset.draft) { window._draft[el.dataset.draft] = el.value; if (el.dataset.draft === 'brief') { clearTimeout(window._lc); window._lc = setTimeout(liveChips, 300); } }
+  if (el.dataset.rvrow && el.type !== 'checkbox' && el.tagName !== 'SELECT' && el.dataset.k !== 'qty') setReview(el);
+  if (el.dataset.rvext && el.type !== 'checkbox' && el.tagName !== 'SELECT') setReview(el);
   if (el.hasAttribute('data-search')) { window._q = el.value; const pos = el.selectionStart; render(); const n = $('[data-search]'); n.focus(); n.setSelectionRange(pos, pos); }
 });
 document.addEventListener('change', async e => {
-  const el = e.target;
-  if (el.dataset.fc || el.dataset.f === 'person.title') setField(el);
-  if (el.dataset.pasttog) { const p = S.past.find(x => x.id === el.dataset.pasttog); p.off = !el.checked; save(); render(); toast(p.off ? 'Excluded from learning' : 'Included in learning'); }
-  if (el.dataset.chg === 'additem') {
-    const p = findPhase(el.dataset.pid), v = el.value; if (!v) return; let it;
-    if (v === '__custom') it = { id: uid(), libId: null, name: 'Custom line', qty: 1, lines: [{ id: uid(), personId: S.people[0]?.id, hours: 4, rate: null }] };
-    else if (v === '__pm') it = pmItem(phaseHours(p) * (+S.settings.pmPct || 10) / 100);
-    else it = itemFromLib(lib(v), 1, cur().calib?.factor || 1);
-    p.items.push(it); touch(); render();
-  }
+  const el = e.target, d = el.dataset;
+  if (d.fc || d.f === 'person.title') setField(el);
+  if (d.rv || d.rvteam || (d.rvrow && (el.type === 'checkbox' || el.tagName === 'SELECT' || d.k === 'qty')) || (d.rvext && (el.type === 'checkbox' || el.tagName === 'SELECT'))) setReview(el);
+  if (d.settog) { S.settings[d.settog] = el.checked; save(); }
+  if (d.pasttog) { const p = S.past.find(x => x.id === d.pasttog); p.off = !el.checked; save(); render(); toast(p.off ? 'Excluded from learning' : 'Included in learning'); }
+  if (d.chg === 'additem' && el.value) { addLineTo(findPhase(d.pid), el.value); touch(); render(); }
+  if (d.chg === 'teamadd' && el.value) { cur().team.push(el.value); touch(); render(); }
+  if (el.hasAttribute('data-applycal')) window._draft.applyCal = el.checked;
   if (el.hasAttribute('data-aitog')) { S.settings.ai = el.checked; save(); }
   if (el.hasAttribute('data-briefup') && el.files[0]) {
     try { const txt = await fileText(el.files[0]); window._draft.brief = (window._draft.brief ? window._draft.brief + '\n\n' : '') + txt.trim(); if (!window._draft.name) window._draft.name = el.files[0].name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' '); render(); toast('Brief loaded'); }
@@ -1155,7 +1567,7 @@ document.addEventListener('change', async e => {
   }
   if (el.hasAttribute('data-pastup')) handlePast([...el.files]);
   if (el.hasAttribute('data-importjson') && el.files[0]) {
-    try { const d = migrate(JSON.parse(await el.files[0].text())); if (!d.people || !d.scopes) throw 0; d.settings.apiKey = S.settings.apiKey; S = d; save(); render(); toast('Backup imported'); } catch (err) { toast('Not a valid backup'); }
+    try { const n = normalize(JSON.parse(await el.files[0].text())); if (!n.people || !n.scopes) throw 0; n.settings.apiKey = S.settings.apiKey; S = n; save(); render(); toast('Backup imported'); } catch (err) { toast('Not a valid backup'); }
   }
 });
 async function handlePast(files) {
