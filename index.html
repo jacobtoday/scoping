@@ -44,8 +44,10 @@ h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em}
 .rail:hover .ni span{opacity:1}
 .ni:hover{background:var(--sidebar-hover);color:#fff}
 .ni.on{background:var(--sidebar-active);color:#fff}
-.rail .foot{margin-top:auto;font-size:11px;color:var(--sidebar-muted);white-space:nowrap;padding:0 8px;opacity:0;transition:opacity .2s}
-.rail:hover .foot{opacity:1}
+.sync{margin-top:auto;display:flex;align-items:center;gap:14px;padding:10px 12px;font-size:12px;color:var(--sidebar-muted);white-space:nowrap}
+.sync i{width:20px;text-align:center;font-size:14px;flex:none}
+.sync span{opacity:0;transition:opacity .15s}.rail:hover .sync span{opacity:1}
+.sync.ok i{color:#7BC48F}.sync.warn i{color:#E0B45C}.sync.err i{color:#E57A6E}
 
 .shell{margin-left:68px;min-height:100vh}
 .topbar{position:sticky;top:0;z-index:20;background:rgba(247,245,240,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;min-height:64px}
@@ -234,7 +236,7 @@ table.est{width:100%;border-collapse:collapse;min-width:760px}
 <aside class="rail">
   <div class="logo" data-act="go" data-v="home"><b id="agencyTag">Born</b><span>SCOPE</span></div>
   <nav class="nav" id="nav"></nav>
-  <div class="foot">Scope Lab v2</div>
+  <div class="sync" id="sync"><i class="fa-solid fa-arrows-rotate fa-spin"></i><span>Connecting…</span></div>
 </aside>
 <div class="shell">
   <header class="topbar" id="topbar"></header>
@@ -316,8 +318,96 @@ function migrate(d) {
 }
 let S;
 try { S = migrate(JSON.parse(localStorage.getItem(LS))) || seed(); } catch (e) { S = seed(); }
+/* ---------------- shared storage (server) ----------------
+   The server is the source of truth. localStorage is only an offline cache.
+   Records: config:main, scope:<id>, past:<id>. API key never leaves this browser. */
+const KEYLS = 'bornScope.apiKey', MIGLS = 'bornScope.migrated';
+try { S.settings.apiKey = localStorage.getItem(KEYLS) || S.settings.apiKey || ''; } catch (e) {}
+const SYNC = { mode: 'connecting', since: 0, synced: {}, busy: false, again: false, storage: '', needRender: false };
+const canon = o => JSON.stringify(o, (k, v) => v && typeof v === 'object' && !Array.isArray(v) ? Object.keys(v).sort().reduce((a, x) => (a[x] = v[x], a), {}) : v);
+function cacheLocal() { try { localStorage.setItem(LS, JSON.stringify({ ...S, settings: { ...S.settings, apiKey: '' } })); localStorage.setItem(KEYLS, S.settings.apiKey || ''); } catch (e) {} }
 let saveT;
-function save() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) { toast('Could not save — browser storage is full'); } }, 250); }
+function save() { clearTimeout(saveT); saveT = setTimeout(() => { cacheLocal(); if (SYNC.mode === 'server') push(); }, 350); }
+function records() {
+  const settings = { ...S.settings }; delete settings.apiKey;
+  const m = { 'config:main': { kind: 'config', id: 'main', data: { version: S.version, settings, people: S.people, library: S.library, phaseTpl: S.phaseTpl } } };
+  S.scopes.forEach(x => m['scope:' + x.id] = { kind: 'scope', id: x.id, data: x });
+  S.past.forEach(x => m['past:' + x.id] = { kind: 'past', id: x.id, data: x });
+  return m;
+}
+const pendingKeys = () => { const c = records(), out = new Set(); for (const k in c) if (SYNC.synced[k] !== canon(c[k].data)) out.add(k); return out; };
+async function push() {
+  if (SYNC.busy) { SYNC.again = true; return; }
+  const c = records(), ups = [], dels = [], snap = {};
+  for (const k in c) { snap[k] = canon(c[k].data); if (SYNC.synced[k] !== snap[k]) ups.push(c[k]); }
+  for (const k in SYNC.synced) if (!(k in c)) { const i = k.indexOf(':'); dels.push({ kind: k.slice(0, i), id: k.slice(i + 1) }); }
+  if (!ups.length && !dels.length) return setStatus('ok');
+  SYNC.busy = true; setStatus('saving');
+  try {
+    const r = await fetch('/api/records', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ upserts: ups, deletes: dels }) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    ups.forEach(u => SYNC.synced[u.kind + ':' + u.id] = snap[u.kind + ':' + u.id]);
+    dels.forEach(d => delete SYNC.synced[d.kind + ':' + d.id]);
+    try { localStorage.setItem(MIGLS, '1'); } catch (e) {}
+    setStatus('ok');
+  } catch (e) { setStatus('error'); setTimeout(push, 5000); }
+  SYNC.busy = false;
+  if (SYNC.again) { SYNC.again = false; push(); }
+}
+function applyRec(r) {
+  const k = r.kind + ':' + r.id;
+  if (r.kind === 'config') { if (r.deleted) return; const d = r.data; Object.assign(S.settings, d.settings, { apiKey: S.settings.apiKey }); S.people = d.people; S.library = d.library; S.phaseTpl = d.phaseTpl; }
+  else { const arr = r.kind === 'scope' ? S.scopes : S.past; const i = arr.findIndex(x => x.id === r.id); if (r.deleted) { if (i >= 0) arr.splice(i, 1); } else if (i >= 0) arr[i] = r.data; else arr.push(r.data); }
+  if (r.deleted) delete SYNC.synced[k]; else SYNC.synced[k] = canon(r.data);
+}
+async function pull() {
+  const r = await fetch('/api/state?since=' + SYNC.since, { cache: 'no-store' });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const j = await r.json(); SYNC.storage = j.storage;
+  const pend = pendingKeys(); let changed = false;
+  for (const rec of j.records) {
+    const k = rec.kind + ':' + rec.id;
+    if (pend.has(k)) continue;                                   // unsaved local edit — ours goes up next push
+    if (!rec.deleted && SYNC.synced[k] === canon(rec.data)) continue; // echo of our own save
+    if (rec.deleted && !(k in SYNC.synced) && !records()[k]) continue;
+    applyRec(rec); changed = true;
+  }
+  SYNC.since = j.now;
+  return changed;
+}
+async function connect() {
+  try {
+    const r = await fetch('/api/state?since=0', { cache: 'no-store' });
+    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) throw new Error('no server');
+    const j = await r.json(); SYNC.storage = j.storage; SYNC.since = j.now;
+    let migrated = false; try { migrated = !!localStorage.getItem(MIGLS); } catch (e) {}
+    const live = j.records.filter(x => !x.deleted);
+    if (migrated || live.length) { if (migrated) { S.scopes = []; S.past = []; } }
+    // server wins; on a browser's first connect, anything it had locally that the server lacks gets uploaded
+    j.records.forEach(applyRec);
+    SYNC.mode = 'server'; cacheLocal(); render(); push();
+    setInterval(poll, 8000);
+    window.addEventListener('focus', poll);
+  } catch (e) { SYNC.mode = 'local'; setStatus('local'); }
+}
+async function poll() {
+  if (SYNC.mode !== 'server' || SYNC.busy) return;
+  try { if (await pull()) { cacheLocal(); softRender(); } if (SYNC.lastStatus === 'error') push(); }
+  catch (e) { setStatus('error'); }
+}
+function softRender() {
+  const a = document.activeElement;
+  if (document.querySelector('.modal-bg') || (a && a.closest && a.closest('#main,#topbar') && a.matches('input,textarea,select'))) { SYNC.needRender = true; return; }
+  SYNC.needRender = false; const y = window.scrollY; render(); window.scrollTo(0, y);
+}
+document.addEventListener('focusout', () => setTimeout(() => { if (SYNC.needRender) softRender(); }, 150));
+function setStatus(st) {
+  SYNC.lastStatus = st;
+  const el = document.getElementById('sync'); if (!el) return;
+  const temp = SYNC.storage === 'file-temporary';
+  const M = { ok: ['fa-cloud', temp ? 'Shared · server storage not persistent' : 'Saved · shared with team', temp ? 'warn' : 'ok'], saving: ['fa-arrows-rotate fa-spin', 'Saving…', ''], error: ['fa-triangle-exclamation', 'Not saved — retrying', 'err'], local: ['fa-laptop', 'Local only — not shared', 'warn'], connecting: ['fa-arrows-rotate fa-spin', 'Connecting…', ''] }[st];
+  el.className = 'sync ' + M[2]; el.innerHTML = `<i class="fa-solid ${M[0]}"></i><span>${M[1]}</span>`; el.title = M[1];
+}
 let view = 'home', curId = null;
 
 /* ---------------- people + calc ---------------- */
@@ -935,7 +1025,7 @@ function vSettings() {
     </div>
     <div class="row"><button class="btn sm" data-act="testai">Test connection</button><span class="hint" id="aiStatus"></span></div>
   </div>
-  <div class="card pad"><div class="sec-h"><h3>Data</h3></div><p class="hint">Saved in this browser. Export to back up or move machines.</p>
+  <div class="card pad"><div class="sec-h"><h3>Data</h3></div><p class="hint">${SYNC.mode === 'server' ? (SYNC.storage === 'file-temporary' ? '<b style="color:var(--warning)">Shared, but the server has no database — data will be lost on redeploy. Add Postgres in Railway.</b>' : 'Stored on the server and shared with everyone who opens this site. Changes from others appear within a few seconds.') : '<b style="color:var(--warning)">Not connected to the server — changes are only saved in this browser.</b>'}</p>
     <div class="row" style="margin-top:12px;flex-wrap:wrap"><button class="btn sm" data-act="exportjson"><i class="fa-solid fa-download"></i>Export backup</button><label class="btn sm"><i class="fa-solid fa-upload"></i>Import backup<input type="file" accept=".json" data-importjson style="display:none"></label></div>
     <div style="border-top:1px solid var(--border);margin:16px 0"></div><button class="btn sm" data-act="reset" style="color:var(--danger)">Reset everything</button></div></div>`];
 }
@@ -1007,8 +1097,8 @@ const ACT = {
   delperson: async a => { const used = S.scopes.some(s => s.phases.some(p => p.items.some(i => i.lines.some(l => l.personId === a.dataset.id)))); if (await confirmBox(used ? 'This person is on existing estimates — those lines will show $0 until reassigned. Delete?' : 'Delete this person?')) { S.people = S.people.filter(r => r.id !== a.dataset.id); save(); render(); } },
   addlib: () => { const d = { id: uid(), name: 'New deliverable', phase: 'production', kw: [], tasks: {}, unit: 0 }; S.library.push(d); window._openLib = d.id; save(); render(); },
   dellib: async a => { if (await confirmBox('Remove this deliverable from the library?')) { S.library = S.library.filter(d => d.id !== a.dataset.id); save(); render(); } },
-  exportjson: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' })); a.download = `born-scope-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click(); },
-  reset: async () => { if (await confirmBox('Wipe all estimates, the pricing model, rate card and library? Export a backup first.', 'Reset')) { S = seed(); save(); render(); } },
+  exportjson: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ ...S, settings: { ...S.settings, apiKey: '' } }, null, 2)], { type: 'application/json' })); a.download = `born-scope-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click(); },
+  reset: async () => { if (await confirmBox('Wipe all estimates, the pricing model, rate card and library — for everyone using this site? Export a backup first.', 'Reset')) { const k = S.settings.apiKey; S = seed(); S.settings.apiKey = k; save(); render(); } },
   testai: async () => { const el = $('#aiStatus'); el.textContent = 'Testing…'; try { await callAI('Reply with JSON only.', 'Return {"ok":true}', 50); el.textContent = 'Connected'; } catch (e) { el.textContent = e.message + (S.settings.apiKey ? '' : ' — set ANTHROPIC_API_KEY on the server'); } },
 };
 document.addEventListener('click', e => { const a = e.target.closest('[data-act]'); if (a && ACT[a.dataset.act]) ACT[a.dataset.act](a, e); });
@@ -1065,7 +1155,7 @@ document.addEventListener('change', async e => {
   }
   if (el.hasAttribute('data-pastup')) handlePast([...el.files]);
   if (el.hasAttribute('data-importjson') && el.files[0]) {
-    try { const d = migrate(JSON.parse(await el.files[0].text())); if (!d.people || !d.scopes) throw 0; S = d; save(); render(); toast('Backup imported'); } catch (err) { toast('Not a valid backup'); }
+    try { const d = migrate(JSON.parse(await el.files[0].text())); if (!d.people || !d.scopes) throw 0; d.settings.apiKey = S.settings.apiKey; S = d; save(); render(); toast('Backup imported'); } catch (err) { toast('Not a valid backup'); }
   }
 });
 async function handlePast(files) {
@@ -1079,6 +1169,8 @@ document.addEventListener('dragleave', e => { const d = e.target.closest?.('#dro
 document.addEventListener('drop', e => { const d = e.target.closest?.('#drop'); if (d) { e.preventDefault(); d.classList.remove('over'); handlePast([...e.dataTransfer.files]); } });
 
 render();
+setStatus('connecting');
+connect();
 </script>
 </body>
 </html>
