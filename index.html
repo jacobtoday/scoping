@@ -412,7 +412,7 @@ const DEFAULT_SETTINGS = {
 const clone = o => JSON.parse(JSON.stringify(o));
 function seedPeople() { return SEED_PEOPLE.map(([title, rate, cost]) => ({ id: uid(), name: '', title, rate, cost })); }
 function seed() {
-  return { version: 3, settings: { ...DEFAULT_SETTINGS }, people: seedPeople(), templates: clone(SEED_TEMPLATES), library: clone(SEED_LIBRARY), externals: clone(SEED_EXTERNALS), past: [], scopes: [] };
+  return { version: 3, settings: { ...DEFAULT_SETTINGS }, people: seedPeople(), templates: clone(SEED_TEMPLATES), library: clone(SEED_LIBRARY), externals: clone(SEED_EXTERNALS), clients: [], past: [], scopes: [] };
 }
 /* bring any older data (v1/v2) up to v3 */
 const OLD_TITLE_MAP = { 'Creative Director': T.CD, 'Strategy Director': T.SD, 'Account Manager': T.AM, 'Producer': T.AM, 'Senior Designer': T.AD, 'Designer': T.DES, 'Copywriter': T.CW, 'UX Designer': T.DES, 'Developer': T.DEV, 'Motion Designer': T.MO };
@@ -432,6 +432,7 @@ function normalize(d) {
     }
   }
   d.externals = d.externals || clone(SEED_EXTERNALS);
+  if (!d.clients) { d.clients = []; (d.scopes || []).forEach(s => { if (!s.client) return; let cl = d.clients.find(x => x.name.toLowerCase() === s.client.toLowerCase()); if (!cl) d.clients.push(cl = { id: uid(), name: s.client, legal: s.clientCo?.name || '', address: s.clientCo?.address || '', abn: s.clientCo?.abn || '', contact: '', email: '', phone: '', notes: '' }); s.clientId = cl.id; }); }
   (d.people || []).forEach(p => { if (!isNum(p.cost)) p.cost = Math.round((+p.rate || 0) * 0.42); });
   (d.scopes || []).forEach(s => normScope(s, d));
   d.version = 3; return d;
@@ -460,7 +461,7 @@ let saveT;
 function save() { clearTimeout(saveT); saveT = setTimeout(() => { cacheLocal(); if (SYNC.mode === 'server') push(); }, 350); }
 function records() {
   const settings = { ...S.settings }; delete settings.apiKey;
-  const m = { 'config:main': { kind: 'config', id: 'main', data: { version: S.version, settings, people: S.people, templates: S.templates, library: S.library, externals: S.externals } } };
+  const m = { 'config:main': { kind: 'config', id: 'main', data: { version: S.version, settings, people: S.people, clients: S.clients, templates: S.templates, library: S.library, externals: S.externals } } };
   S.scopes.forEach(x => m['scope:' + x.id] = { kind: 'scope', id: x.id, data: x });
   S.past.forEach(x => m['past:' + x.id] = { kind: 'past', id: x.id, data: x });
   return m;
@@ -489,7 +490,7 @@ function applyRec(r) {
   if (r.kind === 'config') {
     if (r.deleted) return; const d = clone(r.data);
     S.settings = { ...DEFAULT_SETTINGS, ...d.settings, apiKey: S.settings.apiKey };
-    S.people = d.people || S.people; S.library = d.library || S.library; S.templates = d.templates; S.externals = d.externals;
+    S.people = d.people || S.people; S.clients = d.clients || S.clients || []; S.library = d.library || S.library; S.templates = d.templates; S.externals = d.externals;
     if (!d.templates) { const tmp = normalize({ settings: S.settings, people: S.people, scopes: S.scopes }); S.settings = tmp.settings; S.people = tmp.people; S.templates = tmp.templates; S.library = tmp.library; S.externals = tmp.externals; S.scopes.forEach(x => normScope(x)); }
   } else {
     const arr = r.kind === 'scope' ? S.scopes : S.past; const i = arr.findIndex(x => x.id === r.id);
@@ -513,6 +514,15 @@ async function pull() {
   SYNC.since = j.now;
   return changed;
 }
+function linkClients() {
+  S.clients = S.clients || [];
+  S.scopes.forEach(s => {
+    if (s.clientId && client(s.clientId) || !s.client) return;
+    let cl = clientByName(s.client);
+    if (!cl) S.clients.push(cl = { id: uid(), name: s.client, legal: s.clientCo?.name || '', address: s.clientCo?.address || '', abn: s.clientCo?.abn || '', contact: '', email: '', phone: '', notes: '' });
+    s.clientId = cl.id;
+  });
+}
 async function connect() {
   try {
     const r = await fetch('/api/state?since=0', { cache: 'no-store' });
@@ -521,6 +531,7 @@ async function connect() {
     let migrated = false; try { migrated = !!localStorage.getItem(MIGLS); } catch (e) {}
     if (migrated) { S.scopes = []; S.past = []; }
     j.records.forEach(applyRec);
+    linkClients();
     SYNC.mode = 'server'; cacheLocal(); render(); push();
     setInterval(poll, 8000);
     window.addEventListener('focus', poll);
@@ -561,6 +572,9 @@ function personFor(title, team = []) {
   return inTeam.find(m) || S.people.find(m) || inTeam.find(f) || S.people.find(f) || inTeam[0] || S.people[0];
 }
 const lib = id => S.library.find(d => d.id === id);
+const client = id => (S.clients || []).find(x => x.id === id);
+const clientName = s => client(s.clientId)?.name || s.client || '';
+const clientByName = n => (S.clients || []).find(x => x.name.toLowerCase() === String(n || '').trim().toLowerCase());
 const extLib = id => S.externals.find(d => d.id === id);
 const tpl = id => S.templates.find(t => t.id === id) || S.templates[0];
 const lineRate = l => isNum(l.rate) ? +l.rate : +person(l.personId).rate || 0;
@@ -818,7 +832,7 @@ function addAM(s) {
 function buildScope(d) {
   const rv = d.review, t = tpl(rv.type), size = rv.size, team = rv.team;
   const factor = S.settings.calibrate && d.applyCal !== false ? (rv.calib?.factor || 1) : 1;
-  const s = { id: uid(), name: d.name || rv.title || 'Untitled estimate', client: d.client, brief: d.brief, status: 'draft', created: Date.now(), updated: Date.now(), contingency: 0, discount: 0, notes: S.settings.notes, overview: '', phases: [], signals: { budget: rv.budget, weeks: rv.weeks }, weeks: rv.weeks, team, type: rv.type, size, calib: rv.calib, clientCo: { name: d.client || '', address: '', abn: '' }, detected: rv.rows.filter(r => r.on && r.libId).map(r => r.libId), aiUsed: rv.ai, assumptions: rv.assumptions };
+  const s = { id: uid(), name: d.name || rv.title || 'Untitled estimate', client: d.client, brief: d.brief, status: 'draft', created: Date.now(), updated: Date.now(), contingency: 0, discount: 0, notes: S.settings.notes, overview: '', phases: [], signals: { budget: rv.budget, weeks: rv.weeks }, weeks: rv.weeks, team, type: rv.type, size, calib: rv.calib, clientId: d.clientId || null, clientCo: { name: d.client || '', address: '', abn: '' }, detected: rv.rows.filter(r => r.on && r.libId).map(r => r.libId), aiUsed: rv.ai, assumptions: rv.assumptions };
   let i = 0;
   for (const ph of t.phases) {
     const p = newPhase(ph.name, i);
@@ -1048,12 +1062,12 @@ const A = o => Object.entries(o).map(([k, v]) => `data-${k}="${esc(v)}"`).join('
 const seg = (name, val, opts) => `<div class="seg">${opts.map(([k, l]) => `<button class="${val === k ? 'on' : ''}" data-act="seg" data-k="${name}" data-v="${k}">${l}</button>`).join('')}</div>`;
 
 /* ---------------- shell ---------------- */
-const NAV = [['home', 'fa-layer-group', 'Estimates'], ['new', 'fa-plus', 'New estimate'], ['model', 'fa-chart-line', 'Pricing model'], ['rates', 'fa-users', 'Rate card'], ['library', 'fa-cubes', 'Library'], ['settings', 'fa-gear', 'Settings']];
+const NAV = [['home', 'fa-layer-group', 'Estimates'], ['new', 'fa-plus', 'New estimate'], ['model', 'fa-chart-line', 'Pricing model'], ['clients', 'fa-building', 'Clients'], ['rates', 'fa-users', 'Rate card'], ['library', 'fa-cubes', 'Library'], ['settings', 'fa-gear', 'Settings']];
 function go(v, id) { view = v; if (id !== undefined) curId = id; render(); window.scrollTo(0, 0); }
 function render() {
   $('#agencyTag').textContent = S.settings.agency;
   $('#nav').innerHTML = NAV.map(([k, ic, l]) => `<button class="ni ${view === k || (view === 'edit' && k === 'home') ? 'on' : ''}" data-act="go" data-v="${k}"><i class="fa-solid ${ic}"></i><span>${l}</span></button>`).join('');
-  const V = { home: vHome, new: vNew, edit: vEdit, model: vModel, rates: vRates, library: vLibrary, settings: vSettings }[view] || vHome;
+  const V = { home: vHome, new: vNew, edit: vEdit, model: vModel, clients: vClients, rates: vRates, library: vLibrary, settings: vSettings }[view] || vHome;
   const [top, body] = V();
   $('#topbar').innerHTML = top; $('#main').innerHTML = body;
   if (view === 'edit') updateTotals();
@@ -1064,7 +1078,7 @@ function render() {
 /* ---------------- home ---------------- */
 function vHome() {
   const q = (window._q || '').toLowerCase();
-  const list = S.scopes.filter(s => !q || (s.name + ' ' + s.client).toLowerCase().includes(q)).sort((a, b) => b.updated - a.updated);
+  const list = S.scopes.filter(s => !q || (s.name + ' ' + clientName(s)).toLowerCase().includes(q)).sort((a, b) => b.updated - a.updated);
   const sum = st => S.scopes.filter(s => s.status === st).reduce((a, s) => a + totals(s).ex, 0);
   return [`<h1>Estimates</h1><span class="grow"></span><input class="in" style="max-width:260px" placeholder="Search client or project" value="${esc(window._q || '')}" data-search><button class="btn pri" data-act="go" data-v="new"><i class="fa-solid fa-plus"></i>New estimate</button>`,
   `<div class="stats">
@@ -1074,7 +1088,7 @@ function vHome() {
     <div class="card stat"><div class="lbl">Scopes in pricing model</div><div class="v">${inModel().length}</div></div>
   </div>
   <div class="card">${list.length ? `<table class="tbl"><thead><tr><th>Project</th><th>Client</th><th>Status</th><th class="r">Weeks</th><th class="r">Margin</th><th class="r">Total ex GST</th><th>Updated</th><th></th></tr></thead><tbody>
-    ${list.map(s => { const t = totals(s); return `<tr class="click" data-act="open" data-id="${s.id}"><td><b style="font-weight:500">${esc(s.name)}</b><div class="hint">${esc(tpl(s.type).name)} · ${esc(s.size || '')}</div></td><td class="muted">${esc(s.client || '—')}</td><td><span class="pill st-${s.status}">${s.status}</span></td><td class="r num muted">${s.weeks}</td><td class="r num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${Math.round(t.marginPct * 100)}%</td><td class="r num"><b style="font-weight:600">${money(t.ex)}</b></td><td class="faint">${fmtDate(s.updated)}</td><td class="r" style="white-space:nowrap"><button class="ib" title="Duplicate" data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i></button><button class="ib del" title="Delete" data-act="delscope" data-id="${s.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
+    ${list.map(s => { const t = totals(s); return `<tr class="click" data-act="open" data-id="${s.id}"><td><b style="font-weight:500">${esc(s.name)}</b><div class="hint">${esc(tpl(s.type).name)} · ${esc(s.size || '')}</div></td><td class="muted">${esc(clientName(s) || '—')}</td><td><span class="pill st-${s.status}">${s.status}</span></td><td class="r num muted">${s.weeks}</td><td class="r num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${Math.round(t.marginPct * 100)}%</td><td class="r num"><b style="font-weight:600">${money(t.ex)}</b></td><td class="faint">${fmtDate(s.updated)}</td><td class="r" style="white-space:nowrap"><button class="ib" title="Duplicate" data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i></button><button class="ib del" title="Delete" data-act="delscope" data-id="${s.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
   </tbody></table>` : `<div class="empty"><h3>${S.scopes.length ? 'No matches' : 'No estimates yet'}</h3><p>${S.scopes.length ? 'Try a different search.' : 'Start from a brief.'}</p></div>`}</div>`];
 }
 
@@ -1087,7 +1101,7 @@ function vNew() {
     <div class="card pad" style="display:flex;flex-direction:column;gap:14px">
       <div class="row" style="gap:12px;flex-wrap:wrap">
         <label class="field grow"><span>Project</span><input class="in" data-draft="name" value="${esc(d.name)}" placeholder="e.g. Summer range launch"></label>
-        <label class="field grow"><span>Client</span><input class="in" data-draft="client" value="${esc(d.client)}" placeholder="e.g. Coopers"></label>
+        <label class="field grow"><span>Client</span><input class="in" list="clientList" data-draft="client" value="${esc(d.client)}" placeholder="Select or type a new client"><datalist id="clientList">${S.clients.map(x => `<option value="${esc(x.name)}">`).join('')}</datalist><span class="hint" id="clientHint" style="text-transform:none;letter-spacing:0;font-weight:400">${clientHint(d.client)}</span></label>
       </div>
       <label class="field"><span>Brief</span><textarea class="in" style="min-height:320px" data-draft="brief" placeholder="Paste the full brief — objectives, audience, deliverables, timing, budget">${esc(d.brief)}</textarea></label>
       <div class="row" style="flex-wrap:wrap">
@@ -1183,20 +1197,15 @@ function vEdit() {
   const s = cur(); if (!s) { view = 'home'; return vHome(); }
   return [`<button class="ib" data-act="go" data-v="home" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
     <input class="ghost title-in" data-f="scope.name" value="${esc(s.name)}">
-    <input class="ghost client-in" data-f="scope.client" value="${esc(s.client)}" placeholder="Client">
+    <select class="ghost client-in" data-chg="clientpick" style="cursor:pointer">${s.clientId ? '' : `<option value="" selected>${esc(s.client || 'Choose client')}</option>`}${S.clients.slice().sort((a, b) => a.name.localeCompare(b.name)).map(x => `<option value="${x.id}" ${x.id === s.clientId ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}<option value="__new">＋ New client…</option></select>
     <select class="pill st-${s.status}" data-fc="scope.status" style="cursor:pointer;padding:3px 8px">${['draft', 'sent', 'won', 'lost'].map(x => `<option ${s.status === x ? 'selected' : ''}>${x}</option>`).join('')}</select>
     <span class="grow"></span>
     <button class="btn" data-act="airewrite" title="Rewrite overview and phase descriptions"><i class="fa-solid fa-pen-nib"></i>Rewrite copy</button>
     <button class="btn" data-act="tomodel" title="Add this estimate to the pricing model"><i class="fa-solid fa-chart-line"></i>${S.past.some(p => p.fromScope === s.id) ? 'Update model' : 'Add to model'}</button>
     <button class="btn pri" data-act="export"><i class="fa-solid fa-file-pdf"></i>Scope of Work</button>`,
   `<div class="ed-grid"><div class="ed-main">
-    <details class="card"><summary class="pad"><i class="fa-solid fa-chevron-right"></i><h3 style="font-size:15px">Brief & client details</h3><span class="tags grow">${(s.detected || []).slice(0, 5).map(id => lib(id) ? `<span class="tag">${esc(lib(id).name)}</span>` : '').join('')}</span>${s.aiUsed ? '<span class="pill"><i class="fa-solid fa-wand-magic-sparkles"></i>AI read</span>' : ''}</summary>
+    <details class="card"><summary class="pad"><i class="fa-solid fa-chevron-right"></i><h3 style="font-size:15px">Brief</h3><span class="tags grow">${(s.detected || []).slice(0, 5).map(id => lib(id) ? `<span class="tag">${esc(lib(id).name)}</span>` : '').join('')}</span>${s.aiUsed ? '<span class="pill"><i class="fa-solid fa-wand-magic-sparkles"></i>AI read</span>' : ''}</summary>
       <div style="padding:0 20px 18px;display:flex;flex-direction:column;gap:12px">
-        <div class="row" style="gap:10px;flex-wrap:wrap">
-          <label class="field grow"><span>Client company (SOW)</span><input class="in" data-f="co.name" value="${esc(s.clientCo.name)}"></label>
-          <label class="field grow"><span>Client address</span><input class="in" data-f="co.address" value="${esc(s.clientCo.address)}"></label>
-          <label class="field" style="width:200px"><span>Client ABN</span><input class="in" data-f="co.abn" value="${esc(s.clientCo.abn)}"></label>
-        </div>
         <textarea class="in" style="min-height:160px" data-f="scope.brief">${esc(s.brief)}</textarea>
         ${(s.assumptions || []).length ? `<div><div class="lbl">Assumptions from brief read</div><ul class="assume" style="margin-top:6px">${s.assumptions.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>` : ''}
         <div class="row"><span class="hint grow">Changed the brief? Start a new read — this replaces the table.</span><button class="btn sm" data-act="rescope"><i class="fa-solid fa-rotate"></i>Re-read brief</button></div>
@@ -1212,6 +1221,7 @@ function vEdit() {
     <div class="card pad"><div class="sec-h"><h3>Notes & assumptions</h3><span class="hint">Shown on the SOW</span></div><textarea class="in" data-auto data-f="scope.notes">${esc(s.notes)}</textarea></div>
   </div>
   <aside class="side"><div id="sideDyn"></div>
+    ${clientCard(s)}
     <div class="card pad"><div class="sec-h"><h3>Team</h3></div>
       <div class="chips">${s.team.map(id => `<span class="chip">${esc(pLabel(person(id)))}<button class="ib" data-act="teamrm" data-id="${id}"><i class="fa-solid fa-xmark"></i></button></span>`).join('')}</div>
       <select class="in" style="margin-top:10px" data-chg="teamadd"><option value="">+ Add to team</option>${S.people.filter(p => !s.team.includes(p.id)).map(p => `<option value="${p.id}">${esc(pLabel(p))}</option>`).join('')}</select></div>
@@ -1409,6 +1419,52 @@ function learnedActivities() {
   return Object.values(acc).map(a => ({ ...a, avg: a.h.reduce((x, y) => x + y, 0) / a.h.length, n: a.h.length })).sort((a, b) => b.n - a.n || b.avg - a.avg);
 }
 
+/* ---------------- clients ---------------- */
+function clientHint(v) { const n = String(v || '').trim(); if (!n) return ''; const cl = clientByName(n); return cl ? `<i class="fa-solid fa-check"></i> ${esc([cl.legal, cl.abn].filter(Boolean).join(' · ') || 'Existing client')}` : '<i class="fa-solid fa-plus"></i> New client — saved when you build the estimate'; }
+function clientCard(s) {
+  const cl = client(s.clientId);
+  if (!cl) return `<div class="card pad"><div class="sec-h"><h3>Client</h3></div><p class="hint">${s.client ? esc(s.client) + ' isn\'t linked to a client record.' : 'No client selected.'} Choose one in the header to autofill the Scope of Work.</p></div>`;
+  const line = (i, v) => v ? `<div class="kv" style="justify-content:flex-start;gap:8px"><i class="fa-solid ${i} faint" style="width:14px;padding-top:3px"></i><span style="color:var(--t1);white-space:pre-line">${esc(v)}</span></div>` : '';
+  return `<div class="card pad"><div class="sec-h"><h3>Client</h3><span class="grow"></span><button class="btn sm" data-act="editclient" data-id="${cl.id}"><i class="fa-regular fa-pen-to-square"></i>Edit details</button></div>
+    ${line('fa-building', cl.legal || cl.name)}${line('fa-location-dot', cl.address)}${line('fa-hashtag', cl.abn)}${line('fa-user', cl.contact)}${line('fa-envelope', cl.email)}${line('fa-phone', cl.phone)}
+    ${!cl.legal && !cl.address && !cl.abn ? '<div class="note warn">Add the legal name, address and ABN — they print on the Scope of Work.</div>' : ''}</div>`;
+}
+function clientModal(cl, onSave) {
+  const isNew = !cl; const c = cl ? { ...cl } : { id: uid(), name: '', legal: '', address: '', abn: '', contact: '', email: '', phone: '', notes: '' };
+  const f = (k, l, w, ph = '') => `<label class="field" style="${w ? 'width:' + w : 'flex:1;min-width:200px'}"><span>${l}</span><input class="in" data-ck="${k}" value="${esc(c[k])}" placeholder="${ph}"></label>`;
+  const ests = isNew ? [] : S.scopes.filter(s => s.clientId === c.id).sort((a, b) => b.updated - a.updated);
+  modal(`<h2>${isNew ? 'New client' : esc(c.name)}</h2><p class="hint">Details autofill every Scope of Work for this client. Editing updates all of its estimates.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:14px">
+      <div class="row" style="gap:10px;flex-wrap:wrap">${f('name', 'Client name', '', 'e.g. Coopers')}${f('legal', 'Legal / company name (SOW)', '', 'e.g. Coopers Brewery Ltd')}</div>
+      <label class="field"><span>Address</span><textarea class="in" data-ck="address" rows="2" placeholder="Street\nSuburb STATE Postcode">${esc(c.address)}</textarea></label>
+      <div class="row" style="gap:10px;flex-wrap:wrap">${f('abn', 'ABN', '220px', 'ABN 12 345 678 901')}${f('contact', 'Contact')}</div>
+      <div class="row" style="gap:10px;flex-wrap:wrap">${f('email', 'Email')}${f('phone', 'Phone', '200px')}</div>
+      <label class="field"><span>Notes</span><textarea class="in" data-ck="notes" rows="2">${esc(c.notes)}</textarea></label>
+      ${ests.length ? `<div><div class="lbl">Estimates</div>${ests.map(s => `<div class="kv"><a href="#" data-goest="${s.id}" style="color:var(--t1)">${esc(s.name)}</a><span><span class="pill st-${s.status}">${s.status}</span> <b class="num">${money(totals(s).ex)}</b></span></div>`).join('')}</div>` : ''}
+    </div>
+    <div class="acts"><button class="btn" data-x="no">Cancel</button><button class="btn pri" data-x="yes">${isNew ? 'Add client' : 'Save'}</button></div>`, (m, close) => {
+    m.querySelector('[data-x=no]').onclick = close;
+    m.querySelectorAll('[data-goest]').forEach(a => a.onclick = e => { e.preventDefault(); close(); go('edit', a.dataset.goest); });
+    m.querySelector('[data-x=yes]').onclick = () => {
+      m.querySelectorAll('[data-ck]').forEach(i => c[i.dataset.ck] = i.value.trim());
+      if (!c.name) return toast('Add a client name');
+      const dupe = clientByName(c.name); if (dupe && dupe.id !== c.id) return toast('A client with that name already exists');
+      if (isNew) S.clients.push(c); else Object.assign(cl, c);
+      S.scopes.forEach(s => { if (s.clientId === c.id) s.client = c.name; });
+      save(); close(); toast(isNew ? 'Client added' : 'Client updated'); onSave && onSave(isNew ? c : cl);
+    };
+    setTimeout(() => m.querySelector('[data-ck=name]').focus(), 50);
+  });
+}
+function vClients() {
+  const q = (window._cq || '').toLowerCase();
+  const list = S.clients.filter(c => !q || [c.name, c.legal, c.contact].join(' ').toLowerCase().includes(q)).sort((a, b) => a.name.localeCompare(b.name));
+  return [`<h1>Clients</h1><span class="sub">${S.clients.length}</span><span class="grow"></span><input class="in" style="max-width:240px" placeholder="Search clients" value="${esc(window._cq || '')}" data-csearch><button class="btn pri" data-act="newclient"><i class="fa-solid fa-plus"></i>Add client</button>`,
+  `<div class="card">${list.length ? `<table class="tbl"><thead><tr><th>Client</th><th>Contact</th><th>ABN</th><th class="r">Estimates</th><th class="r">Won</th><th></th></tr></thead><tbody>
+    ${list.map(c => { const es = S.scopes.filter(s => s.clientId === c.id), won = es.filter(s => s.status === 'won').reduce((a, s) => a + totals(s).ex, 0); return `<tr class="click" data-act="editclient" data-id="${c.id}"><td><b style="font-weight:500">${esc(c.name)}</b>${c.legal && c.legal !== c.name ? `<div class="hint">${esc(c.legal)}</div>` : ''}${!c.address && !c.abn ? '<div class="hint" style="color:var(--warning)">Missing SOW details</div>' : ''}</td><td class="muted">${esc(c.contact || '—')}${c.email ? `<div class="hint">${esc(c.email)}</div>` : ''}</td><td class="muted">${esc(c.abn || '—')}</td><td class="r num">${es.length}</td><td class="r num">${won ? money(won) : '—'}</td><td class="r"><button class="ib del" data-act="delclient" data-id="${c.id}" title="Delete"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
+  </tbody></table>` : `<div class="empty"><h3>${S.clients.length ? 'No matches' : 'No clients yet'}</h3><p>Add clients here, or type a new name when starting an estimate.</p></div>`}</div>`];
+}
+
 /* ---------------- rate card ---------------- */
 function vRates() {
   return [`<h1>Rate card</h1><span class="sub">Names are internal only — the Scope of Work never shows them</span><span class="grow"></span><button class="btn pri" data-act="addperson"><i class="fa-solid fa-plus"></i>Add person</button>`,
@@ -1500,7 +1556,7 @@ const WORDS = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', '
 const logoHTML = () => S.settings.logo ? `<img src="${esc(S.settings.logo)}" alt="${esc(S.settings.agency)}">` : BORN_LOGO;
 function buildPrint(s) {
   const t = totals(s), st = S.settings; let n = 0;
-  const co = s.clientCo || {};
+  const cl = client(s.clientId), co = cl ? { name: cl.legal || cl.name, address: cl.address, abn: cl.abn } : (s.clientCo || {});
   const phases = s.phases.map((p, i) => {
     const label = st.sowNumber && !p.media ? `Phase ${WORDS[n++] || n}: ${p.name}` : p.name;
     let items = clientItems(p).map(it => it.name + (it.qty > 1 ? ` x ${it.qty}${it.unit ? ' ' + it.unit + (/s$/.test(it.unit) ? '' : 's') : ''}` : ''));
@@ -1520,7 +1576,7 @@ function buildPrint(s) {
 }
 function exportPDF() {
   const s = cur(); if (!s) return; buildPrint(s);
-  const old = document.title; document.title = `${S.settings.agency} Scope of Work - ${s.client ? s.client + ' - ' : ''}${s.name}`;
+  const old = document.title; document.title = `${S.settings.agency} Scope of Work - ${clientName(s) ? clientName(s) + ' - ' : ''}${s.name}`;
   setTimeout(() => { try { window.print(); } catch (e) { toast('Printing is blocked here'); } document.title = old; }, 100);
 }
 
@@ -1536,6 +1592,9 @@ async function readBrief() {
 }
 async function buildFromDraft() {
   const d = window._draft; const done = loader('Building estimate…');
+  const nm = String(d.client || '').trim(); let cl = clientByName(nm);
+  if (!cl && nm) { cl = { id: uid(), name: nm, legal: '', address: '', abn: '', contact: '', email: '', phone: '', notes: '' }; S.clients.push(cl); }
+  d.clientId = cl?.id || null; if (cl) d.client = cl.name;
   try {
     let s = buildScope(d);
     const old = d.replace && S.scopes.find(x => x.id === d.replace);
@@ -1578,7 +1637,7 @@ const ACT = {
   teamrm: a => { const s = cur(); s.team = s.team.filter(x => x !== a.dataset.id); touch(); render(); },
   rescope: async () => {
     const s = cur(); if (!(await confirmBox('Re-read the brief and rebuild? This replaces the whole table.', 'Re-read'))) return;
-    window._draft = { name: s.name, client: s.client, brief: s.brief, replace: s.id }; view = 'new'; await readBrief();
+    window._draft = { name: s.name, client: clientName(s), clientId: s.clientId, brief: s.brief, replace: s.id }; view = 'new'; await readBrief();
   },
   airewrite: async () => {
     const s = cur(), done = loader('Rewriting copy…');
@@ -1591,7 +1650,7 @@ const ACT = {
     const phases = s.phases.map((p, i) => ({ name: p.name, cost: t.phasesClient[i], items: p.items.flatMap(it => it.lines.map(l => l.type === 'ext' ? { name: it.name, title: '', qty: 1, scope: 'flat', rate: lineClient(l), total: lineClient(l), costRate: null, cost: lineCost(l), supplier: l.supplier || '', ext: true } : { name: it.name, title: person(l.personId).title, qty: +l.hours || 0, scope: 'hours', rate: lineRate(l), total: lineClient(l), costRate: lineCostRate(l), cost: lineCost(l), supplier: '', ext: false })) }));
     const ex = S.past.find(p => p.fromScope === s.id);
     const text = [s.name, ...phases.flatMap(ph => [ph.name, ...ph.items.map(i => i.name)])].join('\n');
-    const rec = { id: ex?.id || uid(), fromScope: s.id, name: s.name, client: s.client, date: Date.now(), source: 'estimate', method: 'Born Scope estimate', text, total: Math.round(t.ex), phases, itemHours: itemHoursMap(phases), detected: [...new Set(s.phases.flatMap(p => p.items.map(i => i.libId)).filter(Boolean))], off: ex?.off || false };
+    const rec = { id: ex?.id || uid(), fromScope: s.id, name: s.name, client: clientName(s), date: Date.now(), source: 'estimate', method: 'Born Scope estimate', text, total: Math.round(t.ex), phases, itemHours: itemHoursMap(phases), detected: [...new Set(s.phases.flatMap(p => p.items.map(i => i.libId)).filter(Boolean))], off: ex?.off || false };
     if (ex) Object.assign(ex, rec); else S.past.push(rec);
     save(); render(); toast(ex ? 'Pricing model updated' : 'Added to pricing model');
   },
@@ -1613,6 +1672,14 @@ const ACT = {
   tpladdln: a => { tpl(a.dataset.id).phases[+a.dataset.pi].items[+a.dataset.ii].lines.push({ title: titles()[0], hours: { small: 0, mid: 0, big: 0 } }); save(); render(); },
   tpldelln: a => { const it = tpl(a.dataset.id).phases[+a.dataset.pi].items, i = it[+a.dataset.ii]; i.lines.splice(+a.dataset.li, 1); if (!i.lines.length) it.splice(+a.dataset.ii, 1); save(); render(); },
   tpldelx: a => { tpl(a.dataset.id).phases[+a.dataset.pi].ext.splice(+a.dataset.xi, 1); save(); render(); },
+  editclient: a => { const cl = client(a.dataset.id); clientModal(cl, () => render()); },
+  newclient: () => clientModal(null, () => render()),
+  delclient: async a => {
+    const cl = client(a.dataset.id), n = S.scopes.filter(s => s.clientId === cl.id).length;
+    if (!(await confirmBox(n ? `Delete ${cl.name}? Its ${n} estimate${n > 1 ? 's' : ''} keep a copy of the details.` : `Delete ${cl.name}?`))) return;
+    S.scopes.forEach(s => { if (s.clientId === cl.id) { s.client = cl.name; s.clientCo = { name: cl.legal || cl.name, address: cl.address, abn: cl.abn }; s.clientId = null; } });
+    S.clients = S.clients.filter(x => x !== cl); save(); render();
+  },
   logoreset: () => { S.settings.logo = ''; save(); render(); },
   exportjson: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ ...S, settings: { ...S.settings, apiKey: '' } }, null, 2)], { type: 'application/json' })); a.download = `born-scope-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click(); },
   resetlib: async () => { if (await confirmBox('Replace templates, deliverables and external costs with the Born defaults? Estimates and rate card are kept.', 'Reset')) { S.templates = clone(SEED_TEMPLATES); S.library = clone(SEED_LIBRARY); S.externals = clone(SEED_EXTERNALS); save(); render(); } },
@@ -1690,9 +1757,11 @@ document.addEventListener('input', e => {
   const el = e.target;
   if (el.dataset.f && el.dataset.f !== 'person.title') setField(el);
   if (el.hasAttribute('data-auto')) autosize(el);
+  if (el.dataset.draft === 'client') { const h = $('#clientHint'); if (h) h.innerHTML = clientHint(el.value); }
   if (el.dataset.draft) { window._draft[el.dataset.draft] = el.value; if (el.dataset.draft === 'brief') { clearTimeout(window._lc); window._lc = setTimeout(liveChips, 300); } }
   if (el.dataset.rvrow && el.type !== 'checkbox' && el.tagName !== 'SELECT' && el.dataset.k !== 'qty') setReview(el);
   if (el.dataset.rvext && el.type !== 'checkbox' && el.tagName !== 'SELECT') setReview(el);
+  if (el.hasAttribute('data-csearch')) { window._cq = el.value; const pos = el.selectionStart; render(); const n = $('[data-csearch]'); n.focus(); n.setSelectionRange(pos, pos); }
   if (el.hasAttribute('data-search')) { window._q = el.value; const pos = el.selectionStart; render(); const n = $('[data-search]'); n.focus(); n.setSelectionRange(pos, pos); }
 });
 document.addEventListener('change', async e => {
@@ -1702,6 +1771,11 @@ document.addEventListener('change', async e => {
   if (d.settog) { S.settings[d.settog] = el.checked; save(); }
   if (d.pasttog) { const p = S.past.find(x => x.id === d.pasttog); p.off = !el.checked; save(); render(); toast(p.off ? 'Excluded from learning' : 'Included in learning'); }
   if (d.chg === 'additem' && el.value) { addLineTo(findPhase(d.pid), el.value); touch(); render(); }
+  if (d.chg === 'clientpick') {
+    const s = cur();
+    if (el.value === '__new') { clientModal(null, cl => { s.clientId = cl.id; s.client = cl.name; touch(); render(); }); render(); }
+    else if (el.value) { const cl = client(el.value); s.clientId = cl.id; s.client = cl.name; touch(); render(); }
+  }
   if (d.chg === 'teamadd' && el.value) { cur().team.push(el.value); touch(); render(); }
   if (el.hasAttribute('data-applycal')) window._draft.applyCal = el.checked;
   if (el.hasAttribute('data-aitog')) { S.settings.ai = el.checked; save(); }
