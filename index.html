@@ -285,6 +285,8 @@ table.ed{width:100%;border-collapse:collapse}
 .ed tr.grp td{background:var(--paper-2);font-weight:600;font-size:13px;padding:8px 6px}
 .est{min-width:1000px}.est tr.ln td:first-child,.est th:first-child{min-width:240px}.est td select{min-width:150px}
 .rv .h{width:78px}
+.modal.wide{width:min(1200px,100%)}
+#pmChecks .note{padding:6px 10px;font-size:12.5px}
 
 </style>
 </head>
@@ -664,7 +666,9 @@ function modelCostText(text) {
   for (const m of detect(text)) { const d = lib(m.id); TRACKS.forEach(([k]) => { const tr = d.tracks[k]; if (tr) c += trackHours(d, k, m.qty) * titleRate(tr.title); }); }
   return c * (1 + (+S.settings.amPct || 0) / 100);
 }
-const pastRatio = p => { const mc = modelCostText(p.text); return mc ? clamp(p.total / mc, 0.33, 3) : null; };
+// compare Born's own (hourly) work only — media and supplier costs would distort the index
+const pastInternal = p => { const ls = (p.phases || []).flatMap(ph => ph.items || []).filter(i => !i.ext && i.scope !== 'flat'); const s = ls.reduce((a, i) => a + (+i.total || 0), 0); if (s > 0) return s; const ph = (p.phases || []).filter(x => !/media|production|adspend|ad spend/i.test(x.name)).reduce((a, x) => a + (+x.cost || 0), 0); return ph > 0 ? ph : p.total; };
+const pastRatio = p => { const mc = modelCostText(p.text); return mc ? clamp(pastInternal(p) / mc, 0.33, 3) : null; };
 function globalIndex() {
   const rs = inModel().map(pastRatio).filter(Boolean);
   if (!rs.length) return { factor: 1, n: 0 };
@@ -834,7 +838,11 @@ function buildScope(d) {
   return s;
 }
 
-/* ---------------- file parsing ---------------- */
+/* ---------------- reading past scopes ----------------
+   1. Born quote template (.xlsx)  → exact column read (front + back end, every line)
+   2. Other spreadsheets           → header detection, line by line
+   3. PDF / Word / text            → Scope-of-Work layout reader, AI when available
+   Every result is reconciled (lines → phase fees → total) and shown for checking. */
 async function pdfLines(file) {
   const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise; const lines = [];
   for (let i = 1; i <= pdf.numPages; i++) {
@@ -851,83 +859,163 @@ async function fileText(file) {
   if (['xlsx', 'xls', 'csv'].includes(ext)) { const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' }); return wb.SheetNames.map(n => XLSX.utils.sheet_to_csv(wb.Sheets[n])).join('\n'); }
   return await file.text();
 }
-const MONEY = /\$\s?\d[\d,]*(?:\.\d{1,2})?/g;
-const amt = s => { const m = s.match(MONEY); return m ? parseFloat(m[m.length - 1].replace(/[$,\s]/g, '')) : null; };
-const PHASEWORDS = /\b(discovery|strategy|research|concept|concepts|creative|design|production|development|build|delivery|launch|implementation|pre-production|post-production|deployment|planning|optimisation|phase|stage)\b/i;
-function isHeading(l) {
-  if (l.startsWith('§')) return true;
-  const c = l.replace(MONEY, '').trim(); if (c.length > 70 || c.length < 3) return false;
-  return /^(phase|stage|step|part)\s*[\dIVX]+/i.test(c) || /^\d{1,2}(\.|\)|:|\s-)\s*[A-Za-z]/.test(c) || (PHASEWORDS.test(c) && c.split(/\s+/).length <= 5 && !/[,;]/.test(c));
+const num = v => { if (v === '' || v == null) return null; if (typeof v === 'number') return isFinite(v) ? v : null; const n = parseFloat(String(v).replace(/[$,\s]/g, '')); return isNaN(n) ? null : n; };
+const AMT_END = /(?:\$\s?)?(\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?|\d+\.\d{2}|(?<=\$\s?)\d+)\s*$/;
+const amtEnd = s => { const m = String(s).match(AMT_END); return m ? parseFloat(m[1].replace(/,/g, '')) : null; };
+const stripAmt = s => String(s).replace(AMT_END, '').replace(/\s{2,}/g, ' ').trim();
+
+/* job title from a line like "Campaign Ideation (Creative Art)" — names in brackets are dropped */
+const ROLE_WORDS = [[/strategy director|\bsd\b/i, T.SD], [/creative director|\bcd\b/i, T.CD], [/design director|\bdd\b/i, T.DD], [/creative art|art director|\bad\b/i, T.AD], [/creative copy|copywriter|\bcopy\b|\bcw\b/i, T.CW], [/strategist/i, T.ST], [/designer/i, T.DES], [/account|\bam\b|\bae\b/i, T.AM], [/digital/i, T.DM], [/developer|\bdev\b/i, T.DEV], [/motion|animator/i, T.MO], [/producer/i, T.AM]];
+function roleOf(name) {
+  const m = String(name).match(/\(([^)]*)\)?\s*$/); if (!m) return { name: String(name).trim(), title: '' };
+  const inside = m[1], hit = ROLE_WORDS.find(([re]) => re.test(inside));
+  return { name: String(name).slice(0, m.index).trim(), title: hit ? (titles().find(t => t === hit[1]) || hit[1]) : '' };
 }
-const cleanHead = l => l.replace(/^§/, '').replace(MONEY, '').replace(/\s{2,}/g, ' ').replace(/[:\-–—\s]+$/, '').replace(/^(phase|stage)\s*(\d+|[IVX]+)\s*[:.\-–—]?\s*/i, '').replace(/^\d{1,2}[.):]\s*/, '').trim() || l;
-function parseLines(lines) {
-  const phases = [], items = []; let cur = null, grand = null, grandInc = null;
-  for (const raw of lines) {
-    const l = raw.trim(); if (!l) continue; const a = amt(l), low = l.toLowerCase();
-    if (a != null && /\btotal\b|investment/.test(low)) {
-      const grandish = /grand|project|overall|investment|total fee|total cost|all phases|ex\.?\s*gst|excl|inc\.?\s*gst|incl/.test(low);
-      if (!grandish && cur && cur.cost == null) { cur.cost = a; continue; }
-      if (/(inc|incl|including)\.?\s*gst/.test(low)) grandInc = a; else grand = a; continue;
+/* no role written on the line: narrow by rates, then by Born templates / deliverable library */
+function guessTitle(name, rate, cost) {
+  const uniq = a => [...new Set(a)];
+  let ts = rate ? uniq(S.people.filter(p => +p.rate === +rate && (!cost || +p.cost === +cost)).map(p => p.title)) : [];
+  if (!ts.length && cost) ts = uniq(S.people.filter(p => +p.cost === +cost).map(p => p.title));
+  if (ts.length === 1) return ts[0];
+  const ok = t => !ts.length || ts.includes(t), n = normTxt(name);
+  const fromTpl = uniq(S.templates.flatMap(t => t.phases.flatMap(ph => ph.items.filter(it => normTxt(it.name) === n).flatMap(it => it.lines.map(l => l.title))))).filter(ok);
+  if (fromTpl.length === 1) return fromTpl[0];
+  const top = detect(name).sort((a, b) => b.score - a.score)[0];
+  if (top) { const fromLib = TRACKS.map(([k]) => lib(top.id).tracks[k]?.title).filter(Boolean).filter(ok); if (fromLib.length) return fromLib[0]; }
+  return '';
+}
+function mkLine(raw) {
+  const r = roleOf(raw.name);
+  const flat = /flat|fixed|fee/i.test(raw.scope || '') || (raw.supplier && !/born|internal/i.test(raw.supplier));
+  const qty = num(raw.qty), rate = num(raw.rate), costRate = num(raw.costRate);
+  let total = num(raw.total); if (total == null && qty != null && rate != null) total = qty * rate;
+  const ext = flat && !!(raw.supplier && !/born|internal/i.test(raw.supplier)) || num(raw.external) > 0;
+  return { name: r.name || raw.name, title: raw.title || r.title || (flat ? '' : guessTitle(r.name || raw.name, rate, costRate)), qty: qty ?? (flat ? 1 : null), scope: flat ? 'flat' : 'hours', rate, total: total ?? 0, costRate, cost: num(raw.cost) ?? (qty != null && costRate != null ? qty * costRate : null), supplier: /born|internal/i.test(raw.supplier || '') ? '' : (raw.supplier || ''), ext };
+}
+
+/* 1 + 2: spreadsheets */
+const HDR = { desc: /item description|description|^item$|deliverable|task|service|activity/, qty: /^qty$|quantity|^hours?$|^hrs$/, scope: /^scope$|^unit$|^type$/, rate: /^rate$|charge rate|hourly rate/, total: /total ex gst|^total$|^amount$|^price$|^fee$|^cost$|line total/, estQty: /est\.? qty|born hours/, costRate: /est\.? cost$|cost rate|internal rate/, cost: /est\.? total cost|internal cost/, notes: /^notes$|supplier|vendor/, markup: /mark ?up/, external: /external/, role: /^role$|^staff$|^resource$|^who$|job title|^title$/, phase: /^phase$|^stage$|^section$/ };
+function findHeader(rows) {
+  let best = { score: 0 };
+  rows.slice(0, 40).forEach((r, i) => {
+    const map = {}; let score = 0;
+    r.forEach((c, j) => { const s = String(c ?? '').toLowerCase().trim(); if (!s || typeof c === 'number') return; for (const [k, re] of Object.entries(HDR)) if (map[k] == null && re.test(s)) { map[k] = j; score++; break; } });
+    if (map.desc != null && (map.total != null || map.qty != null) && score > best.score) best = { score, row: i, map };
+  });
+  return best.score >= 3 ? best : null;
+}
+function readSheet(rows, sheetName) {
+  const h = findHeader(rows); if (!h) return null;
+  const M = h.map, cell = (r, k) => M[k] == null ? '' : r[M[k]];
+  const head = rows.slice(0, h.row).map(r => r.filter(c => c !== '' && c != null).map(String));
+  const lbl = re => { for (const r of head) { const i = r.findIndex(c => re.test(c)); if (i >= 0) { const v = r[i].replace(re, '').replace(/^[:\s]+/, '').trim() || r[i + 1] || ''; if (v) return v.trim(); } } return ''; };
+  const project = lbl(/^project\s*:?/i) || (head.find(r => r[0] && r[0].length > 3 && !/:|front facing|backend|filter|item description/i.test(r[0])) || [])[0] || '';
+  const phases = []; let cur = null, total = null, totalInc = null;
+  for (const r of rows.slice(h.row + 1)) {
+    const desc = String(cell(r, 'desc') ?? '').trim(), rowTxt = r.map(c => String(c ?? '')).join(' ').toLowerCase();
+    if (/sub\s*-?\s*total|total ex|^total\b|grand total/.test(rowTxt) && !desc) {
+      const v = num(cell(r, 'total')); if (v == null) continue;
+      if (/sub\s*-?\s*total|ex gst|total ex/.test(rowTxt)) total = v; else if (/total \$|aud|inc|grand/.test(rowTxt)) totalInc = v; else if (total == null) total = v;
+      continue;
     }
-    if (a != null && /^gst\b/.test(low)) continue;
-    if (isHeading(l)) { cur = { name: cleanHead(l), cost: a, lines: [] }; phases.push(cur); continue; }
-    if (a != null) { const h = l.match(/(\d+(?:\.\d+)?)\s*(?:hrs?|hours)\b/i); const it = { desc: l.replace(MONEY, '').replace(/(\d+(?:\.\d+)?)\s*(?:hrs?|hours)\b/i, '').replace(/\s{2,}/g, ' ').trim(), cost: a, hours: h ? +h[1] : null }; items.push(it); if (cur) cur.lines.push(it); }
+    if (!desc) continue;
+    if (/^(sub\s*total|total|gst|plus gst|rounding)\b/i.test(desc)) { const v = num(cell(r, 'total')); if (v != null && /sub|total ex/i.test(desc)) total = v; continue; }
+    const qty = num(cell(r, 'qty')), rate = num(cell(r, 'rate')), scope = String(cell(r, 'scope') || '');
+    const ph = String(cell(r, 'phase') || '').trim();
+    if (ph && (!cur || cur.name !== ph)) phases.push(cur = { name: ph, fee: null, items: [] });
+    if (qty == null && rate == null && !scope) { phases.push(cur = { name: desc.replace(/\s+/g, ' '), fee: num(cell(r, 'total')), items: [] }); continue; }
+    if (!cur) phases.push(cur = { name: 'Project', fee: null, items: [] });
+    const titleCol = String(cell(r, 'role') || '');
+    cur.items.push(mkLine({ name: desc, qty: num(cell(r, 'estQty')) ?? qty, rate, total: cell(r, 'total'), scope, costRate: cell(r, 'costRate'), cost: cell(r, 'cost'), supplier: String(cell(r, 'notes') || ''), external: cell(r, 'external'), title: titleCol ? roleOf('(' + titleCol + ')').title || titleCol : '' }));
   }
-  phases.forEach(p => { if (p.cost == null) p.cost = p.lines.reduce((x, i) => x + i.cost, 0); });
-  let ph = phases.filter(p => p.cost > 0);
-  const sumP = ph.reduce((a, p) => a + p.cost, 0), sumI = items.reduce((a, i) => a + i.cost, 0), g = 1 + (+S.settings.gst || 0) / 100;
-  const total = grand ?? (grandInc != null ? grandInc / g : null) ?? (sumP || sumI);
-  if (!ph.length && total) ph = [{ name: 'Project', cost: total }];
-  return { phases: ph.map(p => ({ name: p.name, cost: Math.round(p.cost) })), items, total: Math.round(total || 0) };
+  const ph = phases.filter(p => p.items.length || p.fee);
+  if (!ph.length) return null;
+  return { sheet: sheetName, project, client: lbl(/^client\s*:?/i), phases: ph, total, totalInc, method: /\|\s*quote/i.test(sheetName) || M.costRate != null ? 'Born quote template' : 'Spreadsheet' };
 }
-async function parseSheetLines(file) {
+async function readWorkbook(file) {
   const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' }); const out = [], text = [];
   for (const sn of wb.SheetNames) {
+    if (/client sow|finance|clean version/i.test(sn)) continue;
     const rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], { header: 1, raw: true, defval: '' });
-    rows.forEach(r => text.push(r.filter(c => c !== '').join(' ')));
-    let hi = -1, best = 0, map = {};
-    rows.slice(0, 40).forEach((r, i) => {
-      const m = {}; let sc = 0;
-      r.forEach((c, j) => {
-        const s = String(c).toLowerCase().trim(); if (!s || typeof c === 'number') return;
-        if (m.hours == null && /^(est\.?\s*)?(hours?|hrs?|time)\b/.test(s)) { m.hours = j; sc++; }
-        else if (m.rate == null && /rate/.test(s)) { m.rate = j; sc++; }
-        else if (m.cost == null && /(cost|total|amount|price|fee|\$)/.test(s)) { m.cost = j; sc++; }
-        else if (m.desc == null && /(desc|item|task|deliverable|service|activity|scope|line)/.test(s)) { m.desc = j; sc++; }
-        else if (m.role == null && /(role|staff|resource|who|team|person|title)/.test(s)) { m.role = j; sc++; }
-        else if (m.phase == null && /(phase|stage|section|category)/.test(s)) { m.phase = j; sc++; }
-      });
-      if (sc > best && (m.hours != null || m.cost != null)) { best = sc; hi = i; map = m; }
-    });
-    if (best >= 2) {
-      let lastPhase = null;
-      for (const r of rows.slice(hi + 1)) {
-        const num = j => { if (j == null) return null; const v = r[j]; if (v === '' || v == null) return null; const n = typeof v === 'number' ? v : parseFloat(String(v).replace(/[$,\s]/g, '')); return isNaN(n) ? null : n; };
-        const hours = num(map.hours), rate = num(map.rate); let cost = num(map.cost);
-        if (cost == null && hours != null && rate != null) cost = hours * rate;
-        const roleTxt = map.role != null ? String(r[map.role]).trim() : '';
-        const desc = String(map.desc != null ? r[map.desc] : (r.find(c => typeof c === 'string' && c.trim()) || '')).trim() || roleTxt;
-        const phase = map.phase != null ? String(r[map.phase]).trim() : '';
-        if (phase && phase !== lastPhase) { out.push('§' + phase); lastPhase = phase; }
-        if (cost == null && hours == null) { if (desc && r.filter(c => c !== '').length <= 2) out.push('§' + desc); continue; }
-        out.push(`${desc}${roleTxt && roleTxt !== desc ? ' — ' + roleTxt : ''}${hours != null ? '  ' + hours + ' hrs' : ''}  $${Math.round((cost || 0) * 100) / 100}`);
-      }
-    } else rows.forEach(r => { const cells = r.filter(c => c !== ''); if (!cells.length) return; const nums = cells.filter(c => typeof c === 'number' && c > 0); const txt = cells.filter(c => typeof c !== 'number').join(' '); out.push(nums.length ? txt + '  $' + nums[nums.length - 1] : txt); });
+    const r = readSheet(rows, sn); if (r) out.push(r);
+    text.push(XLSX.utils.sheet_to_csv(wb.Sheets[sn]));
   }
-  return { lines: out, text: text.join('\n') };
+  return { candidates: out, text: text.join('\n').slice(0, 60000) };
 }
-function itemHoursMap(items) {
+
+/* 3: PDFs / documents — Scope of Work layout */
+const STOP_RE = /^\*|scope includes|client signature|by approving|terms and conditions|^date$|^page \d/i;
+function readSowText(text) {
+  const lines = String(text).split('\n').map(l => l.replace(/\s+/g, ' ').trim());
+  const phases = []; let cur = null, total = null, totalInc = null, gst = null, project = '', client = '';
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i]; if (!l) continue; const low = l.toLowerCase(), a = amtEnd(l);
+    if (STOP_RE.test(l)) { cur = null; continue; }
+    if (a != null && /grand total|total \$|inc(l|luding)?\.? gst/.test(low)) { totalInc = a; cur = null; continue; }
+    if (a != null && /^\(?gst\)?\b|^plus gst/.test(low)) { gst = a; continue; }
+    if (a != null && /^(sub ?total|total)\b/.test(low)) { total = a; cur = null; continue; }
+    if (/^project name\s+fee$/i.test(l) || /^fee$/i.test(l)) continue;
+    if (/\bfee$/i.test(l) && !project) { project = l.replace(/\s*fee$/i, '').trim(); continue; }
+    if (a != null) {
+      const name = stripAmt(l);
+      const looksPhase = /^(phase|stage|step|part)\b/i.test(name) || PHASEWORDS.test(name) || (name.split(' ').length <= 6 && lines.slice(i + 1, i + 4).some(x => x && amtEnd(x) == null && !STOP_RE.test(x)));
+      if (looksPhase || !cur) { phases.push(cur = { name, fee: a, items: [] }); continue; }
+      const hm = name.match(/(\d+(?:\.\d+)?)\s*(?:hrs?|hours)\b/i);
+      cur.items.push(mkLine({ name: name.replace(/(\d+(?:\.\d+)?)\s*(?:hrs?|hours)\b/i, '').trim(), qty: hm ? +hm[1] : null, total: a, scope: hm ? 'Hours' : '' }));
+      continue;
+    }
+    if (cur && l.length < 120 && !/^company|^abn|^insert/i.test(l)) cur.items.push(mkLine({ name: l, total: null }));
+  }
+  if (!client) { const c = lines.find(x => /^client\s*:/i.test(x)); if (c) client = c.replace(/^client\s*:\s*/i, ''); }
+  const ph = phases.filter(p => p.fee || p.items.length);
+  return { sheet: '', project, client, phases: ph, total: total ?? (totalInc != null ? totalInc / (1 + (+S.settings.gst || 0) / 100) : null), totalInc, method: 'Document reader' };
+}
+const PHASEWORDS = /\b(discovery|strategy|research|concept|ideation|creative|design|production|development|build|delivery|launch|roll ?out|implementation|deployment|planning|media buy|getting to know|immersion|identity)\b/i;
+async function aiReadScope(text, fileName) {
+  const user = `FILE: ${fileName}\n\n<document>\n${String(text).slice(0, 50000)}\n</document>\n
+This is a past quote / scope of work from our agency. Extract it EXACTLY as written — read every line, do not summarise, merge, or invent lines.
+- A phase is a heading with a fee (e.g. "Phase One: Getting to know 6,460.00", "Media Buy 120,000.00"). Lines beneath it are its items.
+- Keep each item's wording, but remove any person's first name (e.g. "Campaign Insights (SD/ Kerryn)" → name "Campaign Insights", title "Strategy Director").
+- Map roles in brackets to these job titles: ${titles().join(', ')}. "Creative Art" = Art Director, "Creative Copy" = Copywriter, "SD" = Strategy Director. Leave title "" if not stated.
+- For each item give hours/qty, rate, total (ex GST) and internal cost rate and supplier only if shown; use null when not shown. "flat" scope for flat fees / third-party costs.
+- total is the ex-GST total; totalIncGst the GST-inclusive total if shown.
+Return JSON: {"project":"","client":"","total":number|null,"totalIncGst":number|null,"phases":[{"name":"","fee":number|null,"items":[{"name":"","title":"","qty":number|null,"scope":"hours|flat","rate":number|null,"total":number|null,"costRate":number|null,"supplier":""}]}]}`;
+  const r = await callAI(`You extract line items from agency quotes with complete accuracy. Respond with a single JSON object only.`, user, 8000);
+  return { sheet: '', project: r.project || '', client: r.client || '', total: num(r.total), totalInc: num(r.totalIncGst), method: 'AI reader', phases: (r.phases || []).map(p => ({ name: p.name || 'Phase', fee: num(p.fee), items: (p.items || []).map(i => { const m = mkLine({ ...i, scope: i.scope === 'flat' ? 'Flat fee' : 'Hours' }); if (i.title) m.title = titles().find(t => t.toLowerCase() === String(i.title).toLowerCase()) || i.title; return m; }) })) };
+}
+
+/* reconcile: lines → phase fees → total */
+function reconcile(c) {
+  const g = 1 + (+S.settings.gst || 0) / 100, checks = [];
+  c.phases.forEach(p => { const sum = p.items.reduce((a, i) => a + (+i.total || 0), 0); p.lineSum = sum; if (p.fee == null && sum) p.fee = sum; });
+  const phaseSum = c.phases.reduce((a, p) => a + (+p.fee || 0), 0);
+  if (c.total == null) c.total = c.totalInc != null ? Math.round(c.totalInc / g * 100) / 100 : phaseSum;
+  c.phases.forEach(p => { if (p.lineSum && p.fee && Math.abs(p.lineSum - p.fee) > 1) checks.push({ ok: false, msg: `${p.name}: lines add to ${money(p.lineSum)} but phase fee is ${money(p.fee)}` }); });
+  checks.unshift(Math.abs(phaseSum - c.total) <= 1 ? { ok: true, msg: `Phase fees add up to the total (${money(c.total)})` } : { ok: false, msg: `Phase fees add to ${money(phaseSum)} but the total is ${money(c.total)}` });
+  if (c.totalInc != null && Math.abs(c.total * g - c.totalInc) > 2) checks.push({ ok: false, msg: `Total inc GST ${money(c.totalInc)} doesn't match ${money(c.total)} + GST` });
+  const n = c.phases.reduce((a, p) => a + p.items.length, 0), noTitle = c.phases.reduce((a, p) => a + p.items.filter(i => i.scope === 'hours' && +i.qty > 0 && !i.title).length, 0);
+  checks.push({ ok: true, msg: `${n} lines across ${c.phases.length} phases` });
+  if (noTitle) checks.push({ ok: false, msg: `${noTitle} hourly line${noTitle > 1 ? 's' : ''} without a job title — set them so rates are learned` });
+  c.checks = checks; return c;
+}
+const pastLines = p => (p.phases || []).flatMap(ph => ph.items || []);
+function itemHoursMap(phases) {
   const m = {};
-  for (const it of items) { if (!(it.hours > 0)) continue; const d = detect(it.desc, false).sort((a, b) => b.score - a.score)[0]; if (d) m[d.id] = (m[d.id] || 0) + it.hours; }
+  phases.forEach(ph => (ph.items || []).forEach(it => { if (it.scope !== 'hours' || !(+it.qty > 0)) return; const d = detect(it.name).sort((a, b) => b.score - a.score)[0]; if (d) m[d.id] = (m[d.id] || 0) + +it.qty; }));
   return m;
 }
 async function importFile(file) {
-  const ext = file.name.split('.').pop().toLowerCase(); let lines, text;
-  if (ext === 'pdf') { lines = await pdfLines(file); text = lines.join('\n'); }
-  else if (['xlsx', 'xls', 'csv'].includes(ext)) { const r = await parseSheetLines(file); lines = r.lines; text = r.text; }
-  else { text = await fileText(file); lines = text.split(/\n/); }
-  const parsed = parseLines(lines);
-  return { id: uid(), name: file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' '), client: '', date: Date.now(), source: ext, file: file.name, text, total: parsed.total, phases: parsed.phases, itemHours: itemHoursMap(parsed.items) };
+  const ext = file.name.split('.').pop().toLowerCase(); let cands = [], text = '';
+  if (['xlsx', 'xls', 'csv'].includes(ext)) { const r = await readWorkbook(file); cands = r.candidates; text = r.text; }
+  else { text = await fileText(file); const loc = readSowText(text); if (loc.phases.length) cands = [loc]; }
+  const weak = !cands.length || cands.every(c => !c.phases.length || c.phases.length < 2);
+  if (S.settings.ai && (weak || ext === 'pdf' || ext === 'docx')) {
+    try { const a = await aiReadScope(text, file.name); if (a.phases.length) cands = ext === 'pdf' || ext === 'docx' ? [a, ...cands] : [...cands, a]; } catch (e) {}
+  }
+  if (!cands.length) cands = [{ sheet: '', project: '', client: '', phases: [], total: 0, method: 'Nothing recognised — add lines manually' }];
+  cands.forEach(reconcile);
+  const base = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+  return { id: uid(), _new: true, file: file.name, source: ext, date: Date.now(), text, cands, pick: 0, name: cands[0].project || base, client: cands[0].client || '' };
 }
 
 /* ---------------- UI helpers ---------------- */
@@ -1214,60 +1302,108 @@ function vModel() {
   const P = S.past.slice().sort((a, b) => b.date - a.date), g = globalIndex(), sp = learnedSplit();
   const learned = S.library.map(d => ({ d, lh: learnedHours(d.id) })).filter(x => x.lh);
   const used = {}; inModel().forEach(p => (p.detected || []).forEach(id => used[id] = (used[id] || 0) + 1));
+  const lr = learnedRates(), la = learnedActivities();
   return [`<h1>Pricing model</h1><span class="sub">${inModel().length} of ${S.past.length} scopes active</span><span class="grow"></span><button class="btn" data-act="addpast"><i class="fa-solid fa-plus"></i>Add manually</button>`,
   `<label class="drop" id="drop"><input type="file" multiple accept=".pdf,.xlsx,.xls,.csv,.docx,.txt" data-pastup><i class="fa-solid fa-cloud-arrow-up"></i><div><b style="color:var(--t1);font-weight:500">Upload past scopes</b><div class="hint">PDF or Excel/CSV · drop several at once · you'll confirm each before it's added</div></div></label>
   <div class="mgrid">
     <div class="card">${P.length ? `<table class="tbl"><thead><tr><th style="width:48px">Use</th><th>Scope</th><th>Client</th><th class="r">Total ex GST</th><th class="r">vs library</th><th>Added</th><th></th></tr></thead><tbody>
       ${P.map(p => { const r = pastRatio(p); return `<tr class="${p.off ? 'off' : ''}"><td><label class="tog" title="${p.off ? 'Excluded from learning' : 'Included in learning'}"><input type="checkbox" data-pasttog="${p.id}" ${p.off ? '' : 'checked'}><span class="sw"></span></label></td>
-        <td><b style="font-weight:500">${esc(p.name)}</b><div class="hint">${esc(String(p.source).toUpperCase())} · ${p.phases.length} phases${Object.keys(p.itemHours || {}).length ? ' · hours learned' : ''}</div></td>
+        <td><b style="font-weight:500">${esc(p.name)}</b><div class="hint">${esc(String(p.source).toUpperCase())}${p.method ? ' · ' + esc(p.method) : ''} · ${p.phases.length} phases · ${pastLines(p).length} lines</div></td>
         <td class="muted">${esc(p.client || '—')}</td><td class="r num">${money(p.total)}</td><td class="r num faint">${r ? '×' + r.toFixed(2) : '—'}</td><td class="faint">${fmtDate(p.date)}</td>
         <td class="r" style="white-space:nowrap"><button class="ib" data-act="editpast" data-id="${p.id}" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button><button class="ib del" data-act="delpast" data-id="${p.id}" title="Remove from model"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
     </tbody></table>` : `<div class="empty"><h3>No past scopes yet</h3><p>Upload old quotes and scope sheets. The more you add, the closer new estimates get to how ${esc(S.settings.agency)} really prices.</p></div>`}</div>
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="card pad"><div class="lbl">Pricing index</div><div class="big num">×${g.factor.toFixed(2)}</div><p class="hint">${g.n ? `Past scopes price at ×${g.raw.toFixed(2)} of template + library baseline (median of ${g.n}).` : 'Add past scopes to calibrate.'}</p></div>
       ${sp ? `<div class="card pad"><div class="sec-h"><h3>Typical phase split</h3><span class="hint">${sp.n} scopes</span></div><div class="bars">${SPLIT.filter(([k]) => sp.split[k]).map(([k, n]) => `<div class="b"><div class="bt"><span>${n}</span><span class="num muted">${Math.round(sp.split[k] * 100)}%</span></div><div class="track"><i style="width:${sp.split[k] * 100}%"></i></div></div>`).join('')}</div></div>` : ''}
-      <div class="card pad"><div class="sec-h"><h3>Learned hours</h3></div>${learned.length ? learned.map(x => `<div class="kv"><span>${esc(x.d.name)}</span><b class="num">${hrs(x.lh.avg)}</b></div>`).join('') : '<p class="hint">Comes from spreadsheets with an hours column.</p>'}</div>
+      <div class="card pad"><div class="sec-h"><h3>Rates charged</h3><span class="hint">median of past lines vs rate card</span></div>${lr.length ? lr.map(x => { const rc = titleRate(x.title); return `<div class="kv"><span>${esc(x.title)} <span class="faint">${x.n}</span></span><b class="num">$${Math.round(x.rate)}${x.cost ? ' / $' + Math.round(x.cost) : ''} <span class="faint" style="font-weight:400">card $${Math.round(rc)}</span>${Math.round(rc) !== Math.round(x.rate) ? ` <button class="ib" data-act="applyrate" data-t="${esc(x.title)}" data-r="${x.rate}" data-c="${x.cost ?? ''}" title="Apply to rate card"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>` : ''}</b></div>`; }).join('') : '<p class="hint">Learned from lines with a job title and rate.</p>'}</div>
+      <div class="card pad"><div class="sec-h"><h3>Typical hours</h3></div>${la.length ? la.slice(0, 14).map(x => `<div class="kv"><span>${esc(x.name)}${x.title ? ` <span class="faint">${esc(x.title)}</span>` : ''}</span><b class="num">${hrs(x.avg)}${x.n > 1 ? ` <span class="faint" style="font-weight:400">×${x.n}</span>` : ''}</b></div>`).join('') : '<p class="hint">Learned from hourly lines.</p>'}</div>
+      ${learned.length ? `<div class="card pad"><div class="sec-h"><h3>Deliverable hours</h3></div>${learned.map(x => `<div class="kv"><span>${esc(x.d.name)}</span><b class="num">${hrs(x.lh.avg)}</b></div>`).join('')}</div>` : ''}
       ${Object.keys(used).length ? `<div class="card pad"><div class="sec-h"><h3>Most common deliverables</h3></div><div class="tags">${Object.entries(used).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([id, n]) => `<span class="tag">${esc(lib(id)?.name || id)} · ${n}</span>`).join('')}</div></div>` : ''}
     </div>
   </div>`];
 }
+function draftFromPast(rec) {
+  return { ...clone(rec), _new: false, text: '', pick: 0, cands: [{ sheet: rec.sheet || '', project: rec.name, client: rec.client, total: rec.total, method: rec.method || 'Saved', phases: (rec.phases || []).map(ph => ({ name: ph.name, fee: ph.cost, items: clone(ph.items || []) })) }] };
+}
+const checksHTML = c => c.checks.map(k => `<div class="note ${k.ok ? 'ok' : 'warn'}" style="margin:4px 0 0"><i class="fa-solid ${k.ok ? 'fa-check' : 'fa-triangle-exclamation'}" style="margin-right:6px"></i>${esc(k.msg)}</div>`).join('');
+function pmHTML(p, c, queue) {
+  const tOpts = sel => `<option value="">—</option>` + [...new Set([...titles(), sel].filter(Boolean))].map(t => `<option ${t === sel ? 'selected' : ''}>${esc(t)}</option>`).join('');
+  const f = (pi, ii, k, v, type = 'text', ph = '') => `<input ${type === 'number' ? 'type="number" step="any"' : ''} data-pf="it" data-pi="${pi}" data-ii="${ii}" data-k="${k}" value="${v == null ? '' : esc(v)}" placeholder="${ph}">`;
+  return `
+  <div class="row" style="align-items:flex-start;gap:12px"><div class="grow"><div class="hint">${esc(p.file || '')}${queue.length ? ` · ${queue.length} more after this` : ''}</div><h2>${p._new ? 'Check every line before adding' : 'Edit past scope'}</h2></div>
+    ${p.cands.length > 1 ? `<label class="field" style="min-width:280px"><span>Read from</span><select class="in" data-pa-chg="pick">${p.cands.map((x, i) => `<option value="${i}" ${i === p.pick ? 'selected' : ''}>${esc(x.sheet || x.method)} · ${money(x.total)} · ${x.phases.reduce((a, ph) => a + ph.items.length, 0)} lines</option>`).join('')}</select></label>` : ''}
+    ${S.settings.ai && p.text ? `<button class="btn sm" data-pa="ai" style="margin-top:18px"><i class="fa-solid fa-wand-magic-sparkles"></i>Re-read with AI</button>` : ''}</div>
+  <div class="row" style="gap:10px;flex-wrap:wrap;margin:12px 0 4px">
+    <label class="field grow"><span>Project</span><input class="in" data-pf="meta" data-k="name" value="${esc(p.name)}"></label>
+    <label class="field grow"><span>Client</span><input class="in" data-pf="meta" data-k="client" value="${esc(p.client)}"></label>
+    <label class="field" style="width:160px"><span>Total ex GST</span><input class="in num" type="number" step="any" data-pf="meta" data-k="total" value="${c.total ?? ''}"></label>
+    <div class="field" style="width:150px"><span>Read by</span><div class="tag" style="margin-top:8px">${esc(c.method)}</div></div>
+  </div>
+  <div id="pmChecks">${checksHTML(c)}</div>
+  <div style="overflow-x:auto;margin-top:12px"><table class="rv"><thead><tr><th>Item</th><th style="width:160px">Job title</th><th style="width:70px;text-align:right">Hrs / qty</th><th style="width:90px">Scope</th><th style="width:80px;text-align:right">Rate</th><th style="width:100px;text-align:right">Total</th><th style="width:80px;text-align:right">Cost rate</th><th style="width:120px">Supplier</th><th style="width:30px"></th></tr></thead>
+  ${c.phases.map((ph, pi) => `<tbody><tr><td colspan="5" style="background:var(--paper-2)"><input data-pf="ph" data-pi="${pi}" data-k="name" value="${esc(ph.name)}" style="font-weight:600"></td><td style="background:var(--paper-2)"><input type="number" step="any" data-pf="ph" data-pi="${pi}" data-k="fee" value="${ph.fee ?? ''}" style="font-weight:600" title="Phase fee"></td><td colspan="2" style="background:var(--paper-2)" class="hint" data-ls="${pi}">${ph.lineSum ? 'lines ' + money(ph.lineSum) : ''}</td><td style="background:var(--paper-2)"><button class="ib del" data-pa="delph" data-pi="${pi}" title="Remove phase"><i class="fa-regular fa-trash-can"></i></button></td></tr>
+    ${ph.items.map((it, ii) => `<tr><td>${f(pi, ii, 'name', it.name)}</td><td><select data-pf="it" data-pi="${pi}" data-ii="${ii}" data-k="title">${tOpts(it.title)}</select></td><td>${f(pi, ii, 'qty', it.qty, 'number')}</td><td><select data-pf="it" data-pi="${pi}" data-ii="${ii}" data-k="scope"><option value="hours" ${it.scope === 'hours' ? 'selected' : ''}>Hours</option><option value="flat" ${it.scope === 'flat' ? 'selected' : ''}>Flat fee</option></select></td><td>${f(pi, ii, 'rate', it.rate, 'number')}</td><td>${f(pi, ii, 'total', it.total || '', 'number')}</td><td>${f(pi, ii, 'costRate', it.costRate, 'number')}</td><td>${f(pi, ii, 'supplier', it.supplier, 'text', it.scope === 'flat' ? 'Supplier' : '')}</td><td><button class="ib del" data-pa="delit" data-pi="${pi}" data-ii="${ii}"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('')}
+    <tr><td colspan="9"><button class="btn sm" data-pa="addit" data-pi="${pi}"><i class="fa-solid fa-plus"></i>Line</button></td></tr></tbody>`).join('')}
+  </table></div>
+  <div class="row" style="margin-top:8px"><button class="btn sm" data-pa="addph"><i class="fa-solid fa-plus"></i>Phase</button><span class="grow"></span><button class="btn sm" data-pa="fit">Set total = sum of phases</button></div>
+  <div class="acts"><button class="btn" data-pa="skip">${p._new ? 'Skip' : 'Cancel'}</button><button class="btn pri" data-pa="save">${p._new ? 'Add to model' : 'Save'}</button></div>`;
+}
 function pastModal(p, queue = []) {
-  const det = detect(p.text).map(d => d.id);
-  modal(`
-    <div class="hint">${queue.length ? queue.length + ' more after this' : ''}</div>
-    <h2>${p._new ? 'Check before adding' : 'Edit past scope'}</h2>
-    <p class="hint">${p.file ? esc(p.file) + ' · ' : ''}Correct anything the reader got wrong. Totals are ex GST.</p>
-    <div class="row" style="gap:10px;flex-wrap:wrap;margin:14px 0">
-      <label class="field grow"><span>Project</span><input class="in" id="pName" value="${esc(p.name)}"></label>
-      <label class="field grow"><span>Client</span><input class="in" id="pClient" value="${esc(p.client)}"></label>
-      <label class="field" style="width:150px"><span>Total ex GST</span><input class="in num" type="number" id="pTotal" value="${p.total}"></label>
-    </div>
-    <div class="lbl">Phases</div>
-    <table class="tbl" id="pPh" style="margin-top:4px">${p.phases.map(ph => `<tr><td style="padding:4px 0"><input class="in" value="${esc(ph.name)}"></td><td style="width:140px;padding:4px 8px"><input class="in num" type="number" value="${ph.cost}"></td><td style="width:34px;padding:0"><button class="ib del" data-rm><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('')}</table>
-    <div class="row" style="margin-top:6px"><button class="btn sm" id="pAddPh"><i class="fa-solid fa-plus"></i>Phase</button><span class="hint grow" id="pSum"></span><button class="btn sm" id="pFit">Use sum as total</button></div>
-    <div class="lbl" style="margin-top:14px">Deliverables recognised</div>
-    <div class="tags" style="margin-top:6px">${det.map(id => `<span class="tag">${esc(lib(id).name)}${p.itemHours?.[id] ? ' · ' + hrs(p.itemHours[id]) : ''}</span>`).join('') || '<span class="hint">None — add a description below so briefs can match it.</span>'}</div>
-    <details style="margin-top:12px"><summary class="hint" style="cursor:pointer">Source text</summary><textarea class="in" id="pText" style="min-height:150px;margin-top:8px">${esc(p.text)}</textarea></details>
-    <div class="acts"><button class="btn" data-x="skip">${p._new ? 'Skip' : 'Cancel'}</button><button class="btn pri" data-x="save">${p._new ? 'Add to model' : 'Save'}</button></div>`,
-    (m, close) => {
-      const tbl = m.querySelector('#pPh');
-      const sum = () => { const s = [...tbl.querySelectorAll('tr')].reduce((a, tr) => a + (+tr.querySelectorAll('input')[1].value || 0), 0); m.querySelector('#pSum').textContent = 'Phases add to ' + money(s); return s; };
-      const bindRm = () => tbl.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { b.closest('tr').remove(); sum(); });
-      bindRm(); sum(); tbl.oninput = sum;
-      m.querySelector('#pAddPh').onclick = () => { tbl.insertAdjacentHTML('beforeend', `<tr><td style="padding:4px 0"><input class="in" placeholder="Phase"></td><td style="width:140px;padding:4px 8px"><input class="in num" type="number" value="0"></td><td style="width:34px;padding:0"><button class="ib del" data-rm><i class="fa-solid fa-xmark"></i></button></td></tr>`); bindRm(); };
-      m.querySelector('#pFit').onclick = () => m.querySelector('#pTotal').value = Math.round(sum());
+  modal(`<div id="pm"></div>`, (m, close) => {
+    m.classList.add('wide');
+    const C = () => p.cands[p.pick];
+    const draw = () => { reconcile(C()); m.querySelector('#pm').innerHTML = pmHTML(p, C(), queue); };
+    const recheck = () => { const c = C(); reconcile(c); m.querySelector('#pmChecks').innerHTML = checksHTML(c); c.phases.forEach((ph, i) => { const el = m.querySelector(`[data-ls="${i}"]`); if (el) el.textContent = ph.lineSum ? 'lines ' + money(ph.lineSum) : ''; }); };
+    draw();
+    const upd = el => {
+      const d = el.dataset, c = C(), k = d.k, v = el.value;
+      if (d.pf === 'meta') { if (k === 'total') c.total = num(v); else p[k] = v; }
+      if (d.pf === 'ph') { const ph = c.phases[+d.pi]; ph[k] = k === 'fee' ? num(v) : v; }
+      if (d.pf === 'it') {
+        const it = c.phases[+d.pi].items[+d.ii];
+        if (['qty', 'rate', 'total', 'costRate'].includes(k)) it[k] = num(v); else it[k] = v;
+        if ((k === 'qty' || k === 'rate') && it.qty != null && it.rate != null) { it.total = Math.round(it.qty * it.rate * 100) / 100; const t = m.querySelector(`[data-pf="it"][data-pi="${d.pi}"][data-ii="${d.ii}"][data-k="total"]`); if (t) t.value = it.total; }
+        if (k === 'costRate' || k === 'qty') it.cost = it.qty != null && it.costRate != null ? it.qty * it.costRate : it.cost;
+        if (k === 'scope') it.ext = v === 'flat' && !!it.supplier;
+        if (k === 'supplier') it.ext = it.scope === 'flat' && !!v;
+      }
+      recheck();
+    };
+    m.addEventListener('input', e => { if (e.target.dataset.pf) upd(e.target); });
+    m.addEventListener('change', e => { const el = e.target; if (el.tagName === 'SELECT' && el.dataset.pf) upd(el); if (el.dataset.paChg === 'pick') { p.pick = +el.value; const c = C(); if (c.project) p.name = p.name || c.project; draw(); } });
+    m.addEventListener('click', async e => {
+      const a = e.target.closest('[data-pa]'); if (!a) return; const c = C(), d = a.dataset;
+      if (d.pa === 'addph') { c.phases.push({ name: 'New phase', fee: null, items: [] }); draw(); }
+      if (d.pa === 'delph') { c.phases.splice(+d.pi, 1); draw(); }
+      if (d.pa === 'addit') { c.phases[+d.pi].items.push({ name: '', title: '', qty: null, scope: 'hours', rate: null, total: 0, costRate: null, cost: null, supplier: '', ext: false }); draw(); }
+      if (d.pa === 'delit') { c.phases[+d.pi].items.splice(+d.ii, 1); draw(); }
+      if (d.pa === 'fit') { c.total = c.phases.reduce((x, ph) => x + (+ph.fee || 0), 0); draw(); }
+      if (d.pa === 'ai') {
+        a.disabled = true; a.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i>Reading…';
+        try { const r = reconcile(await aiReadScope(p.text, p.file)); const i = p.cands.findIndex(x => x.method === 'AI reader'); if (i >= 0) p.cands[i] = r; else p.cands.push(r); p.pick = p.cands.indexOf(r); draw(); }
+        catch (err) { toast('AI unavailable'); a.disabled = false; a.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i>Re-read with AI'; }
+      }
       const next = () => { close(); if (queue.length) pastModal(queue[0], queue.slice(1)); else render(); };
-      m.querySelector('[data-x=skip]').onclick = next;
-      m.querySelector('[data-x=save]').onclick = () => {
-        p.name = m.querySelector('#pName').value.trim() || 'Untitled'; p.client = m.querySelector('#pClient').value.trim();
-        p.total = +m.querySelector('#pTotal').value || 0; p.text = m.querySelector('#pText').value;
-        p.phases = [...tbl.querySelectorAll('tr')].map(tr => { const [a, b] = tr.querySelectorAll('input'); return { name: a.value.trim(), cost: +b.value || 0 }; }).filter(x => x.name);
-        p.detected = detect(p.text).map(d => d.id);
-        const isNew = p._new; delete p._new;
-        if (isNew) S.past.push(p); else { const i = S.past.findIndex(x => x.id === p.id); if (i >= 0) S.past[i] = p; }
-        save(); toast(isNew ? 'Added to pricing model' : 'Saved'); next();
-      };
+      if (d.pa === 'skip') next();
+      if (d.pa === 'save') {
+        const phases = c.phases.filter(ph => ph.name.trim()).map(ph => ({ name: ph.name.trim(), cost: Math.round(+ph.fee || ph.lineSum || 0), items: ph.items.filter(i => i.name.trim()).map(i => ({ name: i.name.trim(), title: i.title || '', qty: i.qty, scope: i.scope, rate: i.rate, total: +i.total || 0, costRate: i.costRate, cost: i.cost ?? null, supplier: i.supplier || '', ext: !!i.ext })) }));
+        const text = [p.name, ...phases.flatMap(ph => [ph.name, ...ph.items.map(i => i.name)])].join('\n');
+        const rec = { id: p.id, name: p.name.trim() || 'Untitled', client: p.client || '', date: p.date || Date.now(), source: p.source || 'manual', file: p.file || '', method: c.method, sheet: c.sheet || '', total: Math.round(+c.total || 0), phases, text, itemHours: itemHoursMap(phases), detected: detect(text).map(x => x.id), off: !!p.off, fromScope: p.fromScope };
+        const i = S.past.findIndex(x => x.id === rec.id); if (i >= 0) S.past[i] = rec; else S.past.push(rec);
+        save(); toast(p._new ? 'Added to pricing model' : 'Saved'); next();
+      }
     });
+  });
+}
+function learnedRates() {
+  const acc = {};
+  inModel().forEach(p => pastLines(p).forEach(i => { if (i.scope !== 'hours' || !i.title || !(+i.rate > 0)) return; const a = acc[i.title] || (acc[i.title] = { r: [], c: [], h: 0, n: 0 }); a.r.push(+i.rate); if (+i.costRate > 0) a.c.push(+i.costRate); a.h += +i.qty || 0; a.n++; }));
+  return Object.entries(acc).map(([t, a]) => ({ title: t, rate: median(a.r), cost: a.c.length ? median(a.c) : null, hours: a.h, n: a.n })).sort((a, b) => b.hours - a.hours);
+}
+function learnedActivities() {
+  const acc = {};
+  inModel().forEach(p => pastLines(p).forEach(i => { if (i.scope !== 'hours' || !(+i.qty > 0)) return; const k = normTxt(i.name) + '|' + (i.title || ''); const a = acc[k] || (acc[k] = { name: i.name, title: i.title, h: [] }); a.h.push(+i.qty); }));
+  return Object.values(acc).map(a => ({ ...a, avg: a.h.reduce((x, y) => x + y, 0) / a.h.length, n: a.h.length })).sort((a, b) => b.n - a.n || b.avg - a.avg);
 }
 
 /* ---------------- rate card ---------------- */
@@ -1446,16 +1582,18 @@ const ACT = {
     done(); touch(); render();
   },
   tomodel: () => {
-    const s = cur(), t = totals(s), ih = {};
-    s.phases.forEach(p => p.items.forEach(it => { if (it.libId) ih[it.libId] = (ih[it.libId] || 0) + itemHours(it) / Math.max(1, it.qty); }));
+    const s = cur(), t = totals(s);
+    const phases = s.phases.map((p, i) => ({ name: p.name, cost: t.phasesClient[i], items: p.items.flatMap(it => it.lines.map(l => l.type === 'ext' ? { name: it.name, title: '', qty: 1, scope: 'flat', rate: lineClient(l), total: lineClient(l), costRate: null, cost: lineCost(l), supplier: l.supplier || '', ext: true } : { name: it.name, title: person(l.personId).title, qty: +l.hours || 0, scope: 'hours', rate: lineRate(l), total: lineClient(l), costRate: lineCostRate(l), cost: lineCost(l), supplier: '', ext: false })) }));
     const ex = S.past.find(p => p.fromScope === s.id);
-    const rec = { id: ex?.id || uid(), fromScope: s.id, name: s.name, client: s.client, date: Date.now(), source: 'estimate', text: s.brief + '\n' + s.phases.map(p => p.name + ': ' + p.items.map(i => i.name).join(', ')).join('\n'), total: Math.round(t.ex), phases: s.phases.map((p, i) => ({ name: p.name, cost: t.phasesClient[i] })), itemHours: ih, detected: [...new Set(s.phases.flatMap(p => p.items.map(i => i.libId)).filter(Boolean))], off: ex?.off || false };
+    const text = [s.name, ...phases.flatMap(ph => [ph.name, ...ph.items.map(i => i.name)])].join('\n');
+    const rec = { id: ex?.id || uid(), fromScope: s.id, name: s.name, client: s.client, date: Date.now(), source: 'estimate', method: 'Born Scope estimate', text, total: Math.round(t.ex), phases, itemHours: itemHoursMap(phases), detected: [...new Set(s.phases.flatMap(p => p.items.map(i => i.libId)).filter(Boolean))], off: ex?.off || false };
     if (ex) Object.assign(ex, rec); else S.past.push(rec);
     save(); render(); toast(ex ? 'Pricing model updated' : 'Added to pricing model');
   },
   export: exportPDF,
-  addpast: () => pastModal({ id: uid(), _new: true, name: '', client: '', date: Date.now(), source: 'manual', text: '', total: 0, phases: [], itemHours: {} }),
-  editpast: a => pastModal(clone(S.past.find(p => p.id === a.dataset.id))),
+  addpast: () => pastModal({ id: uid(), _new: true, name: '', client: '', date: Date.now(), source: 'manual', file: '', text: '', pick: 0, cands: [{ sheet: '', project: '', client: '', phases: [{ name: 'Phase One', fee: null, items: [] }], total: 0, method: 'Manual' }] }),
+  editpast: a => pastModal(draftFromPast(S.past.find(p => p.id === a.dataset.id))),
+  applyrate: a => { const t = a.dataset.t; S.people.filter(p => p.title === t).forEach(p => { p.rate = Math.round(+a.dataset.r); if (a.dataset.c) p.cost = Math.round(+a.dataset.c); }); save(); render(); toast(`${t} rates updated`); },
   delpast: async a => { if (await confirmBox('Remove this scope from the pricing model?', 'Remove')) { S.past = S.past.filter(p => p.id !== a.dataset.id); save(); render(); } },
   addperson: () => { S.people.push({ id: uid(), name: '', title: '', rate: 200, cost: 80 }); save(); render(); },
   delperson: async a => { const used = S.scopes.some(s => s.phases.some(p => p.items.some(i => i.lines.some(l => l.personId === a.dataset.id)))); if (await confirmBox(used ? 'This person is on existing estimates — those lines will show $0 until reassigned. Delete?' : 'Delete this person?')) { S.people = S.people.filter(r => r.id !== a.dataset.id); save(); render(); } },
