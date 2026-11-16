@@ -210,7 +210,7 @@ table.est{width:100%;border-collapse:collapse;min-width:760px}
   #print{display:block;color:#111;font-size:8.6pt;line-height:1.45}
 }
 .sow-top{display:flex;justify-content:space-between;align-items:flex-start}
-.sow-logo{font-size:46pt;font-weight:500;letter-spacing:-.035em;line-height:1}
+.sow-logo{line-height:0}.sow-logo svg,.sow-logo img{height:15mm;width:auto;display:block}
 .sow-title{text-align:right}.sow-title b{font-size:11pt;font-weight:600;display:block}.sow-title span{font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 .sow-parties{display:flex;justify-content:space-between;margin:40px 0 44px;white-space:pre-line}
 .sow-parties div:last-child{text-align:right}
@@ -287,6 +287,7 @@ table.ed{width:100%;border-collapse:collapse}
 .rv .h{width:78px}
 .modal.wide{width:min(1200px,100%)}
 #pmChecks .note{padding:6px 10px;font-size:12.5px}
+.sow-logo-prev{padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;line-height:0}.sow-logo-prev svg,.sow-logo-prev img{height:32px;width:auto}
 
 </style>
 </head>
@@ -323,11 +324,13 @@ const SIZES = [['small', 'Small'], ['mid', 'Mid'], ['big', 'Big']];
 const TRACKS = [['design', 'Design'], ['copy', 'Copy'], ['production', 'Production']];
 if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+/* Born logo (Born_Logo_Black_RGB.svg) — used on the Scope of Work unless replaced in Settings */
+const BORN_LOGO = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1841.72 696.44"><path d="M410.12,44.9C371.85,15.09,320.12,0,256.39,0H0v688.68h268.04c71.45,0,128.51-17.35,169.64-51.57,40.8-33.94,61.48-83.9,61.48-148.43,0-43.82-10.72-80.52-31.84-109.15-21.25-28.72-49.77-49.91-84.75-63.06l-13.86-5.18,13.57-5.95c25.38-11.17,46.11-28.39,61.57-51.33,15.43-22.84,23.25-49.84,23.25-80.19,0-56.06-19.15-99.44-56.95-128.88l-.04-.04ZM100.69,82.21h142.1c39.45,0,70,8.63,90.81,25.65,21.12,17.35,31.84,42.13,31.84,73.66s-10.56,56.19-31.36,73.18c-20.44,16.71-50.85,25.18-90.33,25.18H100.69V82.21ZM396.55,483.83c0,77.51-49.77,116.83-147.92,116.83H100.72v-234.62h147.92c48.48,0,85.54,10.08,110.2,30.01,25.01,20.24,37.72,49.77,37.72,87.8l-.02-.02Z"/><path d="M908.86,221.25c-37.15-21.69-79.92-32.69-127.19-32.69s-91.05,11-128.16,32.69c-37.11,21.69-66.59,51.97-87.67,90.04-21.12,38.11-31.81,82.09-31.81,130.73s10.72,92.81,31.81,131.21c21.08,38.36,50.56,68.85,87.67,90.53,37.11,21.69,80.25,32.69,128.16,32.69s90.07-11,127.19-32.69c37.11-21.72,66.79-52.01,88.2-90.07,21.41-38.12,32.29-82.42,32.29-131.65s-10.84-93.38-32.25-131.17c-21.39-37.76-51.09-67.91-88.18-89.6h-.04l-.02-.02ZM913.43,531.61c-12.73,26.5-30.61,47.43-53.13,62.22-22.61,14.86-49.03,22.37-78.63,22.37-45.71,0-82.93-16.58-110.53-49.27-27.4-32.37-41.28-74.37-41.28-124.89s13.9-91.52,41.28-123.94c27.64-32.69,64.82-49.27,110.53-49.27,29.57,0,55.99,7.51,78.63,22.37,22.5,14.78,40.36,35.39,53.13,61.17,12.65,25.71,19.08,55.86,19.08,89.63s-6.43,63.3-19.08,89.6v.04-.02Z"/><path d="M1637.84,277.04c33.97,0,61.16,10.8,80.72,32.08,19.43,21.17,29.27,48.68,29.27,81.85v296.59h93.89v-319.93c0-35.02-7.59-65.91-22.53-91.73-14.91-25.78-35.7-46.11-61.81-60.4-26.19-14.34-56.95-21.61-91.36-21.61s-66.07,8.23-94.18,24.46c-28.15,16.27-50.95,38.47-67.87,65.98l-11.17,18.2v-74.91c0-17.34-14.06-31.4-31.4-31.4h-62.49v491.38h93.89v-209.11c0-61.89,12.82-111.32,38.03-146.84,25.71-36.18,61.69-54.54,106.96-54.54l.04-.07Z"/><path d="M1175.17,286.38l-11.2,18.71v-77.59c0-17.34-14.07-31.4-31.4-31.4h-62.53v491.38h93.93v-237.02s.29-8.63.91-14.47c2.98-25.07,14.07-75.82,55.45-112.37,33.16-29.27,78.6-42.81,134.97-40.29v-89.32c-24.26-1.05-125.18.61-180.13,92.37Z"/></svg>';
+
 /* ---------------- seed (from Born quote templates) ---------------- */
 const T = { SD: 'Strategy Director', CD: 'Creative Director', DD: 'Design Director', AD: 'Art Director', CW: 'Copywriter', ST: 'Strategist', DES: 'Designer', DM: 'Digital Marketer', AM: 'Account Manager', DEV: 'Developer', MO: 'Motion Designer' };
 const SEED_PEOPLE = [[T.SD, 240, 95], [T.CD, 240, 95], [T.DD, 240, 95], [T.AD, 200, 95], [T.CW, 200, 95], [T.ST, 200, 70], [T.DES, 200, 50], [T.DM, 200, 50], [T.AM, 200, 80], [T.DEV, 200, 95], [T.MO, 200, 70]];
-const DEFAULT_NOTES = `Includes two rounds of changes on all deliverables.
-Third-party costs (printing, media, stock imagery, talent, licensing) are excluded unless listed.
+const DEFAULT_NOTES = `Third-party costs (printing, media, stock imagery, talent, licensing) are excluded unless listed.
 This estimate is valid for 30 days.`;
 // template item: [name, [[title, small, mid, big], ...]]
 const TI = (name, lines) => ({ name, lines: lines.map(([title, s, m, b]) => ({ title, hours: { small: s, mid: m, big: b } })) });
@@ -1467,7 +1470,8 @@ function vSettings() {
   return [`<h1>Settings</h1>`,
   `<div class="split"><div style="display:flex;flex-direction:column;gap:16px">
     <div class="card pad" style="display:flex;flex-direction:column;gap:12px"><div class="sec-h" style="margin:0"><h3>Scope of Work</h3></div>
-      <div class="row" style="gap:10px;flex-wrap:wrap">${f('agency', 'Logo text', '140px')}${f('company', 'Company name')}${f('abn', 'ABN', '200px')}</div>
+      <div class="row" style="gap:14px;align-items:center"><div class="sow-logo-prev">${logoHTML()}</div><label class="btn sm"><i class="fa-solid fa-upload"></i>Replace logo<input type="file" accept=".svg,.png,.jpg,.jpeg" data-logoup style="display:none"></label>${S.settings.logo ? '<button class="btn sm" data-act="logoreset">Use Born logo</button>' : '<span class="hint">Born logo (built in)</span>'}</div>
+      <div class="row" style="gap:10px;flex-wrap:wrap">${f('agency', 'Agency name', '140px')}${f('company', 'Company name')}${f('abn', 'ABN', '200px')}</div>
       <label class="field"><span>Address</span><textarea class="in" data-f="set.address" rows="2">${esc(st.address)}</textarea></label>
       <div class="row" style="gap:10px;flex-wrap:wrap">${f('gst', 'GST %', '90px', 'number')}<label class="field" style="width:140px"><span>Round phase fees to</span><select class="in" data-fc="set.round">${[1, 10, 50, 100, 250, 500].map(v => `<option value="${v}" ${+st.round === v ? 'selected' : ''}>$${v}</option>`).join('')}</select></label>${f('sowNote', 'Footnote')}</div>
       <label class="field"><span>Terms</span><textarea class="in" data-f="set.terms" rows="2">${esc(st.terms)}</textarea></label>
@@ -1493,6 +1497,7 @@ function vSettings() {
 
 /* ---------------- Scope of Work (PDF via print) ---------------- */
 const WORDS = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+const logoHTML = () => S.settings.logo ? `<img src="${esc(S.settings.logo)}" alt="${esc(S.settings.agency)}">` : BORN_LOGO;
 function buildPrint(s) {
   const t = totals(s), st = S.settings; let n = 0;
   const co = s.clientCo || {};
@@ -1503,7 +1508,7 @@ function buildPrint(s) {
     return `<div class="sow-ph"><div class="l"><div class="pn">${esc(label)}</div>${st.sowDesc && p.desc ? `<div class="pd">${esc(p.desc)}</div>` : ''}${items.map(x => `<div class="it">${esc(x)}</div>`).join('')}</div><div class="fee">${money2(t.phasesClient[i])}</div></div>`;
   }).join('');
   $('#print').innerHTML = `
-  <div class="sow-top"><div class="sow-logo">${esc(st.agency)}</div><div class="sow-title"><b>Scope of Work</b><span>${fmtDate(Date.now())}</span></div></div>
+  <div class="sow-top"><div class="sow-logo">${logoHTML()}</div><div class="sow-title"><b>Scope of Work</b><span>${fmtDate(Date.now())}</span></div></div>
   <div class="sow-parties"><div>${esc(co.name || s.client || '')}${co.address ? '\n' + esc(co.address) : ''}${co.abn ? '\n' + esc(co.abn) : ''}</div><div>${esc(st.company)}\n${esc(st.address)}\n${esc(st.abn)}</div></div>
   <div class="sow-head"><span>${esc(s.name)}</span><span>Fee</span></div>
   ${s.overview ? `<p class="sow-ov">${esc(s.overview)}</p>` : ''}
@@ -1608,6 +1613,7 @@ const ACT = {
   tpladdln: a => { tpl(a.dataset.id).phases[+a.dataset.pi].items[+a.dataset.ii].lines.push({ title: titles()[0], hours: { small: 0, mid: 0, big: 0 } }); save(); render(); },
   tpldelln: a => { const it = tpl(a.dataset.id).phases[+a.dataset.pi].items, i = it[+a.dataset.ii]; i.lines.splice(+a.dataset.li, 1); if (!i.lines.length) it.splice(+a.dataset.ii, 1); save(); render(); },
   tpldelx: a => { tpl(a.dataset.id).phases[+a.dataset.pi].ext.splice(+a.dataset.xi, 1); save(); render(); },
+  logoreset: () => { S.settings.logo = ''; save(); render(); },
   exportjson: () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ ...S, settings: { ...S.settings, apiKey: '' } }, null, 2)], { type: 'application/json' })); a.download = `born-scope-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click(); },
   resetlib: async () => { if (await confirmBox('Replace templates, deliverables and external costs with the Born defaults? Estimates and rate card are kept.', 'Reset')) { S.templates = clone(SEED_TEMPLATES); S.library = clone(SEED_LIBRARY); S.externals = clone(SEED_EXTERNALS); save(); render(); } },
   reset: async () => { if (await confirmBox('Wipe all estimates, the pricing model, rate card and library — for everyone using this site? Export a backup first.', 'Reset')) { const k = S.settings.apiKey; S = seed(); S.settings.apiKey = k; save(); render(); } },
@@ -1702,6 +1708,10 @@ document.addEventListener('change', async e => {
   if (el.hasAttribute('data-briefup') && el.files[0]) {
     try { const txt = await fileText(el.files[0]); window._draft.brief = (window._draft.brief ? window._draft.brief + '\n\n' : '') + txt.trim(); if (!window._draft.name) window._draft.name = el.files[0].name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' '); render(); toast('Brief loaded'); }
     catch (err) { toast('Could not read that file'); }
+  }
+  if (el.hasAttribute('data-logoup') && el.files[0]) {
+    const f = el.files[0]; if (f.size > 400000) return toast('Logo must be under 400 KB');
+    const rd = new FileReader(); rd.onload = () => { S.settings.logo = rd.result; save(); render(); toast('Logo updated'); }; rd.readAsDataURL(f);
   }
   if (el.hasAttribute('data-pastup')) handlePast([...el.files]);
   if (el.hasAttribute('data-importjson') && el.files[0]) {
