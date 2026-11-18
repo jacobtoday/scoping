@@ -288,6 +288,187 @@ table.ed{width:100%;border-collapse:collapse}
 .modal.wide{width:min(1200px,100%)}
 #pmChecks .note{padding:6px 10px;font-size:12.5px}
 .sow-logo-prev{padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;line-height:0}.sow-logo-prev svg,.sow-logo-prev img{height:32px;width:auto}
+/* ================= v4 editor ================= */
+kbd{font:500 10.5px var(--ff);padding:1px 5px;border-radius:4px;background:var(--bg-soft);color:var(--t3);border:1px solid var(--border)}
+.btn kbd{margin-left:2px}
+.ib:disabled{opacity:.3;pointer-events:none}
+.ed-title{display:flex;flex-direction:column;min-width:0}
+.ed-title .title-in{font-size:19px;padding:2px 6px;max-width:520px}
+.ed-sub{display:flex;align-items:center;gap:10px;padding-left:6px;font-size:12.5px}
+.ed-sub select.pill{border:none;cursor:pointer;padding:2px 8px;font-size:11.5px}
+.chipbtn{display:inline-flex;align-items:center;gap:6px;color:var(--t2);cursor:default;padding:2px 0}
+.chipbtn:hover{color:var(--t1)}
+.ai-btn{border-color:var(--t1)}
+.ai-btn i{color:#7B5CE0}
+.ai-btn.on{background:var(--t1);color:#fff}.ai-btn.on i{color:#C9B8FF}
+/* hover popovers */
+.hov{position:relative}
+.pop{position:absolute;top:calc(100% + 8px);left:0;z-index:40;min-width:250px;max-width:340px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--sh3);padding:14px 16px;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .14s,transform .14s,visibility .14s;font-size:13px;color:var(--t1);text-align:left;font-weight:400;cursor:default;white-space:normal}
+.hov:hover>.pop,.hov:focus-within>.pop{opacity:1;visibility:visible;transform:none;transition-delay:.08s}
+.pop::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px}
+.pop-r{left:auto;right:0}.pop-l{left:0}
+.pop-c{left:50%;transform:translate(-50%,-4px);min-width:0;white-space:nowrap;padding:8px 12px}
+.hov:hover>.pop-c{transform:translate(-50%,0)}
+.pop-h{font-weight:600;margin-bottom:8px}
+.pop .kv{padding:3px 0;gap:14px}
+.pop .div{border-top:1px solid var(--border-lt);margin:8px 0}
+.pop-lines div{color:var(--t2);line-height:1.5;white-space:pre-line}
+.menu{min-width:220px;padding:6px}
+.menu button{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;padding:8px 10px;border-radius:7px;font-size:13px;text-align:left}
+.menu button i{width:16px;color:var(--t3)}
+.menu button:hover{background:var(--bg-soft)}
+/* canvas */
+.edv{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+.edv.with-ai{grid-template-columns:minmax(0,1fr) 380px;gap:24px}
+.ed-canvas{max-width:1040px;width:100%;margin:0 auto}
+.stats4{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--sh)}
+.st{padding:16px 20px;border-right:1px solid var(--border-lt);cursor:default;transition:background .15s}
+.st:last-child{border-right:none}
+.st:hover{background:var(--paper-2)}
+.st:first-child{border-radius:16px 0 0 16px}.st:last-child{border-radius:0 16px 16px 0}
+.sv{font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
+.sv small{font-size:14px;color:var(--t3);font-weight:400}
+.ssub{font-size:12.5px;color:var(--t3);min-height:18px;display:flex;gap:4px;align-items:center}
+.stat-flag{font-size:12px;margin-top:2px}.stat-flag.warn{color:var(--warning)}.stat-flag.ok{color:var(--success)}
+.m-good{color:var(--success)}.m-ok{color:var(--warning)}.m-low{color:var(--danger)}
+.mini{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:13px;line-height:1;color:var(--t2);display:inline-grid;place-items:center;padding:0}
+.mini:hover{border-color:var(--t1);color:var(--t1)}
+.avs{display:flex;align-items:center}
+.av{width:24px;height:24px;border-radius:50%;display:inline-grid;place-items:center;font-size:9.5px;font-weight:600;color:var(--t1);border:2px solid #fff;flex:none;letter-spacing:.02em}
+.avs .av+.av{margin-left:-7px}
+.avs.big .av{width:32px;height:32px;font-size:11px}
+.avs.big{margin-top:6px}
+.av.more{background:var(--bg-soft);color:var(--t2)}
+.bar-row{display:flex;align-items:center;gap:8px;padding:4px 0;position:relative;font-size:12.5px}
+.bar-row>i{position:absolute;left:32px;bottom:0;height:2px;background:var(--t1);border-radius:2px;opacity:.15}
+.phasebar{display:flex;height:6px;gap:3px;margin:14px 2px 0}
+.phasebar a{border-radius:3px;display:block;transition:transform .15s}
+.phasebar a:hover{transform:scaleY(2)}
+.lensbar{display:flex;align-items:center;gap:10px;margin:22px 0 6px;flex-wrap:wrap}
+.seg button i{margin-right:4px;font-size:11px}
+.ov{margin:14px 0 6px}
+.ghost-area{width:100%;border:1px solid transparent;background:transparent;resize:none;outline:none;font-size:14.5px;line-height:1.6;color:var(--t1);padding:6px 8px;margin-left:-8px;border-radius:8px;overflow:hidden}
+.ghost-area:hover{background:rgba(0,0,0,.02)}
+.ghost-area:focus{background:#fff;border-color:var(--border)}
+/* phases */
+.phase{margin-top:30px;scroll-margin-top:90px}
+.ph-h{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:2px solid var(--pc)}
+.ph-n{font-size:11.5px;font-weight:600;color:var(--t3);font-variant-numeric:tabular-nums}
+.ph-name{font-size:18px;font-weight:500;border:1px solid transparent;background:transparent;border-radius:6px;padding:3px 6px;outline:none;min-width:120px;width:auto;field-sizing:content;max-width:460px}
+.ph-name:hover{border-color:var(--border)}.ph-name:focus{border-color:var(--t1);background:#fff}
+.ph-tools{display:flex;opacity:0;transition:opacity .15s}
+.ph-h:hover .ph-tools{opacity:1}
+.ph-hrs{font-size:12.5px}
+.fee{font-size:18px;font-weight:500;padding:2px 6px;border-radius:8px;cursor:default}
+.fee:hover{background:var(--bg-soft)}
+.lockic{font-size:11px;color:var(--warning);margin-left:6px}
+.ph-desc-wrap{display:flex;align-items:flex-start;gap:6px;margin:8px 0 6px}
+.ph-desc{flex:1;border:1px solid transparent;background:transparent;resize:none;outline:none;font-size:13.5px;line-height:1.55;color:var(--t2);padding:4px 8px;margin-left:-8px;border-radius:8px;overflow:hidden}
+.ph-desc:hover{background:rgba(0,0,0,.02)}.ph-desc:focus{background:#fff;border-color:var(--border);color:var(--t1)}
+.ph-desc-wrap .ib{opacity:0}.ph-desc-wrap:hover .ib{opacity:1}
+/* rows */
+.rows{display:flex;flex-direction:column}
+.it{border-radius:10px;transition:background .12s}
+.it-row{display:grid;grid-template-columns:16px minmax(0,1fr) 140px 120px 70px 110px 28px;align-items:center;gap:10px;padding:7px 8px;cursor:pointer;border-radius:10px}
+.it-row:hover{background:#fff}
+.it.open{background:#fff;box-shadow:var(--sh);margin:4px 0}
+.car{font-size:10px;color:var(--t4);transition:transform .15s}
+.it.open .car{transform:rotate(90deg);color:var(--t2)}
+.it-name-wrap{display:flex;align-items:center;gap:8px;min-width:0}
+.it-name-wrap .trk{margin:0;flex:none}
+.it-name{border:1px solid transparent;background:transparent;border-radius:6px;padding:3px 6px;outline:none;font-size:14px;min-width:0;flex:1;text-overflow:ellipsis}
+.it-name:hover{border-color:var(--border)}.it-name:focus{border-color:var(--t1);background:#fff}
+.qty{display:flex;align-items:center;gap:6px;font-size:13px;justify-content:flex-start}
+.qty .mini{opacity:0;transition:opacity .12s}
+.it-row:hover .qty .mini{opacity:1}
+.qty b{font-weight:500;min-width:14px;text-align:center}
+.qty .faint{font-size:12px}
+.sup{font-size:12.5px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hrs-cell{display:flex;align-items:center;justify-content:flex-end;gap:2px;font-size:13.5px}
+.scrub{width:46px;border:1px solid transparent;background:transparent;border-radius:6px;padding:3px 4px;text-align:right;font-size:13.5px;cursor:ew-resize;outline:none;color:var(--t1)}
+.scrub:hover{background:var(--bg-soft)}
+.scrub:focus{cursor:text;border-color:var(--t1);background:#fff}
+body.scrubbing,body.scrubbing *{cursor:ew-resize!important;user-select:none}
+.amt{display:flex;align-items:center;justify-content:flex-end;gap:7px;font-size:14px;padding:2px 4px;border-radius:6px}
+.amt b{font-weight:500}
+.amt:hover{background:var(--bg-soft)}
+.mdot{width:7px;height:7px;border-radius:50%;flex:none;background:transparent}
+.mdot.m-good{background:var(--success)}.mdot.m-ok{background:#E0B45C}.mdot.m-low{background:var(--danger)}
+.rowdel{opacity:0}.it-row:hover .rowdel{opacity:1}
+.mgmt{margin-top:4px;border-top:1px dashed var(--border)}
+.mgmt .it-row{padding-top:4px;padding-bottom:4px}
+.mgmt .it-name,.mgmt .amt b,.mgmt .scrub{color:var(--t2);font-size:13px}
+.trk.core{display:none}
+.it-detail{padding:4px 12px 12px 34px;display:flex;flex-direction:column;gap:6px}
+.spec{font-size:12.5px;color:var(--t2);padding:2px 0 4px}.spec i{font-size:10px;margin-right:6px;color:var(--t3)}
+.ln{display:flex;align-items:center;gap:10px;padding:4px 6px;border-radius:8px;background:var(--paper-2)}
+.ln select{border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:13px;outline:none;max-width:240px}
+.ln select:hover{border-color:var(--border)}
+.lf{display:inline-flex;align-items:center;gap:2px;font-size:12px;color:var(--t3)}
+.lf input{width:62px;border:1px solid transparent;background:transparent;border-radius:6px;padding:3px 4px;text-align:right;font-size:13px;outline:none}
+.lf input:hover{border-color:var(--border)}.lf input:focus{border-color:var(--t1);background:#fff}
+.lf input::-webkit-inner-spin-button{-webkit-appearance:none}
+.lf .scrub{width:46px}
+.ln b{font-weight:500;font-size:13px}
+.sup-in{border:1px solid transparent;background:transparent;border-radius:6px;padding:4px 6px;font-size:13px;outline:none;width:180px}
+.sup-in:hover{border-color:var(--border)}.sup-in:focus{border-color:var(--t1);background:#fff}
+.sup-av{background:var(--danger-bg)!important;color:var(--danger);font-size:10px}
+.ghostbtn{align-self:flex-start;border-style:dashed;background:transparent}
+.add-row{display:flex;align-items:center;gap:8px;border:none;background:none;color:var(--t3);font-size:13px;padding:8px 10px;margin-top:2px;border-radius:8px;width:100%;text-align:left}
+.add-row:hover{background:#fff;color:var(--t1)}
+.add-phase{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:28px;padding:14px;border:1.5px dashed var(--border-str);border-radius:12px;background:none;color:var(--t2);font-size:13.5px}
+.add-phase:hover{border-color:var(--t1);color:var(--t1)}
+/* palette */
+.pal-bg{position:fixed;inset:0;z-index:120;background:rgba(20,20,20,.18);display:flex;justify-content:center;align-items:flex-start;padding-top:12vh}
+.pal{width:min(620px,92vw);background:#fff;border-radius:14px;box-shadow:var(--sh3);overflow:hidden;border:1px solid var(--border)}
+.pal-in{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border-lt)}
+.pal-in i{color:var(--t3)}
+.pal-in input{flex:1;border:none;outline:none;font-size:16px;background:none}
+.pal-list{max-height:52vh;overflow:auto;padding:6px}
+.pal-g{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);padding:10px 12px 4px}
+.pal-o{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;font-size:14px;cursor:pointer}
+.pal-o i{width:16px;text-align:center;color:var(--t3);font-size:13px}
+.pal-o .faint{font-size:12px;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pal-o.on{background:var(--bg-soft)}
+.pal-o.on i{color:var(--t1)}
+/* AI panel */
+.ai-panel{position:sticky;top:84px;height:calc(100vh - 104px);background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--sh2);display:flex;flex-direction:column;overflow:hidden}
+.ai-h{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--border-lt)}
+.ai-h>i{color:#7B5CE0}
+.ai-thread{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ai-empty p{font-size:13.5px;color:var(--t2);line-height:1.55}
+.ai-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.ai-chips button{border:1px solid var(--border);background:#fff;border-radius:99px;padding:6px 12px;font-size:12.5px}
+.ai-chips button:hover{border-color:var(--t1)}
+.msg{font-size:13.5px;line-height:1.55;max-width:100%}
+.msg.me{align-self:flex-end;background:var(--t1);color:#fff;padding:9px 13px;border-radius:14px 14px 4px 14px;max-width:88%;white-space:pre-wrap}
+.msg.ai{align-self:stretch}
+.ai-txt{color:var(--t1)}
+.ai-q{margin-top:8px;display:flex;flex-direction:column;gap:4px;color:var(--t2);font-size:13px}.ai-q i{margin-right:6px;color:#7B5CE0}
+.chg-list{margin-top:10px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.chg{display:flex;gap:10px;padding:9px 12px;border-bottom:1px solid var(--border-lt);cursor:pointer;align-items:flex-start}
+.chg:last-child{border-bottom:none}
+.chg input{margin-top:3px;accent-color:var(--t1)}
+.chg b{font-weight:500;font-size:13px;display:block}
+.chg small{display:block;color:var(--t3);font-size:12px;margin-top:1px}
+.chg.off b{color:var(--t3);text-decoration:line-through}
+.chg-list.done{opacity:.6}
+.chg-acts{display:flex;align-items:center;gap:8px;margin-top:8px}
+.thinking{display:flex;gap:4px;padding:6px 0}
+.thinking span{width:6px;height:6px;border-radius:50%;background:var(--t3);animation:bl 1s infinite}
+.thinking span:nth-child(2){animation-delay:.15s}.thinking span:nth-child(3){animation-delay:.3s}
+@keyframes bl{50%{opacity:.25}}
+.ai-in{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid var(--border-lt)}
+.ai-in textarea{flex:1;border:1px solid var(--border);border-radius:10px;padding:9px 11px;font-size:13.5px;resize:none;outline:none;line-height:1.45}
+.ai-in textarea:focus{border-color:var(--t1)}
+@media (max-width:1250px){.edv.with-ai{grid-template-columns:1fr}.ai-panel{position:fixed;right:16px;top:80px;bottom:16px;height:auto;width:380px;z-index:60}}
+@media (max-width:900px){.stats4{grid-template-columns:1fr 1fr}.it-row{grid-template-columns:16px minmax(0,1fr) 70px 90px 28px}.it-row .qty,.it-row .avs{display:none}}
+/* home rows */
+.spark{display:flex;height:6px;gap:2px;width:120px}
+.spark i{border-radius:2px;display:block}
+.trk-h{display:flex;align-items:center;gap:8px;margin-top:6px}
+.trk-h .ghostbtn{padding:2px 8px}
+.it-name-wrap .trk+.trk{margin-left:-4px}
 
 </style>
 </head>
@@ -819,6 +1000,7 @@ function deliverableItems(r, team, factor = 1) {
 }
 function addAM(s) {
   const st = S.settings, pct = (+st.amPct || 0) / 100, team = s.team;
+  const keepWho = s.phases.map(p => ({ am: p.items.find(i => i.kind === 'am')?.lines[0]?.personId, wip: p.items.find(i => i.kind === 'wip')?.lines[0]?.personId }));
   s.phases.forEach(p => p.items = p.items.filter(i => i.kind !== 'am' && i.kind !== 'wip'));
   const hrsBy = s.phases.map(phaseWorkHours), tot = hrsBy.reduce((a, b) => a + b, 0) || 1, W = Math.max(0, Math.round(+s.weeks || 0));
   const raw = hrsBy.map(h => h > 0 ? W * h / tot : 0), wk = raw.map(Math.floor);
@@ -826,8 +1008,10 @@ function addAM(s) {
   raw.map((v, i) => [v - Math.floor(v), i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0 && hrsBy[i] > 0) { wk[i]++; left--; } });
   s.phases.forEach((p, i) => {
     p.items.push({ id: uid(), libId: null, kind: 'am', name: 'Account management', qty: 1, lines: [intLine(st.amTitle, Math.max(+st.amMin || 0.5, hrsBy[i] * pct), team)] });
+    if (keepWho[i]?.am && person(keepWho[i].am).id) p.items[p.items.length - 1].lines[0].personId = keepWho[i].am;
     if (wk[i] > 0 && +st.wipHours > 0) p.items.push({ id: uid(), libId: null, kind: 'wip', name: `Weekly WIP meetings (${wk[i]} week${wk[i] > 1 ? 's' : ''})`, qty: wk[i], lines: [intLine(st.amTitle, wk[i] * st.wipHours, team)] });
   });
+  s.phases.forEach((p, i) => { const w = p.items.find(x => x.kind === 'wip'); if (w && keepWho[i]?.wip) w.lines[0].personId = keepWho[i].wip; });
 }
 function buildScope(d) {
   const rv = d.review, t = tpl(rv.type), size = rv.size, team = rv.team;
@@ -1055,7 +1239,7 @@ const cur = () => S.scopes.find(s => s.id === curId);
 const findPhase = id => cur()?.phases.find(p => p.id === id);
 const findItem = (pid, iid) => findPhase(pid)?.items.find(i => i.id === iid);
 const findLine = (pid, iid, lid) => findItem(pid, iid)?.lines.find(l => l.id === lid);
-const touch = () => { const s = cur(); if (s) s.updated = Date.now(); save(); };
+const touch = () => { const s = cur(); if (s) { s.updated = Date.now(); if (view === 'edit') histRecord(); } save(); };
 const fmtDate = t => new Date(t).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
 function autosize(t) { t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
 const A = o => Object.entries(o).map(([k, v]) => `data-${k}="${esc(v)}"`).join(' ');
@@ -1068,9 +1252,12 @@ function render() {
   $('#agencyTag').textContent = S.settings.agency;
   $('#nav').innerHTML = NAV.map(([k, ic, l]) => `<button class="ni ${view === k || (view === 'edit' && k === 'home') ? 'on' : ''}" data-act="go" data-v="${k}"><i class="fa-solid ${ic}"></i><span>${l}</span></button>`).join('');
   const V = { home: vHome, new: vNew, edit: vEdit, model: vModel, clients: vClients, rates: vRates, library: vLibrary, settings: vSettings }[view] || vHome;
+  const a = document.activeElement, fkey = el => ['f', 'fc', 'pid', 'iid', 'lid', 'id'].map(k => el.dataset?.[k] || '').join('|');
+  const keep = a && a.matches && a.matches('#main input:not([type=checkbox]), #main textarea, #topbar input') && (a.dataset.f || a.dataset.fc) ? { k: fkey(a), s: a.selectionStart, e: a.selectionEnd } : null;
   const [top, body] = V();
   $('#topbar').innerHTML = top; $('#main').innerHTML = body;
-  if (view === 'edit') updateTotals();
+  if (keep) { const el = [...document.querySelectorAll('[data-f],[data-fc]')].find(x => fkey(x) === keep.k); if (el) { el.focus(); try { el.setSelectionRange(keep.s, keep.e); } catch (e) {} } }
+  if (view === 'edit') { updateTotals(); const th = $('#aiThread'); if (th) th.scrollTop = th.scrollHeight; }
   document.querySelectorAll('textarea[data-auto]').forEach(autosize);
   if (view === 'new' && !window._draft?.review) liveChips();
 }
@@ -1087,8 +1274,8 @@ function vHome() {
     <div class="card stat"><div class="lbl">Won</div><div class="v num">${money(sum('won'))}</div></div>
     <div class="card stat"><div class="lbl">Scopes in pricing model</div><div class="v">${inModel().length}</div></div>
   </div>
-  <div class="card">${list.length ? `<table class="tbl"><thead><tr><th>Project</th><th>Client</th><th>Status</th><th class="r">Weeks</th><th class="r">Margin</th><th class="r">Total ex GST</th><th>Updated</th><th></th></tr></thead><tbody>
-    ${list.map(s => { const t = totals(s); return `<tr class="click" data-act="open" data-id="${s.id}"><td><b style="font-weight:500">${esc(s.name)}</b><div class="hint">${esc(tpl(s.type).name)} · ${esc(s.size || '')}</div></td><td class="muted">${esc(clientName(s) || '—')}</td><td><span class="pill st-${s.status}">${s.status}</span></td><td class="r num muted">${s.weeks}</td><td class="r num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${Math.round(t.marginPct * 100)}%</td><td class="r num"><b style="font-weight:600">${money(t.ex)}</b></td><td class="faint">${fmtDate(s.updated)}</td><td class="r" style="white-space:nowrap"><button class="ib" title="Duplicate" data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i></button><button class="ib del" title="Delete" data-act="delscope" data-id="${s.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
+  <div class="card">${list.length ? `<table class="tbl"><thead><tr><th>Project</th><th>Client</th><th>Status</th><th>Shape</th><th class="r">Weeks</th><th class="r">Margin</th><th class="r">Total ex GST</th><th>Updated</th><th></th></tr></thead><tbody>
+    ${list.map(s => { const t = totals(s); return `<tr class="click" data-act="open" data-id="${s.id}"><td><b style="font-weight:500">${esc(s.name)}</b><div class="hint">${esc(tpl(s.type).name)} · ${esc(s.size || '')}</div></td><td class="muted">${esc(clientName(s) || '—')}</td><td><span class="pill st-${s.status}">${s.status}</span></td><td><span class="spark">${s.phases.map((p, i) => `<i title="${esc(p.name)} ${money(t.phasesClient[i])}" style="flex:${t.phasesClient[i] || 0.01};background:${p.color}"></i>`).join('')}</span></td><td class="r num muted">${s.weeks}</td><td class="r num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${Math.round(t.marginPct * 100)}%</td><td class="r num"><b style="font-weight:600">${money(t.ex)}</b></td><td class="faint">${fmtDate(s.updated)}</td><td class="r" style="white-space:nowrap"><button class="ib" title="Duplicate" data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i></button><button class="ib del" title="Delete" data-act="delscope" data-id="${s.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
   </tbody></table>` : `<div class="empty"><h3>${S.scopes.length ? 'No matches' : 'No estimates yet'}</h3><p>${S.scopes.length ? 'Try a different search.' : 'Start from a brief.'}</p></div>`}</div>`];
 }
 
@@ -1182,133 +1369,463 @@ function vReview(d) {
   <div class="card pad rv-brief"><div class="lbl" style="margin-bottom:8px">Brief ${rv.ai ? '· highlighted where each item came from' : ''}</div>${highlightBrief(d.brief, [...rv.rows.filter(r => r.verified), ...rv.ext])}</div></div>`];
 }
 
-/* ---------------- editor ---------------- */
+/* ==========================================================
+   EDITOR v4 — one calm canvas.
+   · Stats strip: every number explains itself on hover
+   · Phases read like the Scope of Work; detail opens in place
+   · Hours scrub (drag left/right) or type; ⌘Z undo; ⌘K palette
+   · Ask AI: describe a change, review a diff, apply
+   ========================================================== */
+const H = { stack: [], last: null, t: 0, id: null };
+function histReset() { const s = cur(); H.stack = []; H.id = s?.id; H.last = s ? JSON.stringify(s) : null; H.t = 0; }
+function histRecord() {
+  const s = cur(); if (!s) return; if (H.id !== s.id) return histReset();
+  const now = Date.now(), json = JSON.stringify(s);
+  if (json === H.last) return;
+  if (now - H.t > 900 && H.last) { H.stack.push(H.last); if (H.stack.length > 60) H.stack.shift(); }
+  H.t = now; H.last = json;
+}
+function histMark() { const s = cur(); if (!s) return; if (H.id !== s.id) histReset(); const j = JSON.stringify(s); if (H.stack[H.stack.length - 1] !== j) H.stack.push(j); if (H.stack.length > 60) H.stack.shift(); H.last = j; H.t = Date.now(); }
+const MUTATING = new Set(['aiapply', 'itdel', 'qty', 'weeks', 'phdel', 'phmove', 'addphase', 'lndel', 'lnadd', 'teamrm', 'recalcam', 'phregen', 'regenov', 'airewrite']);
+function undo() {
+  const s = cur(); if (!s || !H.stack.length) return toast('Nothing to undo');
+  const prev = JSON.parse(H.stack.pop()); const i = S.scopes.findIndex(x => x.id === s.id);
+  S.scopes[i] = prev; H.last = JSON.stringify(prev); H.t = 0; prev.updated = Date.now(); save(); render(); toast('Undone');
+}
+const openItems = new Set();
+
+/* ---- small visual helpers ---- */
+const AV_COLS = ['#D9E6F2', '#E7E0F5', '#F4E1E6', '#E3EEDC', '#F5EBD3', '#DDEFEA', '#EEE3D8'];
+const TITLE_INI = { 'Strategy Director': 'SD', 'Creative Director': 'CD', 'Design Director': 'DD', 'Art Director': 'AD', 'Copywriter': 'CW', 'Strategist': 'ST', 'Designer': 'DS', 'Digital Marketer': 'DM', 'Account Manager': 'AM', 'Developer': 'DV', 'Motion Designer': 'MD' };
+const initials = p => { if (!p.name && TITLE_INI[p.title]) return TITLE_INI[p.title]; const src = p.name || p.title || '?'; const w = src.split(/[\s/&]+/).filter(Boolean); return (w.length > 1 ? w[0][0] + w[1][0] : src.slice(0, 2)).toUpperCase(); };
+const avCol = t => AV_COLS[[...String(t)].reduce((a, c) => a + c.charCodeAt(0), 0) % AV_COLS.length];
+const av = (p, extra = '') => `<span class="av" style="background:${avCol(p.title)}" title="${esc(pLabel(p))}" ${extra}>${esc(initials(p))}</span>`;
+const unitLabel = (u, q) => u ? u + (q > 1 && !/s$/.test(u) ? 's' : '') : '';
+const KIND = { design: 'Design', copy: 'Copy', production: 'Production', ext: 'Supplier', core: '', am: 'AM', wip: 'WIP' };
+const visible = l => UI.filter === 'all' || (UI.filter === 'ext' ? l.type === 'ext' : l.type !== 'ext');
+const lens = () => UI.lens || 'client';
+const itemClient = it => it.lines.reduce((a, l) => a + lineClient(l), 0);
+const itemCost = it => it.lines.reduce((a, l) => a + lineCost(l), 0);
+const mPct = (c, k) => c ? (c - k) / c : 0;
+const mClass = m => m >= 0.45 ? 'm-good' : m >= 0.25 ? 'm-ok' : 'm-low';
 function personOpts(sel, team) {
   const t = S.people.filter(p => team.includes(p.id)), o = S.people.filter(p => !team.includes(p.id));
   const opt = p => `<option value="${p.id}" ${p.id === sel ? 'selected' : ''}>${esc(pLabel(p))}</option>`;
   return (t.length ? `<optgroup label="Team">${t.map(opt).join('')}</optgroup><optgroup label="Others">${o.map(opt).join('')}</optgroup>` : S.people.map(opt).join('')) + (sel && !S.people.find(p => p.id === sel) ? `<option selected value="${sel}">Removed person</option>` : '');
 }
-function addOptions() {
-  return `<option value="">+ Add line</option><optgroup label="Deliverables (design + copy + production)">${S.library.map(d => `<option value="lib:${d.id}">${esc(d.name)}</option>`).join('')}</optgroup>
-  <optgroup label="External costs">${S.externals.map(x => `<option value="ext:${x.id}">${esc(x.name)}</option>`).join('')}</optgroup>
-  <optgroup label="Other"><option value="custom:int">Custom internal line</option><option value="custom:ext">Custom external cost</option><option value="custom:am">Account management</option></optgroup>`;
-}
+
+/* ---- view ---- */
 function vEdit() {
   const s = cur(); if (!s) { view = 'home'; return vHome(); }
-  return [`<button class="ib" data-act="go" data-v="home" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
-    <input class="ghost title-in" data-f="scope.name" value="${esc(s.name)}">
-    <select class="ghost client-in" data-chg="clientpick" style="cursor:pointer">${s.clientId ? '' : `<option value="" selected>${esc(s.client || 'Choose client')}</option>`}${S.clients.slice().sort((a, b) => a.name.localeCompare(b.name)).map(x => `<option value="${x.id}" ${x.id === s.clientId ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}<option value="__new">＋ New client…</option></select>
-    <select class="pill st-${s.status}" data-fc="scope.status" style="cursor:pointer;padding:3px 8px">${['draft', 'sent', 'won', 'lost'].map(x => `<option ${s.status === x ? 'selected' : ''}>${x}</option>`).join('')}</select>
+  if (H.id !== s.id) histReset();
+  const cl = client(s.clientId);
+  const top = `<button class="ib" data-act="go" data-v="home" title="All estimates"><i class="fa-solid fa-arrow-left"></i></button>
+    <div class="ed-title"><input class="ghost title-in" data-f="scope.name" value="${esc(s.name)}">
+      <div class="ed-sub">
+        <span class="hov chipbtn"><i class="fa-regular fa-building"></i>${esc(clientName(s) || 'Add client')}<div class="pop pop-l" style="width:300px">${clientPop(s)}</div></span>
+        <select class="pill st-${s.status}" data-fc="scope.status">${['draft', 'sent', 'won', 'lost'].map(x => `<option ${s.status === x ? 'selected' : ''}>${x}</option>`).join('')}</select>
+        <span class="faint">${esc(tpl(s.type).name)} · ${esc(s.size || '')} · edited ${fmtAgo(s.updated)}</span>
+      </div></div>
     <span class="grow"></span>
-    <button class="btn" data-act="airewrite" title="Rewrite overview and phase descriptions"><i class="fa-solid fa-pen-nib"></i>Rewrite copy</button>
-    <button class="btn" data-act="tomodel" title="Add this estimate to the pricing model"><i class="fa-solid fa-chart-line"></i>${S.past.some(p => p.fromScope === s.id) ? 'Update model' : 'Add to model'}</button>
-    <button class="btn pri" data-act="export"><i class="fa-solid fa-file-pdf"></i>Scope of Work</button>`,
-  `<div class="ed-grid"><div class="ed-main">
-    <details class="card"><summary class="pad"><i class="fa-solid fa-chevron-right"></i><h3 style="font-size:15px">Brief</h3><span class="tags grow">${(s.detected || []).slice(0, 5).map(id => lib(id) ? `<span class="tag">${esc(lib(id).name)}</span>` : '').join('')}</span>${s.aiUsed ? '<span class="pill"><i class="fa-solid fa-wand-magic-sparkles"></i>AI read</span>' : ''}</summary>
-      <div style="padding:0 20px 18px;display:flex;flex-direction:column;gap:12px">
-        <textarea class="in" style="min-height:160px" data-f="scope.brief">${esc(s.brief)}</textarea>
-        ${(s.assumptions || []).length ? `<div><div class="lbl">Assumptions from brief read</div><ul class="assume" style="margin-top:6px">${s.assumptions.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>` : ''}
-        <div class="row"><span class="hint grow">Changed the brief? Start a new read — this replaces the table.</span><button class="btn sm" data-act="rescope"><i class="fa-solid fa-rotate"></i>Re-read brief</button></div>
-      </div>
-    </details>
-    <div class="card pad"><div class="sec-h"><h3>Overview</h3><span class="hint grow">Opens the Scope of Work</span><button class="ib" data-act="regenov" title="Regenerate"><i class="fa-solid fa-rotate"></i></button></div>
-      <textarea class="in" data-auto data-f="scope.overview">${esc(s.overview)}</textarea></div>
-    <div class="card">
-      <div class="est-bar">${seg('tab', UI.tab, [['front', 'Front end'], ['back', 'Back end']])}${seg('filter', UI.filter, [['int', 'Internal'], ['all', 'All'], ['ext', 'External']])}<span class="grow"></span><span class="hint">${UI.tab === 'front' ? 'Client pricing' : 'Born costs & margin'}${UI.filter !== 'all' ? ` · showing ${UI.filter === 'int' ? 'internal' : 'external'} only` : ''}</span></div>
-      <div class="est-wrap"><table class="est">${estHead()}${s.phases.map((p, i) => phaseRows(s, p, i)).join('')}</table></div>
-      <div class="est-foot"><button class="btn sm" data-act="addphase"><i class="fa-solid fa-plus"></i>Add phase</button><button class="btn sm" data-act="recalcam" title="Rebuild account management and WIP lines from current hours and weeks"><i class="fa-solid fa-rotate"></i>Recalculate account mgmt</button><span class="tt num" data-t="foot"></span></div>
+    <button class="ib" data-act="undo" title="Undo (⌘Z)" ${H.stack.length ? '' : 'disabled'}><i class="fa-solid fa-rotate-left"></i></button>
+    <button class="btn" data-act="palette" title="Search & commands (⌘K)"><i class="fa-solid fa-magnifying-glass"></i><kbd>⌘K</kbd></button>
+    <button class="btn ai-btn ${UI.ai ? 'on' : ''}" data-act="aitoggle"><i class="fa-solid fa-wand-magic-sparkles"></i>Ask AI</button>
+    <span class="hov"><button class="ib"><i class="fa-solid fa-ellipsis"></i></button><div class="pop pop-r menu">
+      <button data-act="brief"><i class="fa-regular fa-file-lines"></i>Brief & assumptions</button>
+      <button data-act="airewrite"><i class="fa-solid fa-pen-nib"></i>Rewrite client copy</button>
+      <button data-act="tomodel"><i class="fa-solid fa-chart-line"></i>${S.past.some(p => p.fromScope === s.id) ? 'Update pricing model' : 'Add to pricing model'}</button>
+      <button data-act="rescope"><i class="fa-solid fa-rotate"></i>Re-read brief</button>
+      <button data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i>Duplicate</button>
+    </div></span>
+    <button class="btn pri" data-act="export"><i class="fa-solid fa-file-pdf"></i>Scope of Work</button>`;
+  const body = `<div class="edv ${UI.ai ? 'with-ai' : ''}">
+    <div class="ed-canvas">
+      <div id="stats"></div>
+      <div class="lensbar">${seg('lens', lens(), [['client', '<i class="fa-regular fa-user"></i> Client'], ['internal', '<i class="fa-solid fa-gauge"></i> Internal']])}
+        ${seg('filter', UI.filter, [['all', 'Everything'], ['int', 'Born time'], ['ext', 'Suppliers']])}
+        <span class="hint grow" style="text-align:right">${lens() === 'client' ? 'Showing client prices' : 'Showing Born cost and margin'} · drag any hours to adjust</span></div>
+      <div class="ov"><div class="lbl">Overview</div><textarea class="ghost-area" data-auto data-f="scope.overview" placeholder="Opening paragraph for the Scope of Work">${esc(s.overview)}</textarea></div>
+      ${s.phases.map((p, i) => phaseHTML(s, p, i)).join('')}
+      <button class="add-phase" data-act="addphase"><i class="fa-solid fa-plus"></i>Add phase</button>
+      <div class="ov"><div class="lbl">Notes on the Scope of Work</div><textarea class="ghost-area" data-auto data-f="scope.notes">${esc(s.notes)}</textarea></div>
     </div>
-    <div class="card pad"><div class="sec-h"><h3>Notes & assumptions</h3><span class="hint">Shown on the SOW</span></div><textarea class="in" data-auto data-f="scope.notes">${esc(s.notes)}</textarea></div>
+    ${UI.ai ? `<aside class="ai-panel" id="aiPanel">${aiPanelHTML(s)}</aside>` : ''}
+  </div>`;
+  return [top, body];
+}
+const fmtAgo = t => { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? 'just now' : m < 60 ? m + 'm ago' : m < 1440 ? Math.round(m / 60) + 'h ago' : fmtDate(t); };
+function clientPop(s) {
+  const cl = client(s.clientId);
+  return `<div class="lbl">Client</div><select class="in" data-chg="clientpick" style="margin:6px 0 10px">${s.clientId ? '' : `<option value="" selected>${esc(s.client || 'Choose client')}</option>`}${S.clients.slice().sort((a, b) => a.name.localeCompare(b.name)).map(x => `<option value="${x.id}" ${x.id === s.clientId ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}<option value="__new">＋ New client…</option></select>
+    ${cl ? `<div class="pop-lines">${[cl.legal || cl.name, cl.address, cl.abn, cl.contact, cl.email].filter(Boolean).map(x => `<div>${esc(x)}</div>`).join('')}</div>${!cl.address && !cl.abn ? '<div class="note warn">Missing address / ABN for the Scope of Work</div>' : ''}<button class="btn sm" style="margin-top:10px" data-act="editclient" data-id="${cl.id}"><i class="fa-regular fa-pen-to-square"></i>Edit details</button>` : '<p class="hint">Pick a client to autofill the Scope of Work.</p>'}`;
+}
+function statsHTML(s, t) {
+  const sg = s.signals || {};
+  const team = s.team.map(person);
+  const byP = {}; s.phases.forEach(p => p.items.forEach(it => it.lines.forEach(l => { if (l.type === 'ext') return; const r = byP[l.personId] || (byP[l.personId] = { h: 0, c: 0, k: 0 }); r.h += +l.hours || 0; r.c += lineClient(l); r.k += lineCost(l); })));
+  const ppl = Object.entries(byP).sort((a, b) => b[1].h - a[1].h), maxH = Math.max(1, ...ppl.map(r => r[1].h));
+  const wipH = s.phases.reduce((a, p) => a + p.items.filter(i => i.kind === 'wip').reduce((b, i) => b + itemHours(i), 0), 0);
+  const amH = s.phases.reduce((a, p) => a + p.items.filter(i => i.kind === 'am').reduce((b, i) => b + itemHours(i), 0), 0);
+  const budget = sg.budget ? `<div class="stat-flag ${t.ex > sg.budget ? 'warn' : 'ok'}">${t.ex > sg.budget ? money(t.ex - sg.budget) + ' over' : money(sg.budget - t.ex) + ' under'} brief budget</div>` : '';
+  return `<div class="stats4">
+    <div class="st hov"><div class="lbl">Total ex GST</div><div class="sv num">${money(t.ex)}</div>${budget}
+      <div class="pop"><div class="pop-h">Where the money goes</div>${s.phases.map((p, i) => `<div class="kv"><span><span class="dot" style="background:${p.color}"></span> ${esc(p.name)}</span><b class="num">${money(t.phasesClient[i])}</b></div>`).join('')}
+        <div class="div"></div><div class="kv"><span>Born time</span><b class="num">${money(t.intClient)}</b></div><div class="kv"><span>Suppliers</span><b class="num">${money(t.extClient)}</b></div>${t.disc ? `<div class="kv"><span>Discount</span><b class="num">−${money(t.disc)}</b></div>` : ''}<div class="kv"><span>GST</span><b class="num">${money(t.gst)}</b></div><div class="kv"><span>Inc GST</span><b class="num">${money(t.inc)}</b></div>
+        <div class="div"></div><div class="row" style="gap:8px"><label class="field grow"><span>Contingency %</span><input class="in num" type="number" data-f="scope.contingency" value="${esc(s.contingency)}"></label><label class="field grow"><span>Discount $</span><input class="in num" type="number" step="50" data-f="scope.discount" value="${esc(s.discount)}"></label></div>${sg.budget ? `<button class="btn sm" style="margin-top:10px" data-act="aiask" data-q="Fit this estimate to the brief budget of ${money(sg.budget)} ex GST. Keep account management and suppliers; trim Born time where it hurts least."><i class="fa-solid fa-wand-magic-sparkles"></i>Fit to budget with AI</button>` : ''}</div></div>
+    <div class="st hov"><div class="lbl">Margin</div><div class="sv num ${mClass(t.marginPct)}">${Math.round(t.marginPct * 100)}%</div><div class="ssub num">${money(t.margin)}</div>
+      <div class="pop"><div class="pop-h">Margin by phase</div>${s.phases.map(p => { const c = phaseCalc(p), k = phaseCostSum(p); return `<div class="kv"><span>${esc(p.name)}</span><b class="num ${mClass(mPct(c, k))}">${Math.round(mPct(c, k) * 100)}%</b></div>`; }).join('')}
+        <div class="div"></div><div class="kv"><span>Born cost</span><b class="num">${money(t.intCost)}</b></div><div class="kv"><span>Supplier cost</span><b class="num">${money(t.extCost)}</b></div><div class="kv"><span>Born time margin</span><b class="num">${Math.round(mPct(t.intClient, t.intCost) * 100)}%</b></div></div></div>
+    <div class="st hov"><div class="lbl">Hours</div><div class="sv num">${Math.round(t.hours)}</div><div class="ssub">${t.hours && s.weeks ? Math.round(t.hours / s.weeks) + 'h / week' : ''}</div>
+      <div class="pop"><div class="pop-h">Who's doing the work</div>${ppl.map(([id, r]) => `<div class="bar-row">${av(person(id))}<span class="grow">${esc(pLabel(person(id)))}</span><span class="num">${hrs(r.h)}</span><i style="width:${r.h / maxH * 100}%"></i></div>`).join('')}
+        <div class="div"></div><div class="kv"><span>Account management</span><b class="num">${hrs(amH)}</b></div><div class="kv"><span>WIP meetings</span><b class="num">${hrs(wipH)}</b></div></div></div>
+    <div class="st hov"><div class="lbl">Timeline</div><div class="sv num">${s.weeks}<small> wks</small></div><div class="ssub"><button class="mini" data-act="weeks" data-d="-1">−</button><button class="mini" data-act="weeks" data-d="1">+</button></div>
+      <div class="pop"><div class="pop-h">Weekly WIP</div><p class="hint">${S.settings.wipHours}h WIP per week and account management are spread across phases. Changing weeks updates them automatically.</p>${sg.weeks ? `<div class="kv"><span>Brief says</span><b>${sg.weeks} weeks</b></div>` : ''}</div></div>
+    <div class="st hov team"><div class="lbl">Team</div><div class="avs big">${team.slice(0, 6).map(p => av(p)).join('')}${team.length > 6 ? `<span class="av more">+${team.length - 6}</span>` : ''}</div>
+      <div class="pop pop-r"><div class="pop-h">Project team</div>${team.map(p => `<div class="bar-row">${av(p)}<span class="grow">${esc(pLabel(p))}</span><span class="num faint">$${p.rate}</span><button class="ib" data-act="teamrm" data-id="${p.id}"><i class="fa-solid fa-xmark"></i></button></div>`).join('')}
+        <select class="in" style="margin-top:8px" data-chg="teamadd"><option value="">+ Add to team</option>${S.people.filter(p => !s.team.includes(p.id)).map(p => `<option value="${p.id}">${esc(pLabel(p))}</option>`).join('')}</select></div></div>
   </div>
-  <aside class="side"><div id="sideDyn"></div>
-    ${clientCard(s)}
-    <div class="card pad"><div class="sec-h"><h3>Team</h3></div>
-      <div class="chips">${s.team.map(id => `<span class="chip">${esc(pLabel(person(id)))}<button class="ib" data-act="teamrm" data-id="${id}"><i class="fa-solid fa-xmark"></i></button></span>`).join('')}</div>
-      <select class="in" style="margin-top:10px" data-chg="teamadd"><option value="">+ Add to team</option>${S.people.filter(p => !s.team.includes(p.id)).map(p => `<option value="${p.id}">${esc(pLabel(p))}</option>`).join('')}</select></div>
-    <div class="card pad"><div class="sec-h"><h3>Adjustments</h3></div>
-      <div class="row" style="gap:10px"><label class="field grow"><span>Weeks</span><input class="in num" type="number" min="1" data-f="scope.weeks" value="${esc(s.weeks)}"></label><label class="field grow"><span>Contingency %</span><input class="in num" type="number" step="1" data-f="scope.contingency" value="${esc(s.contingency)}"></label><label class="field grow"><span>Discount $</span><input class="in num" type="number" step="50" data-f="scope.discount" value="${esc(s.discount)}"></label></div>
-      <p class="hint" style="margin-top:8px">Change weeks then <b>Recalculate account mgmt</b> to update WIPs. Contingency is folded into phase fees.</p></div>
-  </aside></div>`];
+  <div class="phasebar">${s.phases.map((p, i) => `<a href="#ph-${p.id}" class="hov" style="flex:${Math.max(t.phasesClient[i], t.sub * 0.02) || 1};background:${p.color}" data-jump="${p.id}"><span class="pop pop-c"><b>${esc(p.name)}</b><br>${money(t.phasesClient[i])} · ${t.sub ? Math.round(t.phasesClient[i] / t.sub * 100) : 0}%</span></a>`).join('')}</div>`;
 }
-const COLS = { front: ['Item', 'Qty', 'Team member / supplier', 'Scope', 'Hrs / qty', 'Rate', 'Total ex GST'], back: ['Item', 'Team member / supplier', 'Hours', 'Cost rate', 'Est. cost', 'Markup', 'Total ex GST', 'Margin'] };
-function estHead() {
-  const c = COLS[UI.tab], cls = UI.tab === 'front' ? ['', 'c-q n', '', 'c-s', 'c-h n', 'c-r n', 'c-c n'] : ['', '', 'c-h n', 'c-r n', 'c-c n', 'c-q n', 'c-c n', 'c-c n'];
-  return `<thead><tr>${c.map((h, i) => `<th class="${cls[i]}">${h}</th>`).join('')}<th class="c-del"></th></tr></thead>`;
+function phaseHTML(s, p, i) {
+  const items = p.items.filter(it => it.lines.some(visible));
+  if (UI.filter !== 'all' && !items.length) return '';
+  const work = items.filter(it => it.kind !== 'am' && it.kind !== 'wip'), mgmt = items.filter(it => it.kind === 'am' || it.kind === 'wip');
+  return `<section class="phase" id="ph-${p.id}" style="--pc:${p.color}">
+    <header class="ph-h">
+      <span class="ph-n">${String(i + 1).padStart(2, '0')}</span>
+      <input class="ph-name" data-f="phase.name" ${A({ pid: p.id })} value="${esc(p.name)}">
+      <span class="ph-tools"><button class="ib" data-act="phmove" ${A({ pid: p.id, d: -1 })} title="Move up"><i class="fa-solid fa-arrow-up"></i></button><button class="ib" data-act="phmove" ${A({ pid: p.id, d: 1 })} title="Move down"><i class="fa-solid fa-arrow-down"></i></button><button class="ib" data-act="aiask" data-q="Look at the ${esc(p.name)} phase. Is anything missing or over/under-scoped for this brief?" title="Ask AI about this phase"><i class="fa-solid fa-wand-magic-sparkles"></i></button><button class="ib del" data-act="phdel" ${A({ pid: p.id })} title="Delete phase"><i class="fa-regular fa-trash-can"></i></button></span>
+      <span class="grow"></span>
+      <span class="ph-hrs num faint" data-t="phh-${p.id}"></span>
+      <span class="hov fee"><b class="num" data-t="ph-${p.id}"></b>${isNum(p.override) ? '<i class="fa-solid fa-lock lockic"></i>' : ''}
+        <div class="pop pop-r"><div class="pop-h">${esc(p.name)}</div><div data-t="phpop-${p.id}"></div><div class="div"></div>
+          <label class="field"><span>Lock fee (before contingency)</span><input class="in num" type="number" step="50" data-f="phase.override" ${A({ pid: p.id })} value="${esc(p.override)}" placeholder="Calculated"></label></div></span>
+    </header>
+    <div class="ph-desc-wrap"><textarea class="ph-desc" rows="1" data-auto data-f="phase.desc" ${A({ pid: p.id })} placeholder="What happens in this phase — shown on the Scope of Work">${esc(p.desc)}</textarea><button class="ib" data-act="phregen" ${A({ pid: p.id })} title="Rewrite description"><i class="fa-solid fa-rotate"></i></button></div>
+    <div class="rows">${groupItems(work).map(g => g.length > 1 ? groupHTML(s, p, g) : itemHTML(s, p, g[0])).join('')}${mgmt.length ? `<div class="mgmt">${mgmt.map(it => itemHTML(s, p, it)).join('')}</div>` : ''}</div>
+    <button class="add-row" data-act="palette" data-pid="${p.id}"><i class="fa-solid fa-plus"></i>Add deliverable, person or supplier cost</button>
+  </section>`;
 }
-const visible = l => UI.filter === 'all' || (UI.filter === 'ext' ? l.type === 'ext' : l.type !== 'ext');
-function phaseRows(s, p, i) {
-  const vis = p.items.flatMap(it => it.lines.filter(visible).map(l => [it, l]));
-  if (UI.filter !== 'all' && !vis.length) return '';
-  const ncol = COLS[UI.tab].length + 1, front = UI.tab === 'front';
-  const head = front
-    ? `<td class="n num faint" data-t="phh-${p.id}"></td><td><input class="lock ${isNum(p.override) ? 'on' : ''}" type="number" step="50" data-f="phase.override" ${A({ pid: p.id })} value="${esc(p.override)}" placeholder="Lock $" title="Lock this phase fee (before contingency)"></td><td class="n price num" data-t="ph-${p.id}"></td>`
-    : `<td></td><td class="n num faint" data-t="phc-${p.id}"></td><td></td><td class="n price num" data-t="ph-${p.id}"></td><td class="n num" data-t="phm-${p.id}"></td>`;
-  let rows = `<tbody data-pid="${p.id}"><tr class="ph"><td colspan="${front ? 4 : 2}"><div class="row" style="gap:6px"><span class="dot" style="background:${p.color}"></span><input class="pname" data-f="phase.name" ${A({ pid: p.id })} value="${esc(p.name)}"></div></td>${front ? '' : `<td class="n num faint" data-t="phh-${p.id}"></td>`}${head}
-    <td class="ph-tools"><button class="ib" data-act="phmove" ${A({ pid: p.id, d: -1 })} title="Move up"><i class="fa-solid fa-arrow-up"></i></button><button class="ib" data-act="phmove" ${A({ pid: p.id, d: 1 })} title="Move down"><i class="fa-solid fa-arrow-down"></i></button><button class="ib del" data-act="phdel" ${A({ pid: p.id })} title="Delete phase"><i class="fa-regular fa-trash-can"></i></button></td></tr>
-  <tr class="desc"><td colspan="${ncol - 1}"><textarea rows="1" data-auto data-f="phase.desc" ${A({ pid: p.id })} placeholder="Phase description (shown on SOW)">${esc(p.desc)}</textarea></td><td class="c-del" style="vertical-align:top;padding-top:8px"><button class="ib" data-act="phregen" ${A({ pid: p.id })} title="Regenerate description"><i class="fa-solid fa-rotate"></i></button></td></tr>`;
-  for (const it of p.items) {
-    const lines = it.lines.filter(visible); if (!lines.length) continue;
-    lines.forEach((l, li) => {
-      const ids = A({ pid: p.id, iid: it.id, lid: l.id }), first = li === 0, ext = l.type === 'ext';
-      const nameCell = first ? `<td><div class="row" style="gap:0"><input class="iname" data-f="item.name" ${A({ pid: p.id, iid: it.id })} value="${esc(it.name)}"${it.kind === 'am' || it.kind === 'wip' ? ' style="color:var(--t2)"' : ''}><span class="trk ${it.kind}">${{ design: 'Design', copy: 'Copy', production: 'Prod', ext: 'Ext', am: 'AM', wip: 'WIP' }[it.kind] || ''}</span></div></td>` : '<td></td>';
-      const who = ext ? `<input data-f="line.supplier" ${ids} value="${esc(l.supplier)}" placeholder="Supplier">` : `<select data-fc="line.personId" ${ids}>${personOpts(l.personId, s.team)}</select>`;
-      const actions = `<td class="c-del">${first && !ext ? `<button class="ib" data-act="lnadd" ${A({ pid: p.id, iid: it.id })} title="Add team member"><i class="fa-solid fa-user-plus"></i></button>` : ''}<button class="ib del" data-act="lndel" ${ids} title="Remove"><i class="fa-solid fa-xmark"></i></button></td>`;
-      if (front) {
-        const qty = first && (it.qty > 1 || it.libId) && it.kind !== 'wip' ? `<input type="number" min="1" data-fc="item.qty" ${A({ pid: p.id, iid: it.id })} value="${it.qty}" title="${esc(it.unit || '')}">` : '';
-        rows += `<tr class="ln ${first ? 'first' : ''}">${nameCell}<td class="c-q">${qty}</td><td>${who}</td><td class="c-s flat">${ext ? 'Flat fee' : 'Hours'}</td>
-          <td class="c-h">${ext ? '<span class="ro">1</span>' : `<input type="number" step="0.5" min="0" data-f="line.hours" ${ids} value="${+l.hours}">`}</td>
-          <td class="c-r">${ext ? `<input type="number" step="50" data-f="line.price" ${ids} value="${isNum(l.price) ? l.price : ''}" placeholder="${Math.round(lineClient({ ...l, price: null }))}">` : `<input type="number" step="5" data-f="line.rate" ${ids} value="${isNum(l.rate) ? l.rate : ''}" placeholder="${lineRate({ personId: l.personId })}">`}</td>
-          <td class="c-c n cost num" data-t="lc-${l.id}"></td>${actions}</tr>`;
-      } else {
-        rows += `<tr class="ln ${first ? 'first' : ''}">${nameCell}<td>${who}</td>
-          <td class="c-h">${ext ? '<span class="ro">—</span>' : `<input type="number" step="0.5" min="0" data-f="line.hours" ${ids} value="${+l.hours}">`}</td>
-          <td class="c-r">${ext ? '<span class="ro">—</span>' : `<input type="number" step="5" data-f="line.costRate" ${ids} value="${isNum(l.costRate) ? l.costRate : ''}" placeholder="${lineCostRate({ personId: l.personId })}">`}</td>
-          <td class="c-c">${ext ? `<input type="number" step="50" data-f="line.cost" ${ids} value="${+l.cost || 0}">` : `<span class="ro num" data-t="lk-${l.id}"></span>`}</td>
-          <td class="c-q">${ext ? `<input type="number" step="1" data-f="line.markup" ${ids} value="${+l.markup || 0}" title="Markup %">` : `<span class="ro num" data-t="lm-${l.id}"></span>`}</td>
-          <td class="c-c n cost num" data-t="lc-${l.id}"></td><td class="c-c n num" data-t="lg-${l.id}"></td>${actions}</tr>`;
-      }
-    });
-  }
-  return rows + `<tr class="add"><td colspan="${ncol}"><select data-chg="additem" data-pid="${p.id}">${addOptions()}</select></td></tr></tbody>`;
+function groupItems(items) {
+  const out = [], idx = {};
+  items.forEach(it => { const k = (it.kind === 'design' || it.kind === 'copy') ? 'g:' + (it.libId || '') + ':' + it.name.trim().toLowerCase() : it.id; if (idx[k] == null) { idx[k] = out.length; out.push([]); } out[idx[k]].push(it); });
+  return out;
+}
+/* one deliverable, several tracks (design + copy) shown as a single row */
+function groupHTML(s, p, its) {
+  const first = its[0], key = first.id, open = openItems.has(key), L = lib(first.libId), grp = its.map(i => i.id).join(',');
+  const ppl = [...new Set(its.flatMap(i => i.lines.filter(l => l.type !== 'ext').map(l => l.personId)))].map(person);
+  const h = its.reduce((a, i) => a + itemHours(i), 0);
+  return `<div class="it ${open ? 'open' : ''} k-grp">
+    <div class="it-row" data-act="itoggle" data-iid="${key}">
+      <i class="fa-solid fa-chevron-right car"></i>
+      <span class="it-name-wrap">${its.map(i => `<span class="trk ${i.kind}">${KIND[i.kind]}</span>`).join('')}<input class="it-name" data-f="item.name" data-pid="${p.id}" data-iid="${key}" data-grp="${grp}" value="${esc(first.name)}"></span>
+      <span class="qty">${L || first.qty > 1 ? `<button class="mini" data-act="qty" data-pid="${p.id}" data-grp="${grp}" data-d="-1">−</button><b class="num">${first.qty}</b><span class="faint">${esc(unitLabel(first.unit || L?.unit, first.qty))}</span><button class="mini" data-act="qty" data-pid="${p.id}" data-grp="${grp}" data-d="1">+</button>` : ''}</span>
+      <span class="avs">${ppl.map(x => av(x)).join('')}</span>
+      <span class="hrs-cell"><input class="scrub num" data-scrub data-f="grph.hours" data-pid="${p.id}" data-iid="${key}" data-grp="${grp}" value="${+h.toFixed(1)}" title="Drag to adjust · click to type"><span class="faint">h</span></span>
+      <span class="hov amt"><b class="num" data-gsum="${grp}"></b><span class="mdot" data-gdot="${grp}"></span><div class="pop pop-r" data-gpop="${grp}"></div></span>
+      <button class="ib del rowdel" data-act="itdel" data-pid="${p.id}" data-grp="${grp}" title="Remove"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    ${open ? `<div class="it-detail">${first.spec ? `<div class="spec"><i class="fa-solid fa-quote-left"></i>${esc(first.spec)}</div>` : ''}
+      ${its.map(it => `<div class="trk-h"><span class="trk ${it.kind}">${KIND[it.kind]}</span><span class="faint num">${hrs(itemHours(it))}</span><span class="grow"></span><button class="btn sm ghostbtn" data-act="lnadd" data-pid="${p.id}" data-iid="${it.id}"><i class="fa-solid fa-user-plus"></i>Add person</button></div>${it.lines.filter(visible).map(l => intLineHTML(s, p, it, l)).join('')}`).join('')}</div>` : ''}
+  </div>`;
+}
+function itemHTML(s, p, it) {
+  const ext = it.kind === 'ext' || it.lines.every(l => l.type === 'ext'), open = openItems.has(it.id), L = lib(it.libId);
+  const lines = it.lines.filter(visible), ih = itemHours(it);
+  const ids = A({ pid: p.id, iid: it.id });
+  const ppl = [...new Set(lines.filter(l => l.type !== 'ext').map(l => l.personId))].map(person);
+  const qtyOn = it.kind !== 'am' && it.kind !== 'wip' && (L || it.qty > 1);
+  return `<div class="it ${open ? 'open' : ''} k-${it.kind}">
+    <div class="it-row" data-act="itoggle" data-iid="${it.id}">
+      <i class="fa-solid fa-chevron-right car"></i>
+      <span class="it-name-wrap">${KIND[it.kind] ? `<span class="trk ${it.kind}">${KIND[it.kind]}</span>` : ''}<input class="it-name" data-f="item.name" ${ids} value="${esc(it.name)}"></span>
+      ${qtyOn ? `<span class="qty"><button class="mini" data-act="qty" ${ids} data-d="-1">−</button><b class="num">${it.qty}</b><span class="faint">${esc(unitLabel(it.unit || L?.unit, it.qty))}</span><button class="mini" data-act="qty" ${ids} data-d="1">+</button></span>` : '<span class="qty"></span>'}
+      <span class="avs">${ext ? `<span class="sup">${esc(it.lines[0]?.supplier || 'Supplier')}</span>` : ppl.map(p => av(p)).join('')}</span>
+      ${ext ? '<span class="hrs-cell faint">flat fee</span>' : `<span class="hrs-cell"><input class="scrub num" data-scrub data-f="itemh.hours" ${ids} value="${+ih.toFixed(1)}" title="Drag to adjust · click to type"><span class="faint">h</span></span>`}
+      <span class="hov amt"><b class="num" data-t="ia-${it.id}"></b><span class="mdot" data-t="im-${it.id}"></span><div class="pop pop-r" data-t="ipop-${it.id}"></div></span>
+      <button class="ib del rowdel" data-act="itdel" ${ids} title="Remove"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    ${open ? `<div class="it-detail">${it.spec ? `<div class="spec"><i class="fa-solid fa-quote-left"></i>${esc(it.spec)}</div>` : ''}
+      ${lines.map(l => l.type === 'ext' ? extLineHTML(p, it, l) : intLineHTML(s, p, it, l)).join('')}
+      ${ext ? '' : `<button class="btn sm ghostbtn" data-act="lnadd" ${ids}><i class="fa-solid fa-user-plus"></i>Add person</button>`}</div>` : ''}
+  </div>`;
+}
+function intLineHTML(s, p, it, l) {
+  const ids = A({ pid: p.id, iid: it.id, lid: l.id }), pe = person(l.personId);
+  return `<div class="ln">${av(pe)}<select data-fc="line.personId" ${ids}>${personOpts(l.personId, s.team)}</select>
+    <label class="lf"><input class="scrub num" data-scrub data-f="line.hours" ${ids} value="${+l.hours}"><span>h</span></label>
+    <label class="lf" title="Charge rate"><span>@ $</span><input class="num" type="number" step="5" data-f="line.rate" ${ids} value="${isNum(l.rate) ? l.rate : ''}" placeholder="${lineRate({ personId: l.personId })}"></label>
+    ${lens() === 'internal' ? `<label class="lf" title="Cost rate"><span>cost $</span><input class="num" type="number" step="5" data-f="line.costRate" ${ids} value="${isNum(l.costRate) ? l.costRate : ''}" placeholder="${lineCostRate({ personId: l.personId })}"></label>` : ''}
+    <span class="grow"></span><b class="num" data-t="lc-${l.id}"></b><button class="ib del" data-act="lndel" ${ids}><i class="fa-solid fa-xmark"></i></button></div>`;
+}
+function extLineHTML(p, it, l) {
+  const ids = A({ pid: p.id, iid: it.id, lid: l.id });
+  return `<div class="ln"><span class="av sup-av"><i class="fa-solid fa-truck-fast"></i></span><input class="sup-in" data-f="line.supplier" ${ids} value="${esc(l.supplier)}" placeholder="Supplier">
+    <label class="lf"><span>cost $</span><input class="num" type="number" step="100" data-f="line.cost" ${ids} value="${+l.cost || 0}"></label>
+    <label class="lf"><span>+</span><input class="num" type="number" data-f="line.markup" ${ids} value="${+l.markup || 0}" style="width:48px"><span>%</span></label>
+    <label class="lf" title="Override client price"><span>price $</span><input class="num" type="number" step="50" data-f="line.price" ${ids} value="${isNum(l.price) ? l.price : ''}" placeholder="${Math.round(lineClient({ ...l, price: null }))}"></label>
+    <span class="grow"></span><b class="num" data-t="lc-${l.id}"></b><button class="ib del" data-act="lndel" ${ids}><i class="fa-solid fa-xmark"></i></button></div>`;
 }
 function updateTotals() {
-  const s = cur(); if (!s) return; const t = totals(s);
-  const set = (k, v, cls) => { const el = document.querySelector(`[data-t="${k}"]`); if (el) { el.textContent = v; if (cls != null) el.className = el.className.replace(/ ?margin-(pos|neg)/g, '') + ' ' + cls; } };
-  let vh = 0, vc = 0, vk = 0;
+  const s = cur(); if (!s) return; const t = totals(s), L = lens();
+  const set = (k, v, html) => { const el = document.querySelector(`[data-t="${k}"]`); if (el) el[html ? 'innerHTML' : 'textContent'] = v; };
   s.phases.forEach((p, i) => {
-    let ph = 0, pc = 0, pk = 0;
-    p.items.forEach(it => it.lines.forEach(l => {
-      const c = lineClient(l), k = lineCost(l);
-      set('lc-' + l.id, money(c)); set('lk-' + l.id, money(k));
-      set('lm-' + l.id, k ? Math.round((c / k - 1) * 100) + '%' : '—');
-      set('lg-' + l.id, money(c - k), c - k >= 0 ? 'margin-pos' : 'margin-neg');
-      if (visible(l)) { ph += lineHours(l); pc += c; pk += k; }
-    }));
-    const fee = UI.filter === 'all' ? t.phasesClient[i] : pc;
-    set('ph-' + p.id, money(fee)); set('phh-' + p.id, hrs(ph)); set('phc-' + p.id, money(pk)); set('phm-' + p.id, money(fee - pk), fee - pk >= 0 ? 'margin-pos' : 'margin-neg');
-    vh += ph; vc += UI.filter === 'all' ? 0 : pc; vk += pk;
+    const c = phaseCalc(p), k = phaseCostSum(p);
+    set('ph-' + p.id, L === 'client' ? money(t.phasesClient[i]) : money(k) + ' cost');
+    set('phh-' + p.id, hrs(phaseHours(p)));
+    set('phpop-' + p.id, `<div class="kv"><span>Client fee</span><b class="num">${money(t.phasesClient[i])}</b></div><div class="kv"><span>Calculated</span><b class="num">${money(c)}</b></div><div class="kv"><span>Born + supplier cost</span><b class="num">${money(k)}</b></div><div class="kv"><span>Margin</span><b class="num ${mClass(mPct(c, k))}">${Math.round(mPct(c, k) * 100)}%</b></div><div class="kv"><span>Hours</span><b class="num">${hrs(phaseHours(p))}</b></div>`, true);
+    p.items.forEach(it => {
+      const ic = itemClient(it), ik = itemCost(it), m = mPct(ic, ik);
+      set('ia-' + it.id, L === 'client' ? money(ic) : money(ik));
+      const md = document.querySelector(`[data-t="im-${it.id}"]`); if (md) md.className = 'mdot ' + (L === 'internal' ? mClass(m) : '');
+      set('ipop-' + it.id, `<div class="pop-h">${esc(it.name)}</div>${it.lines.map(l => l.type === 'ext' ? `<div class="kv"><span>${esc(l.supplier || 'Supplier')} · cost ${money(l.cost)} +${l.markup || 0}%</span><b class="num">${money(lineClient(l))}</b></div>` : `<div class="kv"><span>${esc(person(l.personId).title)} · ${hrs(l.hours)} × $${lineRate(l)}</span><b class="num">${money(lineClient(l))}</b></div>`).join('')}<div class="div"></div><div class="kv"><span>Cost</span><b class="num">${money(ik)}</b></div><div class="kv"><span>Margin</span><b class="num ${mClass(m)}">${money(ic - ik)} · ${Math.round(m * 100)}%</b></div>${it.libId && lib(it.libId) ? `<div class="hint" style="margin-top:6px">Library: ${esc(lib(it.libId).name)}${learnedHours(it.libId) ? ` · history avg ${hrs(learnedHours(it.libId).avg)}` : ''}</div>` : ''}`, true);
+      const sc = document.querySelector(`[data-f="itemh.hours"][data-iid="${it.id}"]`); if (sc && document.activeElement !== sc && !sc.dataset.dragging) sc.value = +itemHours(it).toFixed(1);
+      it.lines.forEach(l => set('lc-' + l.id, money(L === 'client' ? lineClient(l) : lineCost(l))));
+    });
   });
-  set('foot', UI.filter === 'all' ? `${hrs(t.hours)} · ${money(t.ex)} ex GST` : `${UI.filter === 'int' ? 'Internal' : 'External'}: ${money(vc)} · cost ${money(vk)}`);
-  const el = $('#sideDyn'); if (el) el.innerHTML = sidePanel(s, t);
+  document.querySelectorAll('[data-gsum]').forEach(el => {
+    const ids = el.dataset.gsum.split(','), its = []; s.phases.forEach(p => p.items.forEach(i => { if (ids.includes(i.id)) its.push(i); }));
+    const ic = its.reduce((a, i) => a + itemClient(i), 0), ik = its.reduce((a, i) => a + itemCost(i), 0), m = mPct(ic, ik);
+    el.textContent = money(L === 'client' ? ic : ik);
+    const dot = document.querySelector(`[data-gdot="${el.dataset.gsum}"]`); if (dot) dot.className = 'mdot ' + (L === 'internal' ? mClass(m) : '');
+    const pop = document.querySelector(`[data-gpop="${el.dataset.gsum}"]`); if (pop) pop.innerHTML = `<div class="pop-h">${esc(its[0].name)}</div>${its.map(i => `<div class="kv"><span>${KIND[i.kind]} · ${i.lines.map(l => person(l.personId).title + ' ' + hrs(l.hours)).join(', ')}</span><b class="num">${money(itemClient(i))}</b></div>`).join('')}<div class="div"></div><div class="kv"><span>Cost</span><b class="num">${money(ik)}</b></div><div class="kv"><span>Margin</span><b class="num ${mClass(m)}">${money(ic - ik)} · ${Math.round(m * 100)}%</b></div>`;
+    const sc = document.querySelector(`[data-f="grph.hours"][data-grp="${el.dataset.gsum}"]`); if (sc && document.activeElement !== sc && !sc.dataset.dragging) sc.value = +its.reduce((a, i) => a + itemHours(i), 0).toFixed(1);
+  });
+  const st = $('#stats'); if (st) { const keep = st.querySelector('.hov:hover'); if (!keep || !keep.querySelector('input:focus')) st.innerHTML = statsHTML(s, t); }
+  const u = document.querySelector('[data-act=undo]'); if (u) u.disabled = !H.stack.length;
 }
-function sidePanel(s, t) {
-  const byP = {}; s.phases.forEach(p => p.items.forEach(it => it.lines.forEach(l => { if (l.type === 'ext') return; const r = byP[l.personId] || (byP[l.personId] = { h: 0, c: 0 }); r.h += +l.hours || 0; r.c += lineClient(l); })));
-  const ppl = Object.entries(byP).sort((a, b) => b[1].h - a[1].h), maxH = Math.max(1, ...ppl.map(r => r[1].h));
-  const sg = s.signals || {}, matches = (s.calib?.matches || []).map(m => ({ ...m, p: S.past.find(p => p.id === m.id) })).filter(m => m.p);
-  return `<div class="card pad"><div class="lbl">Total ex GST</div><div class="big num">${money(t.ex)}</div>
-    <div class="kv"><span>Inc GST</span><b class="num">${money(t.inc)}</b></div>
-    <div class="kv"><span>Internal (Born)</span><b class="num">${money(t.intClient)}</b></div>
-    <div class="kv"><span>External</span><b class="num">${money(t.extClient)}</b></div>
-    <div style="border-top:1px solid var(--border-lt);margin:8px 0"></div>
-    <div class="kv"><span>Born cost</span><b class="num">${money(t.intCost)}</b></div>
-    <div class="kv"><span>Supplier cost</span><b class="num">${money(t.extCost)}</b></div>
-    <div class="kv"><span>Margin</span><b class="num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${money(t.margin)} · ${Math.round(t.marginPct * 100)}%</b></div>
-    <div class="kv"><span>Hours · weeks</span><b class="num">${hrs(t.hours)} · ${s.weeks}</b></div>
-    ${sg.budget ? `<div class="note ${t.ex > sg.budget ? 'warn' : 'ok'}">Brief budget ${money(sg.budget)} · ${money(Math.abs(t.ex - sg.budget))} ${t.ex > sg.budget ? 'over' : 'under'}</div>` : ''}</div>
-  <div class="card pad"><div class="sec-h"><h3>Phases</h3></div><div class="bars">${s.phases.map((p, i) => `<div class="b"><div class="bt"><span><span class="dot" style="background:${p.color};margin-right:6px"></span>${esc(p.name)}</span><b class="num" style="font-weight:500">${money(t.phasesClient[i])}</b></div><div class="track"><i style="width:${t.sub ? t.phasesClient[i] / t.sub * 100 : 0}%;background:${p.color}"></i></div></div>`).join('')}</div></div>
-  <div class="card pad"><div class="sec-h"><h3>Team time</h3></div><div class="bars">${ppl.map(([id, r]) => `<div class="b"><div class="bt"><span>${esc(pLabel(person(id)))}</span><span class="num muted">${hrs(r.h)}</span></div><div class="track"><i style="width:${r.h / maxH * 100}%"></i></div></div>`).join('') || '<p class="hint">No time yet.</p>'}</div></div>
-  ${matches.length ? `<div class="card pad"><div class="sec-h"><h3>Pricing model</h3></div><p class="hint">Calibrated ×${(s.calib?.factor || 1).toFixed(2)} using:</p>${matches.map(m => `<div class="kv"><span>${esc(m.p.name)} <span class="faint">${Math.round(m.sim * 100)}%</span></span><b class="num">${money(m.p.total)}</b></div>`).join('')}</div>` : ''}`;
+
+/* ---- scrubbing numbers: drag horizontally to change, click to type ---- */
+let SCR = null;
+document.addEventListener('pointerdown', e => {
+  const el = e.target.closest('[data-scrub]'); if (!el || document.activeElement === el) return;
+  SCR = { el, x: e.clientX, v: +el.value || 0, moved: false }; e.preventDefault();
+});
+document.addEventListener('pointermove', e => {
+  if (!SCR) return; const dx = e.clientX - SCR.x;
+  if (!SCR.moved && Math.abs(dx) < 3) return;
+  SCR.moved = true; SCR.el.dataset.dragging = '1'; document.body.classList.add('scrubbing');
+  const step = e.shiftKey ? 5 : 0.5, nv = Math.max(0, Math.round((SCR.v + Math.round(dx / 6) * step) * 2) / 2);
+  if (+SCR.el.value !== nv) { SCR.el.value = nv; SCR.el.dispatchEvent(new Event('input', { bubbles: true })); }
+});
+document.addEventListener('pointerup', () => {
+  if (!SCR) return; const { el, moved } = SCR; SCR = null; document.body.classList.remove('scrubbing'); delete el.dataset.dragging;
+  if (!moved) { el.focus(); el.select(); } else el.dispatchEvent(new Event('change', { bubbles: true }));
+});
+
+/* ---- palette (⌘K and "+ Add") ---- */
+function palette(pid) {
+  const s = cur(); if (!s) return;
+  const target = pid || s.phases.find(p => /roll|design/i.test(p.name))?.id || s.phases[0]?.id;
+  const opts = [];
+  if (!pid) {
+    opts.push({ g: 'AI', icon: 'fa-wand-magic-sparkles', label: 'Ask AI…', hint: 'type a request and press Enter', run: q => aiOpen(q) });
+    opts.push({ g: 'Commands', icon: 'fa-file-pdf', label: 'Export Scope of Work', run: exportPDF });
+    opts.push({ g: 'Commands', icon: 'fa-eye', label: `Switch to ${lens() === 'client' ? 'internal' : 'client'} view`, run: () => { UI.lens = lens() === 'client' ? 'internal' : 'client'; saveUI(); render(); } });
+    opts.push({ g: 'Commands', icon: 'fa-plus', label: 'Add phase', run: () => ACT.addphase() });
+    opts.push({ g: 'Commands', icon: 'fa-rotate-left', label: 'Undo', run: undo });
+  }
+  S.library.forEach(d => opts.push({ g: 'Deliverables', icon: 'fa-shapes', label: d.name, hint: Object.entries(d.tracks).map(([k, v]) => `${k} ${v.base ? v.base + '+' : ''}${v.per}h/${d.unit}`).join(' · '), run: () => addTo(target, 'lib:' + d.id) }));
+  S.externals.forEach(x => opts.push({ g: 'Supplier costs', icon: 'fa-truck-fast', label: x.name, hint: x.cost ? money(x.cost) + ' + ' + x.markup + '%' : '', run: () => addTo(target, 'ext:' + x.id) }));
+  S.people.forEach(p => opts.push({ g: 'People', icon: 'fa-user', label: pLabel(p), hint: `$${p.rate}/h`, run: () => addTo(target, 'person:' + p.id) }));
+  opts.push({ g: 'Other', icon: 'fa-pen', label: 'Custom line', run: () => addTo(target, 'custom:int') }, { g: 'Other', icon: 'fa-receipt', label: 'Custom supplier cost', run: () => addTo(target, 'custom:ext') }, { g: 'Other', icon: 'fa-briefcase', label: 'Account management', run: () => addTo(target, 'custom:am') });
+  const bg = document.createElement('div'); bg.className = 'pal-bg';
+  bg.innerHTML = `<div class="pal"><div class="pal-in"><i class="fa-solid ${pid ? 'fa-plus' : 'fa-magnifying-glass'}"></i><input placeholder="${pid ? 'Add to ' + esc(findPhase(pid).name) + '…' : 'Search, add, or ask AI…'}"><kbd>esc</kbd></div><div class="pal-list"></div></div>`;
+  document.body.appendChild(bg);
+  const input = bg.querySelector('input'), list = bg.querySelector('.pal-list'); let sel = 0, shown = [];
+  const close = () => bg.remove();
+  const draw = () => {
+    const q = input.value.trim().toLowerCase();
+    shown = opts.filter(o => !q || o.g === 'AI' || (o.label + ' ' + (o.hint || '') + ' ' + o.g).toLowerCase().includes(q)).slice(0, 40);
+    if (q && !pid) shown[0] = { ...shown[0], label: `Ask AI: “${input.value.trim()}”` };
+    sel = Math.min(sel, shown.length - 1); let g = '';
+    list.innerHTML = shown.map((o, i) => (o.g !== g ? `<div class="pal-g">${(g = o.g)}</div>` : '') + `<div class="pal-o ${i === sel ? 'on' : ''}" data-i="${i}"><i class="fa-solid ${o.icon}"></i><span class="grow">${esc(o.label)}</span><span class="faint">${esc(o.hint || '')}</span></div>`).join('') || '<div class="pal-g">No matches</div>';
+  };
+  const run = i => { const o = shown[i]; if (!o) return; close(); o.run(input.value.trim()); };
+  input.addEventListener('input', () => { const q = input.value.trim(); sel = 0; draw(); if (!pid && q && q.split(/\s+/).length <= 2 && shown.length > 1) { sel = 1; draw(); } });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { sel = Math.min(sel + 1, shown.length - 1); draw(); e.preventDefault(); }
+    if (e.key === 'ArrowUp') { sel = Math.max(sel - 1, 0); draw(); e.preventDefault(); }
+    if (e.key === 'Enter') run(sel);
+    if (e.key === 'Escape') close();
+  });
+  list.addEventListener('mousemove', e => { const o = e.target.closest('.pal-o'); if (o && +o.dataset.i !== sel) { sel = +o.dataset.i; list.querySelectorAll('.pal-o').forEach((x, i) => x.classList.toggle('on', i === sel)); } });
+  list.addEventListener('click', e => { const o = e.target.closest('.pal-o'); if (o) run(+o.dataset.i); });
+  bg.addEventListener('mousedown', e => { if (e.target === bg) close(); });
+  draw(); input.focus();
 }
+function addTo(pid, v) {
+  histMark();
+  const s = cur(), p = findPhase(pid); if (!p) return; const [kind, id] = v.split(':'); let added = [];
+  if (kind === 'lib') { const d = lib(id); added = deliverableItems({ libId: id, name: d.name, qty: 1, spec: '', auto: true, hours: libHours(d, 1) }, s.team, 1); }
+  else if (kind === 'ext') { const x = extLib(id); added = [{ id: uid(), libId: null, extId: id, kind: 'ext', name: x.name, qty: 1, lines: [extLine({ ...x, markup: x.markup ?? S.settings.markup })] }]; }
+  else if (kind === 'person') { const pe = person(id); added = [{ id: uid(), libId: null, kind: 'core', name: pe.title + ' time', qty: 1, lines: [{ id: uid(), type: 'int', personId: id, hours: 2, rate: null, costRate: null }] }]; if (!s.team.includes(id)) s.team.push(id); }
+  else if (id === 'int') added = [{ id: uid(), libId: null, kind: 'core', name: 'Custom line', qty: 1, lines: [intLine(T.DES, 2, s.team)] }];
+  else if (id === 'ext') added = [{ id: uid(), libId: null, kind: 'ext', name: 'Supplier cost', qty: 1, lines: [extLine({ cost: 0, markup: S.settings.markup })] }];
+  else if (id === 'am') added = [{ id: uid(), libId: null, kind: 'am', name: 'Account management', qty: 1, lines: [intLine(S.settings.amTitle, 1, s.team)] }];
+  const firstMg = p.items.findIndex(i => i.kind === 'am' || i.kind === 'wip');
+  p.items.splice(firstMg < 0 || added[0]?.kind === 'am' ? p.items.length : firstMg, 0, ...added);
+  added.forEach(it => openItems.add(it.id));
+  touch(); render(); toast(`Added to ${p.name}`);
+}
+
+/* ==========================================================
+   ASK AI — conversational changes with a reviewable diff
+   ========================================================== */
+const AI_SUGGEST = [
+  ['Check for gaps', 'Review this estimate against the brief. Flag anything missing, over- or under-scoped, and propose fixes.'],
+  ['Fit the budget', 'Fit this estimate to the brief budget. Trim Born time where it hurts least; keep account management and suppliers.'],
+  ['Make it leaner', 'Propose a leaner version: reduce hours about 15% without dropping deliverables.'],
+  ['Explain the price', 'Explain in plain English what drives this price. Do not change anything.'],
+];
+function aiOpen(q) { UI.ai = true; saveUI(); if (view !== 'edit') return; render(); if (q) aiSend(q); else setTimeout(() => $('#aiInput')?.focus(), 50); }
+function aiPanelHTML(s) {
+  const chat = s.chat || [];
+  return `<div class="ai-h"><i class="fa-solid fa-wand-magic-sparkles"></i><b>Ask AI</b><span class="grow"></span>${chat.length ? '<button class="ib" data-act="aiclear" title="Clear conversation"><i class="fa-regular fa-trash-can"></i></button>' : ''}<button class="ib" data-act="aitoggle" title="Close"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="ai-thread" id="aiThread">
+    ${chat.length ? '' : `<div class="ai-empty"><p>Tell me what's changed or what you need — I'll propose edits you can review before anything changes.</p><div class="ai-chips">${AI_SUGGEST.map(([l, q]) => `<button data-act="aiask" data-q="${esc(q)}">${l}</button>`).join('')}</div>
+      <p class="hint" style="margin-top:14px">e.g. “Client wants it live in 6 weeks” · “Add a second round of social, 10 more posts” · “They're supplying photography”</p></div>`}
+    ${chat.map((m, i) => m.role === 'user' ? `<div class="msg me">${esc(m.text)}</div>` : aiMsgHTML(s, m, i)).join('')}
+    ${UI.aiBusy ? '<div class="msg ai thinking"><span></span><span></span><span></span></div>' : ''}
+  </div>
+  <form class="ai-in" data-aiform><textarea id="aiInput" rows="2" placeholder="Ask for a change, or add context…" ${UI.aiBusy ? 'disabled' : ''}></textarea><button class="btn pri sm" ${UI.aiBusy ? 'disabled' : ''}><i class="fa-solid fa-arrow-up"></i></button></form>`;
+}
+function aiMsgHTML(s, m, i) {
+  const ch = m.changes || [];
+  const pending = ch.length && !m.applied && !m.discarded;
+  const on = ch.filter(c => c.on !== false);
+  let delta = '';
+  if (pending) { try { const c2 = clone(s); applyChanges(c2, on); const a = totals(s).ex, b = totals(c2).ex; delta = `${b >= a ? '+' : '−'}${money(Math.abs(b - a)).replace('−', '')} → ${money(b)}`; } catch (e) {} }
+  return `<div class="msg ai">${m.text ? `<div class="ai-txt">${esc(m.text).replace(/\n/g, '<br>')}</div>` : ''}
+    ${(m.questions || []).length ? `<div class="ai-q">${m.questions.map(q => `<div><i class="fa-regular fa-circle-question"></i>${esc(q)}</div>`).join('')}</div>` : ''}
+    ${ch.length ? `<div class="chg-list ${pending ? '' : 'done'}">${ch.map((c, j) => `<label class="chg ${c.on === false ? 'off' : ''}"><input type="checkbox" data-chg-tog="${i}:${j}" ${c.on !== false ? 'checked' : ''} ${pending ? '' : 'disabled'}><span><b>${esc(c.label || describeChange(s, c))}</b>${c.why ? `<small>${esc(c.why)}</small>` : ''}</span></label>`).join('')}</div>
+      ${pending ? `<div class="chg-acts"><span class="num faint">${delta}</span><span class="grow"></span><button class="btn sm" data-act="aidiscard" data-i="${i}">Discard</button><button class="btn sm pri" data-act="aiapply" data-i="${i}" ${on.length ? '' : 'disabled'}>Apply ${on.length}</button></div>` : `<div class="hint" style="margin-top:6px">${m.applied ? '<i class="fa-solid fa-check"></i> Applied — ⌘Z to undo' : 'Discarded'}</div>`}` : ''}
+  </div>`;
+}
+/* compact view of the estimate for the model */
+function scopeForAI(s) {
+  const t = totals(s);
+  return {
+    project: s.name, client: clientName(s), weeks: s.weeks, briefBudget: s.signals?.budget || null, totalExGst: Math.round(t.ex), marginPct: Math.round(t.marginPct * 100), contingencyPct: +s.contingency || 0, discount: +s.discount || 0,
+    team: s.team.map(id => person(id).title),
+    phases: s.phases.map((p, i) => ({ phaseId: p.id, name: p.name, fee: t.phasesClient[i], description: p.desc, items: p.items.map(it => ({ itemId: it.id, name: it.name, kind: it.kind, qty: it.qty, unit: it.unit || lib(it.libId)?.unit || '', libraryId: it.libId || null, lines: it.lines.map(l => l.type === 'ext' ? { lineId: l.id, supplier: l.supplier, cost: +l.cost || 0, markupPct: +l.markup || 0, price: Math.round(lineClient(l)) } : { lineId: l.id, title: person(l.personId).title, hours: +l.hours, rate: lineRate(l) }) })) })),
+  };
+}
+async function aiAdjust(s, instruction) {
+  const libTxt = S.library.map(d => `${d.id} | ${d.name} | per ${d.unit} | ${Object.entries(d.tracks).map(([k, v]) => `${k}: ${v.base || 0}+${v.per}/unit (${v.title})`).join('; ')}`).join('\n');
+  const history = (s.chat || []).slice(-8).map(m => `${m.role === 'user' ? 'USER' : 'YOU'}: ${m.text || ''}${m.changes?.length ? ` [proposed ${m.changes.length} changes, ${m.applied ? 'applied' : m.discarded ? 'discarded' : 'pending'}]` : ''}`).join('\n');
+  const user = `<brief>\n${String(s.brief || '').slice(0, 7000)}\n</brief>\n\n<estimate>\n${JSON.stringify(scopeForAI(s))}\n</estimate>\n
+JOB TITLES (rate/h): ${titles().map(t => `${t} $${Math.round(titleRate(t))}`).join(', ')}
+DELIVERABLE LIBRARY (id | name | unit | hours = base + per × qty):\n${libTxt}
+SETTINGS: account management ${S.settings.amPct}% of phase hours (min ${S.settings.amMin}h) + ${S.settings.wipHours}h WIP per week — recalculated automatically, so never edit AM/WIP lines directly; change weeks instead.
+${history ? `\nCONVERSATION SO FAR:\n${history}\n` : ''}
+REQUEST: ${instruction}
+
+Respond with JSON only:
+{"reply":"short, plain answer (2-4 sentences). Say what you changed and why, or answer the question.",
+ "questions":["only if something essential is unclear"],
+ "changes":[ one object per edit, using ONLY these ops and ids from the estimate:
+  {"op":"set_hours","itemId":"","lineId":"optional — omit to scale the whole item","hours":0,"why":""}
+  {"op":"set_qty","itemId":"","qty":0,"why":""}  (rescales hours by the library formula)
+  {"op":"add_item","phaseId":"","name":"","libraryId":"id or null","qty":1,"kind":"design|copy|production|core","lines":[{"title":"job title","hours":0}],"why":""}
+  {"op":"add_supplier","phaseId":"","name":"","supplier":"","cost":0,"markupPct":30,"why":""}
+  {"op":"remove_item","itemId":"","why":""}
+  {"op":"rename_item","itemId":"","name":"","why":""}
+  {"op":"set_supplier","itemId":"","cost":0,"markupPct":0,"supplier":"","why":""}
+  {"op":"add_phase","name":"","afterPhaseId":"optional","why":""}
+  {"op":"set_phase_description","phaseId":"","text":"","why":""}
+  {"op":"set_weeks","weeks":0,"why":""}
+  {"op":"set_overview","text":"","why":""}
+  {"op":"set_discount","amount":0,"why":""}
+ ]}
+Rules: change only what the request needs; keep the structure; never invent ids; use job titles from the list only; never mention people's names; "changes": [] when the request is a question or needs clarification. Australian English.`;
+  return callAI(`You are a senior producer at ${S.settings.agency}, an Australian creative agency, editing an estimate alongside a colleague. You are precise, commercial and brief. Respond with a single JSON object only.`, user, 6000);
+}
+function findItemAny(s, id) { for (const p of s.phases) { const it = p.items.find(i => i.id === id); if (it) return [p, it]; } return [null, null]; }
+function describeChange(s, c) {
+  const [, it] = c.itemId ? findItemAny(s, c.itemId) : [];
+  const nm = it ? `“${it.name}”` : '';
+  switch (c.op) {
+    case 'set_hours': { if (!it) return 'Adjust hours'; const l = c.lineId && it.lines.find(x => x.id === c.lineId); return l ? `${nm}: ${person(l.personId).title} ${hrs(l.hours)} → ${hrs(c.hours)}` : `${nm}: ${hrs(itemHours(it))} → ${hrs(c.hours)}`; }
+    case 'set_qty': return `${nm}: quantity ${it?.qty} → ${c.qty}`;
+    case 'add_item': return `Add “${c.name}”${c.qty > 1 ? ' ×' + c.qty : ''} to ${s.phases.find(p => p.id === c.phaseId)?.name || 'phase'} (${hrs((c.lines || []).reduce((a, l) => a + (+l.hours || 0), 0))})`;
+    case 'add_supplier': return `Add supplier cost “${c.name}” ${money(c.cost)}${c.markupPct ? ' +' + c.markupPct + '%' : ''}`;
+    case 'remove_item': return `Remove ${nm}`;
+    case 'rename_item': return `Rename ${nm} → “${c.name}”`;
+    case 'set_supplier': return `${nm}: ${[c.cost != null ? 'cost ' + money(c.cost) : '', c.markupPct != null ? 'markup ' + c.markupPct + '%' : '', c.supplier ? 'supplier ' + c.supplier : ''].filter(Boolean).join(', ')}`;
+    case 'add_phase': return `Add phase “${c.name}”`;
+    case 'set_phase_description': return `Rewrite ${s.phases.find(p => p.id === c.phaseId)?.name || 'phase'} description`;
+    case 'set_weeks': return `Timeline ${s.weeks} → ${c.weeks} weeks (WIP updates)`;
+    case 'set_overview': return 'Rewrite overview';
+    case 'set_discount': return `Discount → ${money(c.amount)}`;
+    default: return c.op;
+  }
+}
+function applyChanges(s, changes) {
+  let weeksChanged = false, hoursChanged = false;
+  for (const c of changes) {
+    const [p, it] = c.itemId ? findItemAny(s, c.itemId) : [];
+    switch (c.op) {
+      case 'set_hours': if (!it) break; hoursChanged = true;
+        if (c.lineId) { const l = it.lines.find(x => x.id === c.lineId); if (l) l.hours = Math.max(0, r05(+c.hours)); }
+        else { const h0 = itemHours(it); it.lines.forEach(l => { if (l.type !== 'ext') l.hours = r05(h0 ? +l.hours * c.hours / h0 : c.hours / it.lines.length); }); }
+        break;
+      case 'set_qty': if (!it) break; hoursChanged = true; scaleQty(it, +c.qty); break;
+      case 'add_item': { const ph = s.phases.find(x => x.id === c.phaseId) || s.phases[s.phases.length - 1]; if (!ph) break; hoursChanged = true;
+        const lines = (c.lines || []).filter(l => +l.hours > 0).map(l => intLine(l.title, +l.hours, s.team));
+        if (!lines.length && lib(c.libraryId)) deliverableItems({ libId: c.libraryId, name: c.name, qty: +c.qty || 1, spec: '', auto: true, hours: libHours(lib(c.libraryId), +c.qty || 1) }, s.team, 1).forEach(x => ph.items.push(x));
+        else if (lines.length) ph.items.splice(ph.items.findIndex(i => i.kind === 'am') >= 0 ? ph.items.findIndex(i => i.kind === 'am') : ph.items.length, 0, { id: uid(), libId: lib(c.libraryId) ? c.libraryId : null, kind: c.kind || 'core', name: c.name, qty: Math.max(1, +c.qty || 1), unit: lib(c.libraryId)?.unit || '', lines });
+        break; }
+      case 'add_supplier': { const ph = s.phases.find(x => x.id === c.phaseId) || s.phases.find(x => /production/i.test(x.name)) || s.phases[s.phases.length - 1]; if (!ph) break;
+        ph.items.push({ id: uid(), libId: null, kind: 'ext', name: c.name, qty: 1, lines: [extLine({ supplier: c.supplier || '', cost: +c.cost || 0, markup: c.markupPct ?? S.settings.markup })] }); break; }
+      case 'remove_item': if (p) { p.items = p.items.filter(x => x !== it); hoursChanged = true; } break;
+      case 'rename_item': if (it && c.name) it.name = c.name; break;
+      case 'set_supplier': if (it) { const l = it.lines.find(x => x.type === 'ext'); if (l) { if (c.cost != null) l.cost = +c.cost; if (c.markupPct != null) { l.markup = +c.markupPct; l.price = null; } if (c.supplier) l.supplier = c.supplier; } } break;
+      case 'add_phase': { const i = s.phases.findIndex(x => x.id === c.afterPhaseId); s.phases.splice(i >= 0 ? i + 1 : s.phases.length, 0, newPhase(c.name || 'New phase', s.phases.length)); break; }
+      case 'set_phase_description': { const ph = s.phases.find(x => x.id === c.phaseId); if (ph && c.text) ph.desc = c.text; break; }
+      case 'set_weeks': if (+c.weeks > 0) { s.weeks = Math.round(+c.weeks); weeksChanged = true; } break;
+      case 'set_overview': if (c.text) s.overview = c.text; break;
+      case 'set_discount': s.discount = Math.max(0, +c.amount || 0); break;
+    }
+  }
+  if (weeksChanged || hoursChanged) addAM(s);
+}
+function scaleQty(it, q) {
+  q = Math.max(1, Math.round(q || 1)); const L = lib(it.libId);
+  if (L && L.tracks[it.kind]) { const h0 = trackHours(L, it.kind, it.qty), h1 = trackHours(L, it.kind, q); it.lines.forEach(l => { if (l.type !== 'ext') l.hours = r05(h0 ? +l.hours * h1 / h0 : h1 / it.lines.length); }); }
+  else it.lines.forEach(l => { if (l.type !== 'ext') l.hours = r05(+l.hours * q / it.qty); });
+  it.qty = q;
+}
+/* built-in fallback when AI isn't connected: budget fitting + timeline */
+function localAdjust(s, q) {
+  const t = totals(s), wk = q.match(/(\d{1,2})\s*(weeks?|wks?)/i);
+  const m = q.match(/\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(k)?/i); let target = /budget/i.test(q) && !m ? s.signals?.budget : null;
+  if (m && /budget|fit|trim|under|max|cap/i.test(q)) { target = parseFloat(m[1].replace(/,/g, '')) * (m[2] ? 1000 : 1); }
+  const changes = [];
+  if (wk) changes.push({ op: 'set_weeks', weeks: +wk[1], why: 'Timeline from your request' });
+  if (target) {
+    const fixed = t.ex - t.intClient + s.phases.reduce((a, p) => a + p.items.filter(i => i.kind === 'am' || i.kind === 'wip').reduce((b, i) => b + itemClient(i), 0), 0);
+    const flex = t.ex - fixed, f = flex > 0 ? clamp((target - fixed) / flex, 0.3, 1.5) : 1;
+    if (Math.abs(1 - f) > 0.01) s.phases.forEach(p => p.items.forEach(it => { if (['am', 'wip', 'ext'].includes(it.kind)) return; const h = itemHours(it); if (h) changes.push({ op: 'set_hours', itemId: it.id, hours: r05(h * f) }); }));
+    return { reply: `Scaled Born time by ${Math.round((f - 1) * 100)}% to land near ${money(target)}. Supplier costs and account management are unchanged. (AI isn't connected — this is the built-in budget fitter.)`, changes };
+  }
+  if (changes.length) return { reply: 'Updated the timeline — WIP meetings and account management will follow.', changes };
+  return { reply: "AI isn't connected, so I can only fit budgets (“fit to $80k”) and timelines (“8 weeks”) here. Ask an admin to set ANTHROPIC_API_KEY on the server for full requests.", changes: [] };
+}
+async function aiSend(text) {
+  const s = cur(); if (!s || !text.trim()) return;
+  s.chat = s.chat || []; s.chat.push({ role: 'user', text: text.trim(), at: Date.now() });
+  UI.aiBusy = true; renderAI(); touch();
+  let r;
+  try { r = S.settings.ai ? await aiAdjust(s, text) : null; } catch (e) { r = null; }
+  if (!r) r = localAdjust(s, text);
+  const valid = (r.changes || []).filter(c => describeChange(s, c) && (!c.itemId || findItemAny(s, c.itemId)[1]) && (!c.phaseId || c.op !== 'add_item' || s.phases.some(p => p.id === c.phaseId) || true));
+  s.chat.push({ role: 'ai', text: r.reply || '', questions: r.questions || [], changes: valid.map(c => ({ ...c, label: describeChange(s, c), on: true })), at: Date.now() });
+  if (s.chat.length > 30) s.chat = s.chat.slice(-30);
+  UI.aiBusy = false; touch(); renderAI();
+}
+function renderAI() { const el = $('#aiPanel'); if (!el) return; el.innerHTML = aiPanelHTML(cur()); const th = $('#aiThread'); if (th) th.scrollTop = th.scrollHeight; }
 
 /* ---------------- pricing model page ---------------- */
 function vModel() {
@@ -1613,8 +2130,20 @@ function addLineTo(p, v) {
   else if (id === 'am') p.items.push({ id: uid(), libId: null, kind: 'am', name: 'Account management', qty: 1, lines: [intLine(S.settings.amTitle, 1, s.team)] });
 }
 const ACT = {
+  undo: () => undo(),
+  palette: a => palette(a?.dataset?.pid),
+  aitoggle: () => { UI.ai = !UI.ai; saveUI(); render(); if (UI.ai) setTimeout(() => $('#aiInput')?.focus(), 50); },
+  aiask: a => aiOpen(a.dataset.q),
+  aiclear: () => { const s = cur(); s.chat = []; touch(); renderAI(); },
+  aiapply: a => { const s = cur(), m = s.chat[+a.dataset.i]; applyChanges(s, m.changes.filter(c => c.on !== false)); m.applied = true; touch(); render(); toast('Changes applied'); },
+  aidiscard: a => { const s = cur(); s.chat[+a.dataset.i].discarded = true; touch(); renderAI(); },
+  itoggle: (a, e) => { if (e.target.closest('input,select,button,.pop,.hov')) return; const id = a.dataset.iid; openItems.has(id) ? openItems.delete(id) : openItems.add(id); render(); },
+  itdel: a => { const s = cur(), p = findPhase(a.dataset.pid), ids = (a.dataset.grp || a.dataset.iid).split(','); p.items = p.items.filter(i => !ids.includes(i.id)); addAM(s); touch(); render(); },
+  qty: a => { const s = cur(); (a.dataset.grp || a.dataset.iid).split(',').forEach(id => { const it = findItem(a.dataset.pid, id); if (it) scaleQty(it, it.qty + +a.dataset.d); }); addAM(s); touch(); render(); },
+  weeks: a => { const s = cur(); s.weeks = Math.max(1, (+s.weeks || 1) + +a.dataset.d); addAM(s); touch(); render(); },
+  brief: () => { const s = cur(); modal(`<h2>Brief</h2><p class="hint">Edits here don't change the estimate — use Re-read brief to rebuild, or Ask AI to apply new context.</p><textarea class="in" style="min-height:300px;margin-top:12px" data-f="scope.brief">${esc(s.brief)}</textarea>${(s.assumptions || []).length ? `<div class="lbl" style="margin-top:14px">Assumptions from the brief read</div><ul class="assume" style="margin-top:6px">${s.assumptions.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}<div class="acts"><button class="btn" data-x="ai"><i class="fa-solid fa-wand-magic-sparkles"></i>Ask AI to apply brief changes</button><button class="btn pri" data-x="ok">Done</button></div>`, (m, close) => { m.querySelector('[data-x=ok]').onclick = close; m.querySelector('[data-x=ai]').onclick = () => { close(); aiOpen('I have updated the brief. Compare the estimate to the brief and propose changes for anything new or different.'); }; }); },
   go: a => go(a.dataset.v),
-  open: (a, e) => { if (e.target.closest('button')) return; go('edit', a.dataset.id); },
+  open: (a, e) => { if (e.target.closest('button')) return; openItems.clear(); go('edit', a.dataset.id); },
   seg: a => { UI[a.dataset.k] = a.dataset.v; saveUI(); render(); },
   libtab: a => { UI.libTab = a.dataset.v; saveUI(); render(); },
   dup: a => { const c = clone(S.scopes.find(x => x.id === a.dataset.id)); c.id = uid(); c.name += ' (copy)'; c.status = 'draft'; c.created = c.updated = Date.now(); S.scopes.push(c); save(); render(); toast('Duplicated'); },
@@ -1631,10 +2160,10 @@ const ACT = {
   phregen: a => { const s = cur(), p = findPhase(a.dataset.pid); p.v = (p.v || 0) + 1; p.desc = genPhaseDesc(s, p, p.v); touch(); render(); },
   regenov: () => { const s = cur(); s.overview = genOverview(s); touch(); render(); },
   addphase: () => { const s = cur(); s.phases.push(newPhase('New phase', s.phases.length)); touch(); render(); },
-  recalcam: () => { addAM(cur()); touch(); render(); toast('Account management & WIPs recalculated'); },
   lndel: a => { const p = findPhase(a.dataset.pid), it = findItem(a.dataset.pid, a.dataset.iid); it.lines = it.lines.filter(l => l.id !== a.dataset.lid); if (!it.lines.length) p.items = p.items.filter(i => i !== it); touch(); render(); },
   lnadd: a => { const it = findItem(a.dataset.pid, a.dataset.iid); it.lines.push({ id: uid(), type: 'int', personId: cur().team[0] || S.people[0]?.id, hours: 1, rate: null, costRate: null }); touch(); render(); },
   teamrm: a => { const s = cur(); s.team = s.team.filter(x => x !== a.dataset.id); touch(); render(); },
+  recalcam: () => { addAM(cur()); touch(); render(); },
   rescope: async () => {
     const s = cur(); if (!(await confirmBox('Re-read the brief and rebuild? This replaces the whole table.', 'Re-read'))) return;
     window._draft = { name: s.name, client: clientName(s), clientId: s.clientId, brief: s.brief, replace: s.id }; view = 'new'; await readBrief();
@@ -1686,7 +2215,7 @@ const ACT = {
   reset: async () => { if (await confirmBox('Wipe all estimates, the pricing model, rate card and library — for everyone using this site? Export a backup first.', 'Reset')) { const k = S.settings.apiKey; S = seed(); S.settings.apiKey = k; save(); render(); } },
   testai: async () => { const el = $('#aiStatus'); el.textContent = 'Testing…'; try { await callAI('Reply with JSON only.', 'Return {"ok":true}', 50); el.textContent = 'Connected'; } catch (e) { el.textContent = e.message + (S.settings.apiKey ? '' : ' — set ANTHROPIC_API_KEY on the server'); } },
 };
-document.addEventListener('click', e => { const a = e.target.closest('[data-act]'); if (a && ACT[a.dataset.act]) ACT[a.dataset.act](a, e); });
+document.addEventListener('click', e => { const a = e.target.closest('[data-act]'); if (a && ACT[a.dataset.act]) { if (view === 'edit' && MUTATING.has(a.dataset.act)) histMark(); ACT[a.dataset.act](a, e); } });
 
 function setField(el) {
   const [obj, key] = (el.dataset.f || el.dataset.fc).split('.'); const v = el.value, d = el.dataset;
@@ -1703,7 +2232,18 @@ function setField(el) {
       else it.lines.forEach(l => { if (l.type !== 'ext') l.hours = r05(+l.hours * q / it.qty); });
       it.qty = q; touch(); return render();
     }
-    it[key] = val; touch(); return;
+    if (d.grp) d.grp.split(',').forEach(id => { const x = findItem(d.pid, id); if (x) x[key] = val; }); else it[key] = val; touch(); return;
+  }
+  if (obj === 'grph') {
+    const its = d.grp.split(',').map(id => findItem(d.pid, id)).filter(Boolean), lines = its.flatMap(i => i.lines.filter(l => l.type !== 'ext'));
+    const h0 = lines.reduce((a, l) => a + (+l.hours || 0), 0), nh = Math.max(0, +v || 0);
+    lines.forEach(l => l.hours = Math.round((h0 ? +l.hours * nh / h0 : nh / lines.length) * 2) / 2);
+    touch(); return updateTotals();
+  }
+  if (obj === 'itemh') {
+    const it = findItem(d.pid, d.iid), h0 = itemHours(it), nh = Math.max(0, +v || 0), ints = it.lines.filter(l => l.type !== 'ext');
+    ints.forEach(l => l.hours = Math.round((h0 ? +l.hours * nh / h0 : nh / ints.length) * 2) / 2);
+    touch(); return updateTotals();
   }
   if (obj === 'line') {
     const l = findLine(d.pid, d.iid, d.lid);
@@ -1767,6 +2307,8 @@ document.addEventListener('input', e => {
 document.addEventListener('change', async e => {
   const el = e.target, d = el.dataset;
   if (d.fc || d.f === 'person.title') setField(el);
+  if (view === 'edit' && (d.f === 'line.hours' || d.f === 'itemh.hours' || d.f === 'grph.hours')) { const it = findItem(d.pid, d.iid); if (it && it.kind !== 'am' && it.kind !== 'wip') setTimeout(() => { addAM(cur()); touch(); render(); }, 0); }
+  if (d.chgTog) { const [i, j] = d.chgTog.split(':').map(Number); const m = cur().chat[i]; m.changes[j].on = el.checked; touch(); renderAI(); }
   if (d.rv || d.rvteam || (d.rvrow && (el.type === 'checkbox' || el.tagName === 'SELECT' || d.k === 'qty')) || (d.rvext && (el.type === 'checkbox' || el.tagName === 'SELECT'))) setReview(el);
   if (d.settog) { S.settings[d.settog] = el.checked; save(); }
   if (d.pasttog) { const p = S.past.find(x => x.id === d.pasttog); p.off = !el.checked; save(); render(); toast(p.off ? 'Excluded from learning' : 'Included in learning'); }
@@ -1802,6 +2344,15 @@ document.addEventListener('dragover', e => { const d = e.target.closest?.('#drop
 document.addEventListener('dragleave', e => { const d = e.target.closest?.('#drop'); if (d) d.classList.remove('over'); });
 document.addEventListener('drop', e => { const d = e.target.closest?.('#drop'); if (d) { e.preventDefault(); d.classList.remove('over'); handlePast([...e.dataTransfer.files]); } });
 
+document.addEventListener('submit', e => { if (e.target.matches('[data-aiform]')) { e.preventDefault(); const t = $('#aiInput'); const q = t.value; t.value = ''; aiSend(q); } });
+document.addEventListener('keydown', e => {
+  if (e.target.id === 'aiInput' && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.target.form.requestSubmit(); return; }
+  const mod = e.metaKey || e.ctrlKey, typing = e.target.matches('input,textarea,select');
+  if (mod && e.key.toLowerCase() === 'k' && view === 'edit') { e.preventDefault(); palette(); }
+  if (mod && e.key.toLowerCase() === 'z' && !e.shiftKey && !typing && view === 'edit') { e.preventDefault(); undo(); }
+  if (mod && e.key.toLowerCase() === 'j' && view === 'edit') { e.preventDefault(); ACT.aitoggle(); }
+});
+document.addEventListener('click', e => { const j = e.target.closest('[data-jump]'); if (j) { e.preventDefault(); document.getElementById('ph-' + j.dataset.jump)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); } });
 render();
 setStatus('connecting');
 connect();
