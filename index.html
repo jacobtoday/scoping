@@ -219,10 +219,11 @@ table.est{width:100%;border-collapse:collapse;min-width:760px}
 .sow-ph{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;break-inside:avoid}
 .sow-ph .l{width:62%}
 .sow-ph .pn{font-weight:600;border-top:.6px solid #ccc;padding:4px 0}
-.sow-ph .pd{color:#555;padding:2px 0 5px;font-size:8pt}
-.sow-ph .si{border-top:.6px solid #ccc;padding:3px 0}
-.sow-ph .si:last-child{border-bottom:.6px solid #ccc}
-.sow-ph .fee{font-weight:600;padding-top:4px;font-variant-numeric:tabular-nums}
+.sow-ph .pd{color:#555;padding:2px 0 4px;font-size:8pt}
+.sow-ph .sil{margin:2px 0 0;padding:0 0 4px 13px;font-size:8.4pt;line-height:1.55}
+.sow-ph .sil li{margin:0}
+.sow-ph .sil li::marker{color:#999}
+.sow-ph .sfee{font-size:8.6pt;font-weight:600;padding-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.45}
 .sow-note{margin:26px 0 18px}
 .sow-tot{border-top:1.2px solid #111;font-variant-numeric:tabular-nums}
 .sow-tot div{display:flex;justify-content:flex-end;gap:0;padding:6px 0}
@@ -234,7 +235,6 @@ table.est{width:100%;border-collapse:collapse;min-width:760px}
 .sow-sign div:last-child{flex:.5}
 .sow-terms{margin-top:28px;font-size:7.5pt;color:#444}
 .sow-tot.rng div span:last-child{width:230px}
-.sow-ph .fee{white-space:nowrap}
 
 /* ---------- v3 additions ---------- */
 .seg{display:inline-flex;background:var(--bg-soft);border-radius:8px;padding:3px;gap:2px}
@@ -1571,7 +1571,7 @@ function sowHTML(s) {
     const label = st.sowNumber && !p.media ? `Phase ${WORDS[n++] || n}: ${p.name}` : p.name;
     const items = clientItems(p).map(it => it.name + (it.qty > 1 ? ` x ${it.qty}${it.unit ? ' ' + it.unit + (/s$/.test(it.unit) ? '' : 's') : ''}` : ''));
     if (st.sowAM && p.items.some(i => i.kind === 'am' || i.kind === 'wip')) items.push('Account management & WIP meetings');
-    return `<div class="sow-ph"><div class="l"><div class="pn">${esc(label)}</div>${st.sowDesc && p.desc ? `<div class="pd">${esc(p.desc)}</div>` : ''}${items.map(x => `<div class="si">${esc(x)}</div>`).join('')}</div><div class="fee">${rg && p.ranged ? `${money2(rg.ph[i][0])} – ${money2(rg.ph[i][1])}` : money2(t.phasesClient[i])}</div></div>`;
+    return `<div class="sow-ph"><div class="l"><div class="pn">${esc(label)}</div>${st.sowDesc && p.desc ? `<div class="pd">${esc(p.desc)}</div>` : ''}${items.length ? `<ul class="sil">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</div><div class="sfee">${rg && p.ranged ? `${money2(rg.ph[i][0])} – ${money2(rg.ph[i][1])}` : money2(t.phasesClient[i])}</div></div>`;
   }).join('');
   return `<div class="sow-top"><div class="sow-logo">${logoHTML()}</div><div class="sow-title"><b>Scope of Work</b><span>${fmtDate(Date.now())}</span></div></div>
   <div class="sow-parties"><div>${esc(co.name || s.client || '')}${co.address ? '\n' + esc(co.address) : ''}${co.abn ? '\n' + esc(co.abn) : ''}</div><div>${esc(st.company)}\n${esc(st.address)}\n${esc(st.abn)}</div></div>
