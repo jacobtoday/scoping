@@ -602,6 +602,16 @@ body.scrubbing,body.scrubbing *{cursor:ew-resize!important;user-select:none}
 .it-name-wrap{gap:6px}
 .it-name-wrap .it-name{order:-1}
 .sv-rng{font-size:21px;white-space:nowrap}.sv-rng span{color:var(--t3);font-weight:400}
+.tsep{width:1px;height:20px;background:var(--border);margin:0 6px}
+.rng-bar{display:flex;align-items:center;gap:10px;margin:8px 0 4px;padding:10px 14px;background:var(--info-bg);color:var(--info);border-radius:10px;font-size:12.5px;flex-wrap:wrap}
+.rng-bar .money-in{background:#fff}
+.ranged .it-row,.ranged .cols{grid-template-columns:16px minmax(0,1fr) 130px 100px 70px 190px 28px}
+.rng-in{display:flex;align-items:center;justify-content:flex-end;gap:4px;font-size:12px;color:var(--t3)}
+.rng-in input{width:78px;border:1px dashed var(--border-str);background:transparent;border-radius:7px;padding:4px 6px;text-align:right;font-size:13px;outline:none}
+.rng-in input::placeholder{color:var(--t3)}
+.rng-in input:focus{border-style:solid;border-color:var(--t1);background:#fff}
+.rng-in.set input{border-style:solid;border-color:var(--info);background:#fff;color:var(--t1)}
+.rng-in input::-webkit-inner-spin-button{-webkit-appearance:none}
 
 </style>
 </head>
@@ -1448,9 +1458,16 @@ function highlightBrief(brief, rows) {
    ========================================================== */
 /* ---- optional price range ---- */
 const rangeOn = s => !!s?.range?.on;
-function phaseRange(s, p, fee) {
-  const r = s.range || {}, lo = isNum(p.rangeLo) ? +p.rangeLo : roundTo(fee * (1 - (+r.lo || 0) / 100)), hi = isNum(p.rangeHi) ? +p.rangeHi : roundTo(fee * (1 + (+r.hi || 0) / 100));
-  return [Math.min(lo, hi), Math.max(lo, hi)];
+function groupRange(its) { const f = its[0], c = its.reduce((a, i) => a + itemClient(i), 0); return isNum(f.rLo) && isNum(f.rHi) ? [Math.min(+f.rLo, +f.rHi), Math.max(+f.rLo, +f.rHi)] : [c, c]; }
+/* phase range = its own override, else the sum of item ranges (items without one count at their fixed price),
+   scaled for any locked fee, contingency and rounding */
+function phaseRange(s, p, fee, ignoreOverride) {
+  if (!ignoreOverride && isNum(p.rangeLo) && isNum(p.rangeHi)) return [Math.min(+p.rangeLo, +p.rangeHi), Math.max(+p.rangeLo, +p.rangeHi)];
+  const work = p.items.filter(i => i.kind !== 'am' && i.kind !== 'wip'), mg = p.items.filter(i => i.kind === 'am' || i.kind === 'wip');
+  let lo = 0, hi = 0; groupItems(work).forEach(g => { const [a, b] = groupRange(g); lo += a; hi += b; });
+  const m = mg.reduce((a, i) => a + itemClient(i), 0); lo += m; hi += m;
+  const calc = phaseCalc(p), k = calc ? fee / calc : 1;
+  return [roundTo(lo * k), roundTo(hi * k)];
 }
 function totalsRange(s, t = totals(s)) {
   const ph = s.phases.map((p, i) => phaseRange(s, p, t.phasesClient[i])), g = 1 + (+S.settings.gst || 0) / 100;
@@ -1672,13 +1689,16 @@ function vEdit() {
       <button data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i>Duplicate</button>
     </div></span>
     <button class="btn pri" data-act="send">Review & send<i class="fa-solid fa-arrow-right"></i></button>`;
-  const body = `<div class="edv ${UI.ai ? 'with-ai' : ''}">
+  const body = `<div class="edv ${UI.ai ? 'with-ai' : ''} ${rangeOn(s) && lens() === 'client' ? 'ranged' : ''}">
     <div class="ed-canvas">
       <div class="mini-sum" id="miniSum"></div>
       <div id="stats"></div>
-      <div class="toolbar"><span class="lbl">Show</span>${seg('lens', lens(), [['client', 'Client prices'], ['internal', 'Born cost & margin']])}
+      <div class="toolbar"><span class="lbl">Pricing</span>${seg('pricing', rangeOn(s) ? 'range' : 'fixed', [['fixed', 'Fixed price'], ['range', 'Price range']])}<span class="tsep"></span><span class="lbl">Show</span>${seg('lens', lens(), [['client', 'Client prices'], ['internal', 'Born cost & margin']])}
         <select class="mini-sel" data-chg="filter">${[['all', 'All lines'], ['int', 'Born time only'], ['ext', 'Supplier costs only']].map(([k, l]) => `<option value="${k}" ${UI.filter === k ? 'selected' : ''}>${l}</option>`).join('')}</select>
         <span class="grow"></span><span class="hint"><i class="fa-solid fa-left-right"></i> Drag any hours to adjust · <kbd>⌘K</kbd> to add</span></div>
+      ${rangeOn(s) ? `<div class="rng-bar"><i class="fa-solid fa-arrows-left-right-to-line"></i><span>Set low – high per item below, or for a whole phase by hovering its fee. Blank items stay fixed.</span><span class="grow"></span>
+        <label class="money-in sm"><span>−</span><input class="num" type="number" min="0" id="rngLo" value="${UI.rlo ?? 10}"><span>%</span></label><label class="money-in sm"><span>+</span><input class="num" type="number" min="0" id="rngHi" value="${UI.rhi ?? 15}"><span>%</span></label>
+        <button class="btn sm" data-act="rngall">Apply to all items</button><button class="btn sm" data-act="rngclear">Clear</button></div>` : ''}
       <div class="ov"><div class="lbl">Overview</div><textarea class="ghost-area" data-auto data-f="scope.overview" placeholder="Opening paragraph for the Scope of Work">${esc(s.overview)}</textarea></div>
       ${s.phases.map((p, i) => phaseHTML(s, p, i)).join('')}
       <button class="add-phase" data-act="addphase"><i class="fa-solid fa-plus"></i>Add phase</button>
@@ -1707,8 +1727,7 @@ function statsHTML(s, t) {
       <div class="pop"><div class="pop-h">Where the money goes</div>${s.phases.map((p, i) => `<div class="kv"><span><span class="dot" style="background:${p.color}"></span> ${esc(p.name)}</span><b class="num">${money(t.phasesClient[i])}</b></div>`).join('')}
         <div class="div"></div><div class="kv"><span>Born time</span><b class="num">${money(t.intClient)}</b></div><div class="kv"><span>Suppliers</span><b class="num">${money(t.extClient)}</b></div>${t.disc ? `<div class="kv"><span>Discount</span><b class="num">−${money(t.disc)}</b></div>` : ''}<div class="kv"><span>GST</span><b class="num">${money(t.gst)}</b></div><div class="kv"><span>Inc GST</span><b class="num">${money(t.inc)}</b></div>
         <div class="div"></div><div class="row" style="gap:8px"><label class="field grow"><span>Contingency %</span><input class="in num" type="number" data-f="scope.contingency" value="${esc(s.contingency)}"></label><label class="field grow"><span>Discount $</span><input class="in num" type="number" step="50" data-f="scope.discount" value="${esc(s.discount)}"></label></div>
-        <div class="div"></div><label class="tog"><input type="checkbox" data-rangetog ${rangeOn(s) ? 'checked' : ''}><span class="sw"></span>Quote as a price range</label>
-        ${rangeOn(s) ? `<div class="row" style="gap:8px;margin-top:8px"><label class="field grow"><span>Low −%</span><input class="in num" type="number" min="0" data-f="range.lo" value="${esc(s.range.lo)}"></label><label class="field grow"><span>High +%</span><input class="in num" type="number" min="0" data-f="range.hi" value="${esc(s.range.hi)}"></label></div><p class="hint" style="margin-top:6px">Applied to every phase fee. Set exact figures per phase in its fee popup.</p>` : ''}${sg.budget ? `<button class="btn sm" style="margin-top:10px" data-act="aiask" data-q="Fit this estimate to the brief budget of ${money(sg.budget)} ex GST. Keep account management and suppliers; trim Born time where it hurts least."><i class="fa-solid fa-wand-magic-sparkles"></i>Fit to budget with AI</button>` : ''}</div></div>
+${sg.budget ? `<button class="btn sm" style="margin-top:10px" data-act="aiask" data-q="Fit this estimate to the brief budget of ${money(sg.budget)} ex GST. Keep account management and suppliers; trim Born time where it hurts least."><i class="fa-solid fa-wand-magic-sparkles"></i>Fit to budget with AI</button>` : ''}</div></div>
     <div class="st hov"><div class="lbl">Margin</div><div class="sv num ${mClass(t.marginPct)}">${Math.round(t.marginPct * 100)}%</div><div class="ssub num">${money(t.margin)}</div>
       <div class="pop"><div class="pop-h">Margin by phase</div>${s.phases.map(p => { const c = phaseCalc(p), k = phaseCostSum(p); return `<div class="kv"><span>${esc(p.name)}</span><b class="num ${mClass(mPct(c, k))}">${Math.round(mPct(c, k) * 100)}%</b></div>`; }).join('')}
         <div class="div"></div><div class="kv"><span>Born cost</span><b class="num">${money(t.intCost)}</b></div><div class="kv"><span>Supplier cost</span><b class="num">${money(t.extCost)}</b></div><div class="kv"><span>Born time margin</span><b class="num">${Math.round(mPct(t.intClient, t.intCost) * 100)}%</b></div></div></div>
@@ -1737,7 +1756,7 @@ function phaseHTML(s, p, i) {
       <span class="hov fee"><b class="num" data-t="ph-${p.id}"></b>${isNum(p.override) ? '<i class="fa-solid fa-lock lockic"></i>' : ''}
         <div class="pop pop-r"><div class="pop-h">${esc(p.name)}</div><div data-t="phpop-${p.id}"></div><div class="div"></div>
           <label class="field"><span>Lock fee (before contingency)</span><input class="in num" type="number" step="50" data-f="phase.override" ${A({ pid: p.id })} value="${esc(p.override)}" placeholder="Calculated"></label>
-          ${rangeOn(s) ? (() => { const fee = totals(s).phasesClient[s.phases.indexOf(p)], d0 = { ...p, rangeLo: '', rangeHi: '' }, [a, b] = phaseRange(s, d0, fee); return `<div class="row" style="gap:8px;margin-top:8px"><label class="field grow"><span>Range low $</span><input class="in num" type="number" step="100" data-f="phase.rangeLo" ${A({ pid: p.id })} value="${esc(p.rangeLo ?? '')}" placeholder="${a}"></label><label class="field grow"><span>Range high $</span><input class="in num" type="number" step="100" data-f="phase.rangeHi" ${A({ pid: p.id })} value="${esc(p.rangeHi ?? '')}" placeholder="${b}"></label></div>`; })() : ''}</div></span>
+          ${rangeOn(s) ? (() => { const fee = totals(s).phasesClient[s.phases.indexOf(p)], [a, b] = phaseRange(s, p, fee, true); return `<div class="row" style="gap:8px;margin-top:8px"><label class="field grow"><span>Phase low $</span><input class="in num" type="number" step="100" data-f="phase.rangeLo" ${A({ pid: p.id })} value="${esc(p.rangeLo ?? '')}" placeholder="${a}"></label><label class="field grow"><span>Phase high $</span><input class="in num" type="number" step="100" data-f="phase.rangeHi" ${A({ pid: p.id })} value="${esc(p.rangeHi ?? '')}" placeholder="${b}"></label></div>`; })() : ''}</div></span>
     </header>
     <div class="ph-desc-wrap"><textarea class="ph-desc" rows="1" data-auto data-f="phase.desc" ${A({ pid: p.id })} placeholder="What happens in this phase — shown on the Scope of Work">${esc(p.desc)}</textarea><button class="ib" data-act="phregen" ${A({ pid: p.id })} title="Rewrite description"><i class="fa-solid fa-rotate"></i></button></div>
     <div class="rows">${work.length || mgmt.length ? `<div class="cols"><span></span><span>Deliverable</span><span>Qty</span><span>Team</span><span class="r">Hours</span><span class="r">${lens() === 'client' ? 'Price' : 'Cost'}</span><span></span></div>` : ''}${groupItems(work).map(g => g.length > 1 ? groupHTML(s, p, g) : itemHTML(s, p, g[0])).join('')}${!work.length ? `<div class="empty-ph">Nothing in this phase yet.</div>` : ''}${mgmt.length ? `<div class="mgmt">${mgmt.length > 1 ? groupHTML(s, p, mgmt, 'Account management & weekly WIP') : itemHTML(s, p, mgmt[0])}</div>` : ''}</div>
@@ -1750,6 +1769,10 @@ function groupItems(items) {
   return out;
 }
 /* one deliverable, several tracks (design + copy) shown as a single row */
+function rngCell(p, f, its) {
+  const c = Math.round(its.reduce((a, i) => a + itemClient(i), 0)), ids = A({ pid: p.id, iid: f.id });
+  return `<span class="rng-in ${isNum(f.rLo) || isNum(f.rHi) ? 'set' : ''}" title="Leave blank to keep the fixed price ($${c.toLocaleString('en-AU')})"><input class="num" type="number" step="50" data-f="irng.rLo" ${ids} value="${isNum(f.rLo) ? f.rLo : ''}" placeholder="${c}"><span>–</span><input class="num" type="number" step="50" data-f="irng.rHi" ${ids} value="${isNum(f.rHi) ? f.rHi : ''}" placeholder="${c}"></span>`;
+}
 function groupHTML(s, p, its, label) {
   const first = its[0], key = first.id, open = openItems.has(key), L = lib(first.libId), grp = its.map(i => i.id).join(',');
   const ppl = [...new Set(its.flatMap(i => i.lines.filter(l => l.type !== 'ext').map(l => l.personId)))].map(person);
@@ -1761,7 +1784,7 @@ function groupHTML(s, p, its, label) {
       <span class="qty">${!label && (L || first.qty > 1) ? `<button class="mini" data-act="qty" data-pid="${p.id}" data-grp="${grp}" data-d="-1">−</button><b class="num">${first.qty}</b><span class="faint">${esc(unitLabel(first.unit || L?.unit, first.qty))}</span><button class="mini" data-act="qty" data-pid="${p.id}" data-grp="${grp}" data-d="1">+</button>` : ''}</span>
       <span class="avs">${ppl.map(x => av(x)).join('')}</span>
       <span class="hrs-cell"><input class="scrub num" data-scrub data-f="grph.hours" data-pid="${p.id}" data-iid="${key}" data-grp="${grp}" value="${+h.toFixed(1)}" title="Drag to adjust · click to type"><span class="faint">h</span></span>
-      <span class="hov amt"><b class="num" data-gsum="${grp}"></b><span class="mdot" data-gdot="${grp}"></span><div class="pop pop-r" data-gpop="${grp}"></div></span>
+      ${rangeOn(s) && lens() === 'client' && !label ? rngCell(p, first, its) : ''}<span class="hov amt" ${rangeOn(s) && lens() === 'client' && !label ? 'style="display:none"' : ''}><b class="num" data-gsum="${grp}"></b><span class="mdot" data-gdot="${grp}"></span><div class="pop pop-r" data-gpop="${grp}"></div></span>
       ${label ? '<span></span>' : `<button class="ib del rowdel" data-act="itdel" data-pid="${p.id}" data-grp="${grp}" title="Remove"><i class="fa-solid fa-xmark"></i></button>`}
     </div>
     ${open ? `<div class="it-detail">${first.spec ? `<div class="spec"><i class="fa-solid fa-quote-left"></i>${esc(first.spec)}</div>` : ''}
@@ -1781,7 +1804,7 @@ function itemHTML(s, p, it) {
       ${qtyOn ? `<span class="qty"><button class="mini" data-act="qty" ${ids} data-d="-1">−</button><b class="num">${it.qty}</b><span class="faint">${esc(unitLabel(it.unit || L?.unit, it.qty))}</span><button class="mini" data-act="qty" ${ids} data-d="1">+</button></span>` : '<span class="qty"></span>'}
       <span class="avs">${ext ? `<span class="sup">${esc(it.lines[0]?.supplier || 'Supplier')}</span>` : ppl.map(p => av(p)).join('')}</span>
       ${ext ? '<span class="hrs-cell faint">flat fee</span>' : `<span class="hrs-cell"><input class="scrub num" data-scrub data-f="itemh.hours" ${ids} value="${+ih.toFixed(1)}" title="Drag to adjust · click to type"><span class="faint">h</span></span>`}
-      <span class="hov amt"><b class="num" data-t="ia-${it.id}"></b><span class="mdot" data-t="im-${it.id}"></span><div class="pop pop-r" data-t="ipop-${it.id}"></div></span>
+      ${rangeOn(s) && lens() === 'client' && it.kind !== 'am' && it.kind !== 'wip' ? rngCell(p, it, [it]) : ''}<span class="hov amt" ${rangeOn(s) && lens() === 'client' && it.kind !== 'am' && it.kind !== 'wip' ? 'style="display:none"' : ''}><b class="num" data-t="ia-${it.id}"></b><span class="mdot" data-t="im-${it.id}"></span><div class="pop pop-r" data-t="ipop-${it.id}"></div></span>
       <button class="ib del rowdel" data-act="itdel" ${ids} title="Remove"><i class="fa-solid fa-xmark"></i></button>
     </div>
     ${open ? `<div class="it-detail">${it.spec ? `<div class="spec"><i class="fa-solid fa-quote-left"></i>${esc(it.spec)}</div>` : ''}
@@ -2355,6 +2378,12 @@ const ACT = {
   rvweeks: a => { const rv = window._draft.review; rv.weeks = Math.max(1, rv.weeks + +a.dataset.d); rv.weeksSource = 'Set by you'; render(); },
   rvinclude: a => { const r = window._draft.review.rows.find(x => x.id === a.dataset.id); r.on = true; r.missed = false; render(); },
   send: () => sendModal(),
+  rngall: () => {
+    const s = cur(), lo = +($('#rngLo')?.value || 0) / 100, hi = +($('#rngHi')?.value || 0) / 100; UI.rlo = lo * 100; UI.rhi = hi * 100; saveUI(); histMark();
+    s.phases.forEach(p => { p.rangeLo = ''; p.rangeHi = ''; groupItems(p.items.filter(i => i.kind !== 'am' && i.kind !== 'wip')).forEach(g => { const c = g.reduce((a, i) => a + itemClient(i), 0); g[0].rLo = roundTo(c * (1 - lo)); g[0].rHi = roundTo(c * (1 + hi)); }); });
+    touch(); render(); toast(`Ranges set at −${UI.rlo}% / +${UI.rhi}%`);
+  },
+  rngclear: () => { const s = cur(); histMark(); s.phases.forEach(p => { p.rangeLo = ''; p.rangeHi = ''; p.items.forEach(i => { delete i.rLo; delete i.rHi; }); }); touch(); render(); toast('Ranges cleared'); },
   undo: () => undo(),
   palette: a => palette(a?.dataset?.pid),
   aitoggle: () => { UI.ai = !UI.ai; saveUI(); render(); if (UI.ai) setTimeout(() => $('#aiInput')?.focus(), 50); },
@@ -2372,6 +2401,7 @@ const ACT = {
   seg: a => {
     const k = a.dataset.k, v = a.dataset.v;
     if (k === 'rvtype' || k === 'rvsize') { const rv = window._draft.review; rv[k === 'rvtype' ? 'type' : 'size'] = v; rv.team = [...new Set([...rv.team, ...suggestTeam(rv.type, rv.size, rv.rows)])]; if (!/brief|you/i.test(rv.weeksSource || '')) rv.weeks = tpl(rv.type).weeks[rv.size]; return render(); }
+    if (k === 'pricing') { const s = cur(); histMark(); s.range = { ...(s.range || {}), on: v === 'range' }; touch(); render(); return; }
     UI[k] = v; saveUI(); render();
   },
   libtab: a => { UI.libTab = a.dataset.v; saveUI(); render(); },
@@ -2452,6 +2482,7 @@ function setField(el) {
   const val = numKeys.includes(key) ? (v === '' ? 0 : +v) : v;
   if (obj === 'scope') { cur()[key] = val; if (key === 'status') el.className = 'pill st-' + v; touch(); return updateTotals(); }
   if (obj === 'co') { cur().clientCo[key] = v; touch(); return; }
+  if (obj === 'irng') { const it = findItem(d.pid, d.iid); it[key] = v === '' ? '' : +v; el.closest('.rng-in')?.classList.toggle('set', isNum(it.rLo) || isNum(it.rHi)); touch(); return updateTotals(); }
   if (obj === 'range') { const s = cur(); s.range = s.range || { on: true, lo: 10, hi: 15 }; s.range[key] = v === '' ? 0 : +v; touch(); render(); return; }
   if (obj === 'phase') { if (key === 'rangeLo' || key === 'rangeHi') { findPhase(d.pid)[key] = v === '' ? '' : +v; touch(); return updateTotals(); } findPhase(d.pid)[key] = val; if (key === 'override') el.classList.toggle('on', isNum(v)); touch(); return updateTotals(); }
   if (obj === 'item') {
