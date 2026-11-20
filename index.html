@@ -235,6 +235,10 @@ table.est{width:100%;border-collapse:collapse;min-width:760px}
 .sow-sign div:last-child{flex:.5}
 .sow-terms{margin-top:28px;font-size:7.5pt;color:#444}
 .sow-tot.rng div span:last-child{width:230px}
+.sow-p2{break-before:page;page-break-before:always}
+.sow-p1 .sow-tot{margin-top:18px}
+.sow-p2{break-inside:avoid}
+.sow-p2.flow{break-before:auto;page-break-before:auto;margin-top:24px}
 
 /* ---------- v3 additions ---------- */
 .seg{display:inline-flex;background:var(--bg-soft);border-radius:8px;padding:3px;gap:2px}
@@ -737,7 +741,7 @@ const DEFAULT_SETTINGS = {
   gst: 10, round: 10, markup: 30, amPct: 10, amMin: 1, wipHours: 1, amTitle: T.AM,
   sowNote: '*The scope includes 2 rounds of changes on all deliverables',
   terms: 'By approving this quote you are agreeing to our Terms and Conditions set out at:\nhttps://www.borntheagency.com/termsconditions',
-  sowNumber: true, sowDesc: true, sowAM: false, ai: true, apiKey: '', model: 'claude-sonnet-5-5', notes: DEFAULT_NOTES, calibrate: true,
+  sowNumber: true, minScale: 75, sowDesc: true, sowAM: false, ai: true, apiKey: '', model: 'claude-sonnet-5-5', notes: DEFAULT_NOTES, calibrate: true,
 };
 const clone = o => JSON.parse(JSON.stringify(o));
 function seedPeople() { return SEED_PEOPLE.map(([title, rate, cost]) => ({ id: uid(), name: '', title, rate, cost })); }
@@ -1564,7 +1568,7 @@ function vReview(d) {
 const rvOpen = new Set();
 
 /* ---- step 4: review & send ---- */
-function sowHTML(s) {
+function sowHTML(s, split) {
   const t = totals(s), st = S.settings, rg = rangeOn(s) ? totalsRange(s, t) : null; let n = 0;
   const cl = client(s.clientId), co = cl ? { name: cl.legal || cl.name, address: cl.address, abn: cl.abn } : (s.clientCo || {});
   const phases = s.phases.map((p, i) => {
@@ -1573,15 +1577,16 @@ function sowHTML(s) {
     if (st.sowAM && p.items.some(i => i.kind === 'am' || i.kind === 'wip')) items.push('Account management & WIP meetings');
     return `<div class="sow-ph"><div class="l"><div class="pn">${esc(label)}</div>${st.sowDesc && p.desc ? `<div class="pd">${esc(p.desc)}</div>` : ''}${items.length ? `<ul class="sil">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</div><div class="sfee">${rg && p.ranged ? `${money2(rg.ph[i][0])} – ${money2(rg.ph[i][1])}` : money2(t.phasesClient[i])}</div></div>`;
   }).join('');
-  return `<div class="sow-top"><div class="sow-logo">${logoHTML()}</div><div class="sow-title"><b>Scope of Work</b><span>${fmtDate(Date.now())}</span></div></div>
+  const top = `<div class="sow-top"><div class="sow-logo">${logoHTML()}</div><div class="sow-title"><b>Scope of Work</b><span>${fmtDate(Date.now())}</span></div></div>
   <div class="sow-parties"><div>${esc(co.name || s.client || '')}${co.address ? '\n' + esc(co.address) : ''}${co.abn ? '\n' + esc(co.abn) : ''}</div><div>${esc(st.company)}\n${esc(st.address)}\n${esc(st.abn)}</div></div>
   <div class="sow-head"><span>${esc(s.name)}</span><span>Fee</span></div>
   ${s.overview ? `<p class="sow-ov">${esc(s.overview)}</p>` : ''}
-  ${phases}
-  <div class="sow-note">${rg ? esc((s.phases.every(p => p.ranged) ? 'Fees are shown as an estimated range.' : 'Phases shown with a range are estimates.') + ' The final fee will be confirmed once scope is locked.') + '<br>' : ''}${esc(st.sowNote)}${s.notes ? '<br>' + esc(s.notes).replace(/\n/g, '<br>') : ''}</div>
-  ${rg ? `<div class="sow-tot rng">${t.disc ? `<div><span>Subtotal</span><span>${mr2(rg.subLo, rg.subHi)}</span></div><div><span>Discount</span><span>−$${money2(t.disc)}</span></div>` : ''}<div><span>Total</span><span>${mr2(rg.lo, rg.hi)}</span></div><div><span>(GST)</span><span>${mr2(rg.gstLo, rg.gstHi)}</span></div><div class="g"><span>Grand Total $ (AUD)</span><span>${mr2(rg.loInc, rg.hiInc)}</span></div></div>` : `<div class="sow-tot">${t.disc ? `<div><span>Subtotal</span><span>$${money2(t.sub)}</span></div><div><span>Discount</span><span>−$${money2(t.disc)}</span></div>` : ''}<div><span>Total</span><span>$${money2(t.ex)}</span></div><div><span>(GST)</span><span>$${money2(t.gst)}</span></div><div class="g"><span>Grand Total $ (AUD)</span><span>$${money2(t.inc)}</span></div></div>`}
-  <div class="sow-sign"><div>CLIENT SIGNATURE</div><div>DATE</div></div>
-  <div class="sow-terms">${esc(st.terms).replace(/\n/g, '<br>')}</div>`;
+  ${phases}`;
+  const note = `<div class="sow-note">${rg ? esc((s.phases.every(p => p.ranged) ? 'Fees are shown as an estimated range.' : 'Phases shown with a range are estimates.') + ' The final fee will be confirmed once scope is locked.') + '<br>' : ''}${esc(st.sowNote)}${s.notes ? '<br>' + esc(s.notes).replace(/\n/g, '<br>') : ''}</div>`;
+  const tot = `${rg ? `<div class="sow-tot rng">${t.disc ? `<div><span>Subtotal</span><span>${mr2(rg.subLo, rg.subHi)}</span></div><div><span>Discount</span><span>−$${money2(t.disc)}</span></div>` : ''}<div><span>Total</span><span>${mr2(rg.lo, rg.hi)}</span></div><div><span>(GST)</span><span>${mr2(rg.gstLo, rg.gstHi)}</span></div><div class="g"><span>Grand Total $ (AUD)</span><span>${mr2(rg.loInc, rg.hiInc)}</span></div></div>` : `<div class="sow-tot">${t.disc ? `<div><span>Subtotal</span><span>$${money2(t.sub)}</span></div><div><span>Discount</span><span>−$${money2(t.disc)}</span></div>` : ''}<div><span>Total</span><span>$${money2(t.ex)}</span></div><div><span>(GST)</span><span>$${money2(t.gst)}</span></div><div class="g"><span>Grand Total $ (AUD)</span><span>$${money2(t.inc)}</span></div></div>`}`;
+  const sign = `<div class="sow-sign"><div>CLIENT SIGNATURE</div><div>DATE</div></div>
+<div class="sow-terms">${esc(st.terms).replace(/\n/g, '<br>')}</div>`;
+  return split ? `<div class="sow-p1">${top}${tot}</div><div class="sow-p2">${note}${sign}</div>` : top + note + tot + sign;
 }
 function readiness(s) {
   const t = totals(s), cl = client(s.clientId), out = [];
@@ -2321,7 +2326,7 @@ function vSettings() {
       <div class="row" style="gap:10px;flex-wrap:wrap">${f('gst', 'GST %', '90px', 'number')}<label class="field" style="width:140px"><span>Round phase fees to</span><select class="in" data-fc="set.round">${[1, 10, 50, 100, 250, 500].map(v => `<option value="${v}" ${+st.round === v ? 'selected' : ''}>$${v}</option>`).join('')}</select></label>${f('sowNote', 'Footnote')}</div>
       <label class="field"><span>Terms</span><textarea class="in" data-f="set.terms" rows="2">${esc(st.terms)}</textarea></label>
       <label class="field"><span>Default notes</span><textarea class="in" data-f="set.notes" rows="3">${esc(st.notes)}</textarea></label>
-      <div class="row" style="gap:18px;flex-wrap:wrap">${tg('sowNumber', 'Number phases (Phase One: …)')}${tg('sowDesc', 'Show phase descriptions')}${tg('sowAM', 'List account management')}</div>
+      <div class="row" style="gap:18px;flex-wrap:wrap">${f('minScale', 'Smallest print scale %', '170px', 'number')}${tg('sowNumber', 'Number phases (Phase One: …)')}${tg('sowDesc', 'Show phase descriptions')}${tg('sowAM', 'List account management')}</div>
     </div>
     <div class="card pad" style="display:flex;flex-direction:column;gap:12px"><div class="sec-h" style="margin:0"><h3>Estimating</h3></div>
       <div class="row" style="gap:10px;flex-wrap:wrap">${f('amPct', 'Account mgmt % of phase hours', '200px', 'number')}${f('amMin', 'Min AM hours / phase', '160px', 'number')}${f('wipHours', 'WIP hours / week', '140px', 'number')}
@@ -2343,7 +2348,23 @@ function vSettings() {
 /* ---------------- Scope of Work (PDF via print) ---------------- */
 const WORDS = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
 const logoHTML = () => S.settings.logo ? `<img src="${esc(S.settings.logo)}" alt="${esc(S.settings.agency)}">` : BORN_LOGO;
-function buildPrint(s) { $('#print').innerHTML = sowHTML(s); }
+/* One A4 page where possible: scale down to fit. If that would go below the minimum scale,
+   keep phases + totals on page 1 (scaled to fit, never below the minimum) and move notes, signature and terms to page 2. */
+const A4_W_MM = 210 - 30, A4_H_MM = 297 - 32, MM = 96 / 25.4;
+function measure(el) { el.style.cssText = `display:block;position:absolute;left:-10000px;top:0;width:${A4_W_MM}mm;visibility:hidden;font-size:8.6pt;line-height:1.45`; return el; }
+function fitOnePage(s) {
+  const el = $('#print'), maxH = A4_H_MM * MM - 4, minZ = clamp((+S.settings.minScale || 75) / 100, 0.4, 1);
+  el.innerHTML = sowHTML(s); measure(el);
+  let z = Math.min(1, maxH / el.scrollHeight);
+  if (z >= minZ) { el.style.cssText = ''; if (z < 1) el.style.zoom = z.toFixed(4); return { pages: 1, zoom: z }; }
+  el.innerHTML = sowHTML(s, true); measure(el);
+  const p1 = el.querySelector('.sow-p1'), need = maxH / p1.scrollHeight; z = Math.max(minZ, Math.min(1, need));
+  el.style.cssText = ''; p1.style.zoom = z.toFixed(4);
+  // phases won't fit on one page even at the minimum: let notes + signature follow straight on rather than forcing a blank-ish page
+  if (need < minZ) el.querySelector('.sow-p2').classList.add('flow');
+  return { pages: need < minZ ? Math.ceil(minZ / need) + 1 : 2, zoom: z };
+}
+function buildPrint(s) { return fitOnePage(s); }
 function exportPDF() {
   const s = cur(); if (!s) return; buildPrint(s);
   const old = document.title; document.title = `${S.settings.agency} Scope of Work - ${clientName(s) ? clientName(s) + ' - ' : ''}${s.name}`;
@@ -2489,7 +2510,7 @@ document.addEventListener('click', e => { const a = e.target.closest('[data-act]
 
 function setField(el) {
   const [obj, key] = (el.dataset.f || el.dataset.fc).split('.'); const v = el.value, d = el.dataset;
-  const numKeys = ['hours', 'contingency', 'discount', 'gst', 'round', 'amPct', 'amMin', 'wipHours', 'markup', 'cost', 'weeks', 'base', 'per'];
+  const numKeys = ['hours', 'contingency', 'discount', 'gst', 'round', 'amPct', 'amMin', 'wipHours', 'markup', 'cost', 'weeks', 'base', 'per', 'minScale'];
   const val = numKeys.includes(key) ? (v === '' ? 0 : +v) : v;
   if (obj === 'scope') { cur()[key] = val; if (key === 'status') el.className = 'pill st-' + v; touch(); return updateTotals(); }
   if (obj === 'co') { cur().clientCo[key] = v; touch(); return; }
