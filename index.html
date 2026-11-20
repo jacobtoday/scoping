@@ -233,6 +233,8 @@ table.est{width:100%;border-collapse:collapse;min-width:760px}
 .sow-sign div{flex:1;border-top:.8px solid #111;padding-top:5px;font-weight:600;font-size:8pt}
 .sow-sign div:last-child{flex:.5}
 .sow-terms{margin-top:28px;font-size:7.5pt;color:#444}
+.sow-tot.rng div span:last-child{width:230px}
+.sow-ph .fee{white-space:nowrap}
 
 /* ---------- v3 additions ---------- */
 .seg{display:inline-flex;background:var(--bg-soft);border-radius:8px;padding:3px;gap:2px}
@@ -599,6 +601,7 @@ body.scrubbing,body.scrubbing *{cursor:ew-resize!important;user-select:none}
 .it-name-wrap .trk.production{color:var(--warning)!important}
 .it-name-wrap{gap:6px}
 .it-name-wrap .it-name{order:-1}
+.sv-rng{font-size:21px;white-space:nowrap}.sv-rng span{color:var(--t3);font-weight:400}
 
 </style>
 </head>
@@ -1405,7 +1408,7 @@ function vHome() {
     <div class="card stat"><div class="lbl">Scopes in pricing model</div><div class="v">${inModel().length}</div></div>
   </div>
   <div class="card">${list.length ? `<table class="tbl"><thead><tr><th>Project</th><th>Client</th><th>Status</th><th>Shape</th><th class="r">Weeks</th><th class="r">Margin</th><th class="r">Total ex GST</th><th>Updated</th><th></th></tr></thead><tbody>
-    ${list.map(s => { const t = totals(s); return `<tr class="click" data-act="open" data-id="${s.id}"><td><b style="font-weight:500">${esc(s.name)}</b><div class="hint">${esc(tpl(s.type).name)} · ${esc(s.size || '')}</div></td><td class="muted">${esc(clientName(s) || '—')}</td><td><span class="pill st-${s.status}">${s.status}</span></td><td><span class="spark">${s.phases.map((p, i) => `<i title="${esc(p.name)} ${money(t.phasesClient[i])}" style="flex:${t.phasesClient[i] || 0.01};background:${p.color}"></i>`).join('')}</span></td><td class="r num muted">${s.weeks}</td><td class="r num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${Math.round(t.marginPct * 100)}%</td><td class="r num"><b style="font-weight:600">${money(t.ex)}</b></td><td class="faint">${fmtDate(s.updated)}</td><td class="r" style="white-space:nowrap"><button class="ib" title="Duplicate" data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i></button><button class="ib del" title="Delete" data-act="delscope" data-id="${s.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
+    ${list.map(s => { const t = totals(s); return `<tr class="click" data-act="open" data-id="${s.id}"><td><b style="font-weight:500">${esc(s.name)}</b><div class="hint">${esc(tpl(s.type).name)} · ${esc(s.size || '')}</div></td><td class="muted">${esc(clientName(s) || '—')}</td><td><span class="pill st-${s.status}">${s.status}</span></td><td><span class="spark">${s.phases.map((p, i) => `<i title="${esc(p.name)} ${money(t.phasesClient[i])}" style="flex:${t.phasesClient[i] || 0.01};background:${p.color}"></i>`).join('')}</span></td><td class="r num muted">${s.weeks}</td><td class="r num ${t.margin >= 0 ? 'margin-pos' : 'margin-neg'}">${Math.round(t.marginPct * 100)}%</td><td class="r num"><b style="font-weight:600">${rangeOn(s) ? (() => { const rg = totalsRange(s, t); return mr(rg.lo, rg.hi); })() : money(t.ex)}</b></td><td class="faint">${fmtDate(s.updated)}</td><td class="r" style="white-space:nowrap"><button class="ib" title="Duplicate" data-act="dup" data-id="${s.id}"><i class="fa-regular fa-copy"></i></button><button class="ib del" title="Delete" data-act="delscope" data-id="${s.id}"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }).join('')}
   </tbody></table>` : `<div class="empty"><h3>${S.scopes.length ? 'No matches' : 'No estimates yet'}</h3><p>${S.scopes.length ? 'Try a different search.' : 'Start from a brief.'}</p></div>`}</div>`];
 }
 
@@ -1443,6 +1446,19 @@ function highlightBrief(brief, rows) {
 /* ==========================================================
    FLOW — Brief → Confirm → Refine → Send
    ========================================================== */
+/* ---- optional price range ---- */
+const rangeOn = s => !!s?.range?.on;
+function phaseRange(s, p, fee) {
+  const r = s.range || {}, lo = isNum(p.rangeLo) ? +p.rangeLo : roundTo(fee * (1 - (+r.lo || 0) / 100)), hi = isNum(p.rangeHi) ? +p.rangeHi : roundTo(fee * (1 + (+r.hi || 0) / 100));
+  return [Math.min(lo, hi), Math.max(lo, hi)];
+}
+function totalsRange(s, t = totals(s)) {
+  const ph = s.phases.map((p, i) => phaseRange(s, p, t.phasesClient[i])), g = 1 + (+S.settings.gst || 0) / 100;
+  const lo = ph.reduce((a, x) => a + x[0], 0) - t.disc, hi = ph.reduce((a, x) => a + x[1], 0) - t.disc;
+  return { ph, lo, hi, loInc: lo * g, hiInc: hi * g, gstLo: lo * (g - 1), gstHi: hi * (g - 1), subLo: lo + t.disc, subHi: hi + t.disc };
+}
+const mr = (a, b) => `${money(a)} – ${money(b)}`;
+const mr2 = (a, b) => `$${money2(a)} – $${money2(b)}`;
 const STEPS = [['brief', 'Brief'], ['confirm', 'Confirm scope'], ['refine', 'Refine'], ['send', 'Review & send']];
 function stepper(active) {
   const ai = STEPS.findIndex(s => s[0] === active);
@@ -1525,21 +1541,21 @@ const rvOpen = new Set();
 
 /* ---- step 4: review & send ---- */
 function sowHTML(s) {
-  const t = totals(s), st = S.settings; let n = 0;
+  const t = totals(s), st = S.settings, rg = rangeOn(s) ? totalsRange(s, t) : null; let n = 0;
   const cl = client(s.clientId), co = cl ? { name: cl.legal || cl.name, address: cl.address, abn: cl.abn } : (s.clientCo || {});
   const phases = s.phases.map((p, i) => {
     const label = st.sowNumber && !p.media ? `Phase ${WORDS[n++] || n}: ${p.name}` : p.name;
     const items = clientItems(p).map(it => it.name + (it.qty > 1 ? ` x ${it.qty}${it.unit ? ' ' + it.unit + (/s$/.test(it.unit) ? '' : 's') : ''}` : ''));
     if (st.sowAM && p.items.some(i => i.kind === 'am' || i.kind === 'wip')) items.push('Account management & WIP meetings');
-    return `<div class="sow-ph"><div class="l"><div class="pn">${esc(label)}</div>${st.sowDesc && p.desc ? `<div class="pd">${esc(p.desc)}</div>` : ''}${items.map(x => `<div class="si">${esc(x)}</div>`).join('')}</div><div class="fee">${money2(t.phasesClient[i])}</div></div>`;
+    return `<div class="sow-ph"><div class="l"><div class="pn">${esc(label)}</div>${st.sowDesc && p.desc ? `<div class="pd">${esc(p.desc)}</div>` : ''}${items.map(x => `<div class="si">${esc(x)}</div>`).join('')}</div><div class="fee">${rg ? `${money2(rg.ph[i][0])} – ${money2(rg.ph[i][1])}` : money2(t.phasesClient[i])}</div></div>`;
   }).join('');
   return `<div class="sow-top"><div class="sow-logo">${logoHTML()}</div><div class="sow-title"><b>Scope of Work</b><span>${fmtDate(Date.now())}</span></div></div>
   <div class="sow-parties"><div>${esc(co.name || s.client || '')}${co.address ? '\n' + esc(co.address) : ''}${co.abn ? '\n' + esc(co.abn) : ''}</div><div>${esc(st.company)}\n${esc(st.address)}\n${esc(st.abn)}</div></div>
   <div class="sow-head"><span>${esc(s.name)}</span><span>Fee</span></div>
   ${s.overview ? `<p class="sow-ov">${esc(s.overview)}</p>` : ''}
   ${phases}
-  <div class="sow-note">${esc(st.sowNote)}${s.notes ? '<br>' + esc(s.notes).replace(/\n/g, '<br>') : ''}</div>
-  <div class="sow-tot">${t.disc ? `<div><span>Subtotal</span><span>$${money2(t.sub)}</span></div><div><span>Discount</span><span>−$${money2(t.disc)}</span></div>` : ''}<div><span>Total</span><span>$${money2(t.ex)}</span></div><div><span>(GST)</span><span>$${money2(t.gst)}</span></div><div class="g"><span>Grand Total $ (AUD)</span><span>$${money2(t.inc)}</span></div></div>
+  <div class="sow-note">${rg ? esc(s.range.note || 'Fees are shown as an estimated range. The final fee will be confirmed once scope is locked.') + '<br>' : ''}${esc(st.sowNote)}${s.notes ? '<br>' + esc(s.notes).replace(/\n/g, '<br>') : ''}</div>
+  ${rg ? `<div class="sow-tot rng">${t.disc ? `<div><span>Subtotal</span><span>${mr2(rg.subLo, rg.subHi)}</span></div><div><span>Discount</span><span>−$${money2(t.disc)}</span></div>` : ''}<div><span>Total</span><span>${mr2(rg.lo, rg.hi)}</span></div><div><span>(GST)</span><span>${mr2(rg.gstLo, rg.gstHi)}</span></div><div class="g"><span>Grand Total $ (AUD)</span><span>${mr2(rg.loInc, rg.hiInc)}</span></div></div>` : `<div class="sow-tot">${t.disc ? `<div><span>Subtotal</span><span>$${money2(t.sub)}</span></div><div><span>Discount</span><span>−$${money2(t.disc)}</span></div>` : ''}<div><span>Total</span><span>$${money2(t.ex)}</span></div><div><span>(GST)</span><span>$${money2(t.gst)}</span></div><div class="g"><span>Grand Total $ (AUD)</span><span>$${money2(t.inc)}</span></div></div>`}
   <div class="sow-sign"><div>CLIENT SIGNATURE</div><div>DATE</div></div>
   <div class="sow-terms">${esc(st.terms).replace(/\n/g, '<br>')}</div>`;
 }
@@ -1563,7 +1579,7 @@ function sendModal() {
     const r = readiness(s), t = totals(s), blockers = r.filter(x => x.ok === false).length;
     m.innerHTML = `<div class="send">
       <div class="send-l">
-        <div class="eyebrow">Step 4 · Review & send</div><h2>${esc(s.name)}</h2><p class="muted">${esc(clientName(s) || 'No client')} · ${money(t.ex)} ex GST · ${money(t.inc)} inc GST</p>
+        <div class="eyebrow">Step 4 · Review & send</div><h2>${esc(s.name)}</h2><p class="muted">${esc(clientName(s) || 'No client')} · ${rangeOn(s) ? (() => { const rg = totalsRange(s, t); return mr(rg.lo, rg.hi) + ' ex GST (range)'; })() : money(t.ex) + ' ex GST · ' + money(t.inc) + ' inc GST'}</p>
         <div class="checks">${r.map(x => `<div class="chk ${x.ok ? 'ok' : x.warn ? 'warn' : 'bad'}"><i class="fa-solid ${x.ok ? 'fa-circle-check' : x.warn ? 'fa-circle-exclamation' : 'fa-circle-xmark'}"></i><span class="grow">${esc(x.t)}</span>${x.act || ''}</div>`).join('')}</div>
         <div class="send-acts">
           <button class="btn pri big" data-x="pdf"><i class="fa-solid fa-file-pdf"></i>Download PDF</button>
@@ -1687,10 +1703,12 @@ function statsHTML(s, t) {
   const amH = s.phases.reduce((a, p) => a + p.items.filter(i => i.kind === 'am').reduce((b, i) => b + itemHours(i), 0), 0);
   const budget = sg.budget ? `<div class="stat-flag ${t.ex > sg.budget ? 'warn' : 'ok'}">${t.ex > sg.budget ? money(t.ex - sg.budget) + ' over' : money(sg.budget - t.ex) + ' under'} brief budget</div>` : '';
   return `<div class="stats4">
-    <div class="st hov"><div class="lbl">Total ex GST</div><div class="sv num">${money(t.ex)}</div>${budget}
+    <div class="st hov"><div class="lbl">Total ex GST${rangeOn(s) ? ' · range' : ''}</div>${rangeOn(s) ? (() => { const rg = totalsRange(s, t); return `<div class="sv num sv-rng">${money(rg.lo)}<span> – </span>${money(rg.hi)}</div><div class="ssub num">midpoint ${money(t.ex)}</div>`; })() : `<div class="sv num">${money(t.ex)}</div>`}${budget}
       <div class="pop"><div class="pop-h">Where the money goes</div>${s.phases.map((p, i) => `<div class="kv"><span><span class="dot" style="background:${p.color}"></span> ${esc(p.name)}</span><b class="num">${money(t.phasesClient[i])}</b></div>`).join('')}
         <div class="div"></div><div class="kv"><span>Born time</span><b class="num">${money(t.intClient)}</b></div><div class="kv"><span>Suppliers</span><b class="num">${money(t.extClient)}</b></div>${t.disc ? `<div class="kv"><span>Discount</span><b class="num">−${money(t.disc)}</b></div>` : ''}<div class="kv"><span>GST</span><b class="num">${money(t.gst)}</b></div><div class="kv"><span>Inc GST</span><b class="num">${money(t.inc)}</b></div>
-        <div class="div"></div><div class="row" style="gap:8px"><label class="field grow"><span>Contingency %</span><input class="in num" type="number" data-f="scope.contingency" value="${esc(s.contingency)}"></label><label class="field grow"><span>Discount $</span><input class="in num" type="number" step="50" data-f="scope.discount" value="${esc(s.discount)}"></label></div>${sg.budget ? `<button class="btn sm" style="margin-top:10px" data-act="aiask" data-q="Fit this estimate to the brief budget of ${money(sg.budget)} ex GST. Keep account management and suppliers; trim Born time where it hurts least."><i class="fa-solid fa-wand-magic-sparkles"></i>Fit to budget with AI</button>` : ''}</div></div>
+        <div class="div"></div><div class="row" style="gap:8px"><label class="field grow"><span>Contingency %</span><input class="in num" type="number" data-f="scope.contingency" value="${esc(s.contingency)}"></label><label class="field grow"><span>Discount $</span><input class="in num" type="number" step="50" data-f="scope.discount" value="${esc(s.discount)}"></label></div>
+        <div class="div"></div><label class="tog"><input type="checkbox" data-rangetog ${rangeOn(s) ? 'checked' : ''}><span class="sw"></span>Quote as a price range</label>
+        ${rangeOn(s) ? `<div class="row" style="gap:8px;margin-top:8px"><label class="field grow"><span>Low −%</span><input class="in num" type="number" min="0" data-f="range.lo" value="${esc(s.range.lo)}"></label><label class="field grow"><span>High +%</span><input class="in num" type="number" min="0" data-f="range.hi" value="${esc(s.range.hi)}"></label></div><p class="hint" style="margin-top:6px">Applied to every phase fee. Set exact figures per phase in its fee popup.</p>` : ''}${sg.budget ? `<button class="btn sm" style="margin-top:10px" data-act="aiask" data-q="Fit this estimate to the brief budget of ${money(sg.budget)} ex GST. Keep account management and suppliers; trim Born time where it hurts least."><i class="fa-solid fa-wand-magic-sparkles"></i>Fit to budget with AI</button>` : ''}</div></div>
     <div class="st hov"><div class="lbl">Margin</div><div class="sv num ${mClass(t.marginPct)}">${Math.round(t.marginPct * 100)}%</div><div class="ssub num">${money(t.margin)}</div>
       <div class="pop"><div class="pop-h">Margin by phase</div>${s.phases.map(p => { const c = phaseCalc(p), k = phaseCostSum(p); return `<div class="kv"><span>${esc(p.name)}</span><b class="num ${mClass(mPct(c, k))}">${Math.round(mPct(c, k) * 100)}%</b></div>`; }).join('')}
         <div class="div"></div><div class="kv"><span>Born cost</span><b class="num">${money(t.intCost)}</b></div><div class="kv"><span>Supplier cost</span><b class="num">${money(t.extCost)}</b></div><div class="kv"><span>Born time margin</span><b class="num">${Math.round(mPct(t.intClient, t.intCost) * 100)}%</b></div></div></div>
@@ -1718,7 +1736,8 @@ function phaseHTML(s, p, i) {
       <span class="ph-hrs num faint" data-t="phh-${p.id}"></span>
       <span class="hov fee"><b class="num" data-t="ph-${p.id}"></b>${isNum(p.override) ? '<i class="fa-solid fa-lock lockic"></i>' : ''}
         <div class="pop pop-r"><div class="pop-h">${esc(p.name)}</div><div data-t="phpop-${p.id}"></div><div class="div"></div>
-          <label class="field"><span>Lock fee (before contingency)</span><input class="in num" type="number" step="50" data-f="phase.override" ${A({ pid: p.id })} value="${esc(p.override)}" placeholder="Calculated"></label></div></span>
+          <label class="field"><span>Lock fee (before contingency)</span><input class="in num" type="number" step="50" data-f="phase.override" ${A({ pid: p.id })} value="${esc(p.override)}" placeholder="Calculated"></label>
+          ${rangeOn(s) ? (() => { const fee = totals(s).phasesClient[s.phases.indexOf(p)], d0 = { ...p, rangeLo: '', rangeHi: '' }, [a, b] = phaseRange(s, d0, fee); return `<div class="row" style="gap:8px;margin-top:8px"><label class="field grow"><span>Range low $</span><input class="in num" type="number" step="100" data-f="phase.rangeLo" ${A({ pid: p.id })} value="${esc(p.rangeLo ?? '')}" placeholder="${a}"></label><label class="field grow"><span>Range high $</span><input class="in num" type="number" step="100" data-f="phase.rangeHi" ${A({ pid: p.id })} value="${esc(p.rangeHi ?? '')}" placeholder="${b}"></label></div>`; })() : ''}</div></span>
     </header>
     <div class="ph-desc-wrap"><textarea class="ph-desc" rows="1" data-auto data-f="phase.desc" ${A({ pid: p.id })} placeholder="What happens in this phase — shown on the Scope of Work">${esc(p.desc)}</textarea><button class="ib" data-act="phregen" ${A({ pid: p.id })} title="Rewrite description"><i class="fa-solid fa-rotate"></i></button></div>
     <div class="rows">${work.length || mgmt.length ? `<div class="cols"><span></span><span>Deliverable</span><span>Qty</span><span>Team</span><span class="r">Hours</span><span class="r">${lens() === 'client' ? 'Price' : 'Cost'}</span><span></span></div>` : ''}${groupItems(work).map(g => g.length > 1 ? groupHTML(s, p, g) : itemHTML(s, p, g[0])).join('')}${!work.length ? `<div class="empty-ph">Nothing in this phase yet.</div>` : ''}${mgmt.length ? `<div class="mgmt">${mgmt.length > 1 ? groupHTML(s, p, mgmt, 'Account management & weekly WIP') : itemHTML(s, p, mgmt[0])}</div>` : ''}</div>
@@ -1791,7 +1810,7 @@ function updateTotals() {
   const set = (k, v, html) => { const el = document.querySelector(`[data-t="${k}"]`); if (el) el[html ? 'innerHTML' : 'textContent'] = v; };
   s.phases.forEach((p, i) => {
     const c = phaseCalc(p), k = phaseCostSum(p);
-    set('ph-' + p.id, L === 'client' ? money(t.phasesClient[i]) : money(k) + ' cost');
+    set('ph-' + p.id, L === 'client' ? (rangeOn(s) ? mr(...phaseRange(s, p, t.phasesClient[i])) : money(t.phasesClient[i])) : money(k) + ' cost');
     set('phh-' + p.id, hrs(phaseHours(p)));
     set('phpop-' + p.id, `<div class="kv"><span>Client fee</span><b class="num">${money(t.phasesClient[i])}</b></div><div class="kv"><span>Calculated</span><b class="num">${money(c)}</b></div><div class="kv"><span>Born + supplier cost</span><b class="num">${money(k)}</b></div><div class="kv"><span>Margin</span><b class="num ${mClass(mPct(c, k))}">${Math.round(mPct(c, k) * 100)}%</b></div><div class="kv"><span>Hours</span><b class="num">${hrs(phaseHours(p))}</b></div>`, true);
     p.items.forEach(it => {
@@ -1811,7 +1830,7 @@ function updateTotals() {
     const pop = document.querySelector(`[data-gpop="${el.dataset.gsum}"]`); if (pop) pop.innerHTML = `<div class="pop-h">${esc(its[0].name)}</div>${its.map(i => `<div class="kv"><span>${KIND[i.kind]} · ${i.lines.map(l => person(l.personId).title + ' ' + hrs(l.hours)).join(', ')}</span><b class="num">${money(itemClient(i))}</b></div>`).join('')}<div class="div"></div><div class="kv"><span>Cost</span><b class="num">${money(ik)}</b></div><div class="kv"><span>Margin</span><b class="num ${mClass(m)}">${money(ic - ik)} · ${Math.round(m * 100)}%</b></div>`;
     const sc = document.querySelector(`[data-f="grph.hours"][data-grp="${el.dataset.gsum}"]`); if (sc && document.activeElement !== sc && !sc.dataset.dragging) sc.value = +its.reduce((a, i) => a + itemHours(i), 0).toFixed(1);
   });
-  const ms = $('#miniSum'); if (ms) ms.innerHTML = `<b class="num">${money(t.ex)}</b><span class="num ${mClass(t.marginPct)}">${Math.round(t.marginPct * 100)}% margin</span><span class="num">${Math.round(t.hours)}h</span><span class="num">${s.weeks} weeks</span>`;
+  const ms = $('#miniSum'); if (ms) ms.innerHTML = `<b class="num">${rangeOn(s) ? mr(totalsRange(s, t).lo, totalsRange(s, t).hi) : money(t.ex)}</b><span class="num ${mClass(t.marginPct)}">${Math.round(t.marginPct * 100)}% margin</span><span class="num">${Math.round(t.hours)}h</span><span class="num">${s.weeks} weeks</span>`;
   const st = $('#stats'); if (st) { const keep = st.querySelector('.hov:hover'); if (!keep || !keep.querySelector('input:focus')) st.innerHTML = statsHTML(s, t); }
   const u = document.querySelector('[data-act=undo]'); if (u) u.disabled = !H.stack.length;
 }
@@ -2433,7 +2452,8 @@ function setField(el) {
   const val = numKeys.includes(key) ? (v === '' ? 0 : +v) : v;
   if (obj === 'scope') { cur()[key] = val; if (key === 'status') el.className = 'pill st-' + v; touch(); return updateTotals(); }
   if (obj === 'co') { cur().clientCo[key] = v; touch(); return; }
-  if (obj === 'phase') { findPhase(d.pid)[key] = val; if (key === 'override') el.classList.toggle('on', isNum(v)); touch(); return updateTotals(); }
+  if (obj === 'range') { const s = cur(); s.range = s.range || { on: true, lo: 10, hi: 15 }; s.range[key] = v === '' ? 0 : +v; touch(); render(); return; }
+  if (obj === 'phase') { if (key === 'rangeLo' || key === 'rangeHi') { findPhase(d.pid)[key] = v === '' ? '' : +v; touch(); return updateTotals(); } findPhase(d.pid)[key] = val; if (key === 'override') el.classList.toggle('on', isNum(v)); touch(); return updateTotals(); }
   if (obj === 'item') {
     const it = findItem(d.pid, d.iid);
     if (key === 'qty') {
@@ -2528,6 +2548,7 @@ document.addEventListener('change', async e => {
     if (el.value === '__new') { clientModal(null, cl => { s.clientId = cl.id; s.client = cl.name; touch(); render(); }); render(); }
     else if (el.value) { const cl = client(el.value); s.clientId = cl.id; s.client = cl.name; touch(); render(); }
   }
+  if (el.hasAttribute('data-rangetog')) { const s = cur(); histMark(); s.range = { lo: 10, hi: 15, ...(s.range || {}), on: el.checked }; touch(); render(); toast(el.checked ? 'Quoting as a range' : 'Back to a fixed price'); }
   if (d.chg === 'filter') { UI.filter = el.value; saveUI(); render(); }
   if (d.chg === 'teamadd' && el.value) { cur().team.push(el.value); touch(); render(); }
   if (el.hasAttribute('data-applycal')) { window._draft.applyCal = el.checked; rvFooterUpdate(); }
